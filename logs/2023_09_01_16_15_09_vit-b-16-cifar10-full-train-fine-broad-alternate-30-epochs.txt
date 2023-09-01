@@ -1,0 +1,203 @@
+************************************************************************************************************************
+ViTBasicForImageClassification(
+  (embedding_layer): Sequential(
+    (0): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16))
+    (1): Rearrange('b d ph pw -> b (ph pw) d')
+  )
+  (additional_class_tokens): ParameterList(
+      (0): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+      (1): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+  )
+  (mlp_heads): ModuleList(
+    (0): Linear(in_features=768, out_features=2, bias=True)
+    (1): Linear(in_features=768, out_features=10, bias=True)
+  )
+  (positional_embedding): PositionalEmbedding1D()
+  (transformer_encoder): TransformerEncoder(
+    (tf_blocks): ModuleList(
+      (0-11): 12 x TransformerBlock(
+        (mha): MultiHeadAttention(
+          (query_layer): Linear(in_features=768, out_features=768, bias=True)
+          (key_layer): Linear(in_features=768, out_features=768, bias=True)
+          (value_layer): Linear(in_features=768, out_features=768, bias=True)
+          (out_proj): Linear(in_features=768, out_features=768, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (layer_norm_1): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (pos_wise_ff_layer): PositionWiseFeedForward(
+          (pos_wise_feed_forward): Sequential(
+            (0): Linear(in_features=768, out_features=3072, bias=True)
+            (1): GELU(approximate='none')
+            (2): Dropout(p=0.0, inplace=False)
+            (3): Linear(in_features=3072, out_features=768, bias=True)
+            (4): Dropout(p=0.0, inplace=False)
+          )
+        )
+        (layer_norm_2): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (dropout): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (final_layer_norm): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+)
+Experiment:  vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111
+Starting Broad Fine Alternate Class Training...
+Starting Train/Eval...
+
+Epoch: 0
+Mode: MODE.TRAIN
+Losses: 0.4065633869879996
+Metrics: {'Acc@1_broad': 0.8161365, 'Acc@1_fine': 0.07758552}
+Best Acc@1_fine till now: -1
+
+Train Metrics increased from: -1 -> 0.07758551836013794
+
+Epoch: 0
+Mode: MODE.EVAL
+Losses: 1.4345575390727656
+Metrics: {'Acc@1_broad': 0.85001993, 'Acc@1_fine': 0.08101115}
+Best Acc@1_fine till now: -1
+
+Eval Metrics increased from: -1 -> 0.08101114630699158
+Model CKPT saved at: ./checkpoints/vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111.pt
+Epoch took 1017.26 s
+
+Epoch: 1
+Mode: MODE.TRAIN
+Losses: 1.812446223347998
+Metrics: {'Acc@1_broad': 0.83306026, 'Acc@1_fine': 0.32664642}
+Best Acc@1_fine till now: 0.07758551836013794
+
+Train Metrics increased from: 0.07758551836013794 -> 0.3266464173793793
+
+Epoch: 1
+Mode: MODE.EVAL
+Losses: 1.1135066360425039
+Metrics: {'Acc@1_broad': 0.8119029, 'Acc@1_fine': 0.3397691}
+Best Acc@1_fine till now: 0.08101114630699158
+
+Eval Metrics increased from: 0.08101114630699158 -> 0.3397690951824188
+Model CKPT saved at: ./checkpoints/vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111.pt
+Epoch took 1021.51 s
+
+Epoch: 2
+Mode: MODE.TRAIN
+Losses: 1.6367128639269972
+Metrics: {'Acc@1_broad': 0.8073849, 'Acc@1_fine': 0.3964594}
+Best Acc@1_fine till now: 0.3266464173793793
+
+Train Metrics increased from: 0.3266464173793793 -> 0.3964594006538391
+
+Epoch: 2
+Mode: MODE.EVAL
+Losses: 1.094550949373063
+Metrics: {'Acc@1_broad': 0.7929936, 'Acc@1_fine': 0.37838376}
+Best Acc@1_fine till now: 0.3397690951824188
+
+Eval Metrics increased from: 0.3397690951824188 -> 0.3783837556838989
+Model CKPT saved at: ./checkpoints/vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111.pt
+Epoch took 1020.32 s
+
+Epoch: 3
+Mode: MODE.TRAIN
+Losses: 1.5533417280372757
+Metrics: {'Acc@1_broad': 0.79164004, 'Acc@1_fine': 0.43246484}
+Best Acc@1_fine till now: 0.3964594006538391
+
+Train Metrics increased from: 0.3964594006538391 -> 0.4324648380279541
+
+Epoch: 3
+Mode: MODE.EVAL
+Losses: 1.1214615432130304
+Metrics: {'Acc@1_broad': 0.75258756, 'Acc@1_fine': 0.3834594}
+Best Acc@1_fine till now: 0.3783837556838989
+
+Eval Metrics increased from: 0.3783837556838989 -> 0.3834593892097473
+Model CKPT saved at: ./checkpoints/vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111.pt
+Epoch took 1021.41 s
+
+Epoch: 4
+Mode: MODE.TRAIN
+Losses: 1.482582322776775
+Metrics: {'Acc@1_broad': 0.7772139, 'Acc@1_fine': 0.46139705}
+Best Acc@1_fine till now: 0.4324648380279541
+
+Train Metrics increased from: 0.4324648380279541 -> 0.46139705181121826
+
+Epoch: 4
+Mode: MODE.EVAL
+Losses: 1.1312704455510827
+Metrics: {'Acc@1_broad': 0.7685112, 'Acc@1_fine': 0.37619427}
+Best Acc@1_fine till now: 0.3834593892097473
+
+Epoch took 1018.28 s
+
+Epoch: 5
+Mode: MODE.TRAIN
+Losses: 1.4257848829107211
+Metrics: {'Acc@1_broad': 0.7727182, 'Acc@1_fine': 0.48173752}
+Best Acc@1_fine till now: 0.46139705181121826
+
+Train Metrics increased from: 0.46139705181121826 -> 0.48173752427101135
+
+Epoch: 5
+Mode: MODE.EVAL
+Losses: 1.0076706615413071
+Metrics: {'Acc@1_broad': 0.7685112, 'Acc@1_fine': 0.44576034}
+Best Acc@1_fine till now: 0.3834593892097473
+
+Eval Metrics increased from: 0.3834593892097473 -> 0.4457603394985199
+Model CKPT saved at: ./checkpoints/vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111.pt
+Epoch took 1020.93 s
+
+Epoch: 6
+Mode: MODE.TRAIN
+Losses: 1.374390450584919
+Metrics: {'Acc@1_broad': 0.7701207, 'Acc@1_fine': 0.5040561}
+Best Acc@1_fine till now: 0.48173752427101135
+
+Train Metrics increased from: 0.48173752427101135 -> 0.5040560960769653
+
+Epoch: 6
+Mode: MODE.EVAL
+Losses: 0.9900351217028441
+Metrics: {'Acc@1_broad': 0.76801354, 'Acc@1_fine': 0.46118632}
+Best Acc@1_fine till now: 0.4457603394985199
+
+Eval Metrics increased from: 0.4457603394985199 -> 0.46118631958961487
+Model CKPT saved at: ./checkpoints/vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111.pt
+Epoch took 1020.72 s
+
+Epoch: 7
+Mode: MODE.TRAIN
+Losses: 1.3370199238552767
+Metrics: {'Acc@1_broad': 0.76556504, 'Acc@1_fine': 0.5164842}
+Best Acc@1_fine till now: 0.5040560960769653
+
+Train Metrics increased from: 0.5040560960769653 -> 0.5164842009544373
+
+Epoch: 7
+Mode: MODE.EVAL
+Losses: 0.9694301348393131
+Metrics: {'Acc@1_broad': 0.7259156, 'Acc@1_fine': 0.5104498}
+Best Acc@1_fine till now: 0.46118631958961487
+
+Eval Metrics increased from: 0.46118631958961487 -> 0.5104498267173767
+Model CKPT saved at: ./checkpoints/vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111.pt
+Epoch took 1021.00 s
+
+Epoch: 8
+Mode: MODE.TRAIN
+Losses: 1.3043683557711598
+Metrics: {'Acc@1_broad': 0.74466515, 'Acc@1_fine': 0.52931184}
+Best Acc@1_fine till now: 0.5164842009544373
+
+Train Metrics increased from: 0.5164842009544373 -> 0.5293118357658386
+
+Epoch: 8
+Mode: MODE.EVAL
+Losses: 0.9871478695778331
+Metrics: {'Acc@1_broad': 0.73556924, 'Acc@1_fine': 0.4727309}
+Best Acc@1_fine till now: 0.5104498267173767
+
+Epoch took 1020.11 s

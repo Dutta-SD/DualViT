@@ -1,0 +1,401 @@
+************************************************************************************************************************
+ViTBasicForImageClassification(
+  (embedding_layer): Sequential(
+    (0): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16))
+    (1): Rearrange('b d ph pw -> b (ph pw) d')
+  )
+  (additional_class_tokens): ParameterList(
+      (0): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+      (1): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+  )
+  (mlp_heads): ModuleList(
+    (0): Linear(in_features=768, out_features=2, bias=True)
+    (1): Linear(in_features=768, out_features=10, bias=True)
+  )
+  (positional_embedding): PositionalEmbedding1D()
+  (transformer_encoder): TransformerEncoder(
+    (tf_blocks): ModuleList(
+      (0-11): 12 x TransformerBlock(
+        (mha): MultiHeadAttention(
+          (query_layer): Linear(in_features=768, out_features=768, bias=True)
+          (key_layer): Linear(in_features=768, out_features=768, bias=True)
+          (value_layer): Linear(in_features=768, out_features=768, bias=True)
+          (out_proj): Linear(in_features=768, out_features=768, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (layer_norm_1): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (pos_wise_ff_layer): PositionWiseFeedForward(
+          (pos_wise_feed_forward): Sequential(
+            (0): Linear(in_features=768, out_features=3072, bias=True)
+            (1): GELU(approximate='none')
+            (2): Dropout(p=0.0, inplace=False)
+            (3): Linear(in_features=3072, out_features=768, bias=True)
+            (4): Dropout(p=0.0, inplace=False)
+          )
+        )
+        (layer_norm_2): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (dropout): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (final_layer_norm): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+)
+Experiment:  vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693558459
+Starting Broad Fine Alternate Class Training...
+Starting Train/Eval...
+
+Epoch: 0
+Mode: MODE.TRAIN
+Losses: 0.4065633869879996
+Metrics: {}
+Best Acc@1_fine till now: -1
+
+************************************************************************************************************************
+ViTBasicForImageClassification(
+  (embedding_layer): Sequential(
+    (0): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16))
+    (1): Rearrange('b d ph pw -> b (ph pw) d')
+  )
+  (additional_class_tokens): ParameterList(
+      (0): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+      (1): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+  )
+  (mlp_heads): ModuleList(
+    (0): Linear(in_features=768, out_features=2, bias=True)
+    (1): Linear(in_features=768, out_features=10, bias=True)
+  )
+  (positional_embedding): PositionalEmbedding1D()
+  (transformer_encoder): TransformerEncoder(
+    (tf_blocks): ModuleList(
+      (0-11): 12 x TransformerBlock(
+        (mha): MultiHeadAttention(
+          (query_layer): Linear(in_features=768, out_features=768, bias=True)
+          (key_layer): Linear(in_features=768, out_features=768, bias=True)
+          (value_layer): Linear(in_features=768, out_features=768, bias=True)
+          (out_proj): Linear(in_features=768, out_features=768, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (layer_norm_1): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (pos_wise_ff_layer): PositionWiseFeedForward(
+          (pos_wise_feed_forward): Sequential(
+            (0): Linear(in_features=768, out_features=3072, bias=True)
+            (1): GELU(approximate='none')
+            (2): Dropout(p=0.0, inplace=False)
+            (3): Linear(in_features=3072, out_features=768, bias=True)
+            (4): Dropout(p=0.0, inplace=False)
+          )
+        )
+        (layer_norm_2): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (dropout): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (final_layer_norm): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+)
+Experiment:  vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693564110
+Starting Broad Fine Alternate Class Training...
+Starting Train/Eval...
+[tensor(0.6496, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4756, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.5469), 'Acc@1_fine': tensor(0.0781)}
+[tensor(0.8083, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5119, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.6250), 'Acc@1_fine': tensor(0.1094)}
+[tensor(0.5207, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4695, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7344), 'Acc@1_fine': tensor(0.0781)}
+[tensor(0.4978, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4494, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7500), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.5377, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5134, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.6719), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.4469, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5494, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.8125), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.4943, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5046, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7812), 'Acc@1_fine': tensor(0.1094)}
+[tensor(0.5775, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4396, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7344), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.5124, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4756, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.8281), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.5388, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4968, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7500), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.6318, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4825, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.6250), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.4749, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5056, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7500), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.4216, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.6202, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.8281), 'Acc@1_fine': tensor(0.0156)}
+[tensor(0.4327, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5067, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.8438), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.5336, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5498, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7031), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.6675, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5006, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7344), 'Acc@1_fine': tensor(0.0156)}
+[tensor(0.6557, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4354, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.6406), 'Acc@1_fine': tensor(0.0781)}
+[tensor(0.5094, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4555, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7812), 'Acc@1_fine': tensor(0.0156)}
+[tensor(0.5484, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5590, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.6875), 'Acc@1_fine': tensor(0.0781)}
+[tensor(0.5574, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4929, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.6406), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.5306, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4404, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7500), 'Acc@1_fine': tensor(0.0781)}
+[tensor(0.5362, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4736, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7031), 'Acc@1_fine': tensor(0.0781)}
+[tensor(0.5942, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5031, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.6406), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.4594, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4131, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7500), 'Acc@1_fine': tensor(0.1875)}
+[tensor(0.6238, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4349, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.6875), 'Acc@1_fine': tensor(0.1406)}
+[tensor(0.4674, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4595, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7500), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.4657, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.3746, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.8125), 'Acc@1_fine': tensor(0.1250)}
+[tensor(0.4792, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4425, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7812), 'Acc@1_fine': tensor(0.1562)}
+[tensor(0.4919, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4418, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7812), 'Acc@1_fine': tensor(0.0781)}
+[tensor(0.6018, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.3651, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7031), 'Acc@1_fine': tensor(0.0781)}
+[tensor(0.4906, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4436, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7656), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.4994, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5018, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7500), 'Acc@1_fine': tensor(0.1094)}
+[tensor(0.4052, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5292, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.8750), 'Acc@1_fine': tensor(0.0469)}
+[tensor(0.5408, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4887, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7812), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.5840, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5840, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7031), 'Acc@1_fine': tensor(0.0469)}
+[tensor(0.5661, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4953, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7188), 'Acc@1_fine': tensor(0.1094)}
+[tensor(0.4197, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5507, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7812), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.4980, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4354, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7344), 'Acc@1_fine': tensor(0.1250)}
+[tensor(0.3688, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4502, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.8594), 'Acc@1_fine': tensor(0.1094)}
+[tensor(0.4134, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.3971, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7969), 'Acc@1_fine': tensor(0.1250)}
+[tensor(0.4937, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5016, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7344), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.5097, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5715, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7500), 'Acc@1_fine': tensor(0.0469)}
+[tensor(0.5619, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4606, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.6562), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.4422, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4213, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7656), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.3569, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4565, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.8750), 'Acc@1_fine': tensor(0.0312)}
+[tensor(0.4519, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4888, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7969), 'Acc@1_fine': tensor(0.0781)}
+[tensor(0.4602, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5102, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7344), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.4593, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5630, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7812), 'Acc@1_fine': tensor(0.1562)}
+[tensor(0.4565, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4989, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7500), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.5205, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4884, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7031), 'Acc@1_fine': tensor(0.1719)}
+[tensor(0.5728, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4438, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7031), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.5235, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4943, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7656), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.5566, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5641, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.6562), 'Acc@1_fine': tensor(0.0312)}
+[tensor(0.5196, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4995, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7188), 'Acc@1_fine': tensor(0.1094)}
+[tensor(0.4488, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4596, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7969), 'Acc@1_fine': tensor(0.0469)}
+[tensor(0.3558, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4403, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.8594), 'Acc@1_fine': tensor(0.0156)}
+[tensor(0.4341, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4178, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7969), 'Acc@1_fine': tensor(0.1250)}
+[tensor(0.5532, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4572, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7500), 'Acc@1_fine': tensor(0.0781)}
+[tensor(0.4273, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4271, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7969), 'Acc@1_fine': tensor(0.1094)}
+[tensor(0.5518, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4318, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7188), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.3930, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.3792, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.8125), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.5352, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4943, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7344), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.4738, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5707, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7500), 'Acc@1_fine': tensor(0.0312)}
+[tensor(0.4282, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5251, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7969), 'Acc@1_fine': tensor(0.0781)}
+[tensor(0.4951, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4424, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7656), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.4161, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4324, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.8125), 'Acc@1_fine': tensor(0.1250)}
+[tensor(0.5007, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.5766, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7812), 'Acc@1_fine': tensor(0.0312)}
+[tensor(0.4715, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4657, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7812), 'Acc@1_fine': tensor(0.0938)}
+[tensor(0.5928, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4167, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.6875), 'Acc@1_fine': tensor(0.0625)}
+[tensor(0.5053, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4694, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.7656), 'Acc@1_fine': tensor(0.0781)}
+************************************************************************************************************************
+ViTBasicForImageClassification(
+  (embedding_layer): Sequential(
+    (0): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16))
+    (1): Rearrange('b d ph pw -> b (ph pw) d')
+  )
+  (additional_class_tokens): ParameterList(
+      (0): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+      (1): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+  )
+  (mlp_heads): ModuleList(
+    (0): Linear(in_features=768, out_features=2, bias=True)
+    (1): Linear(in_features=768, out_features=10, bias=True)
+  )
+  (positional_embedding): PositionalEmbedding1D()
+  (transformer_encoder): TransformerEncoder(
+    (tf_blocks): ModuleList(
+      (0-11): 12 x TransformerBlock(
+        (mha): MultiHeadAttention(
+          (query_layer): Linear(in_features=768, out_features=768, bias=True)
+          (key_layer): Linear(in_features=768, out_features=768, bias=True)
+          (value_layer): Linear(in_features=768, out_features=768, bias=True)
+          (out_proj): Linear(in_features=768, out_features=768, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (layer_norm_1): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (pos_wise_ff_layer): PositionWiseFeedForward(
+          (pos_wise_feed_forward): Sequential(
+            (0): Linear(in_features=768, out_features=3072, bias=True)
+            (1): GELU(approximate='none')
+            (2): Dropout(p=0.0, inplace=False)
+            (3): Linear(in_features=3072, out_features=768, bias=True)
+            (4): Dropout(p=0.0, inplace=False)
+          )
+        )
+        (layer_norm_2): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (dropout): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (final_layer_norm): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+)
+Experiment:  vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693564250
+Starting Broad Fine Alternate Class Training...
+Starting Train/Eval...
+[tensor(0.6496, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4756, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.5469), 'Acc@1_fine': tensor(0.0781)}
+
+Epoch: 0
+Mode: MODE.TRAIN
+Losses: 0.6495742797851562
+Metrics: {}
+Best Acc@1_fine till now: -1
+
+************************************************************************************************************************
+ViTBasicForImageClassification(
+  (embedding_layer): Sequential(
+    (0): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16))
+    (1): Rearrange('b d ph pw -> b (ph pw) d')
+  )
+  (additional_class_tokens): ParameterList(
+      (0): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+      (1): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+  )
+  (mlp_heads): ModuleList(
+    (0): Linear(in_features=768, out_features=2, bias=True)
+    (1): Linear(in_features=768, out_features=10, bias=True)
+  )
+  (positional_embedding): PositionalEmbedding1D()
+  (transformer_encoder): TransformerEncoder(
+    (tf_blocks): ModuleList(
+      (0-11): 12 x TransformerBlock(
+        (mha): MultiHeadAttention(
+          (query_layer): Linear(in_features=768, out_features=768, bias=True)
+          (key_layer): Linear(in_features=768, out_features=768, bias=True)
+          (value_layer): Linear(in_features=768, out_features=768, bias=True)
+          (out_proj): Linear(in_features=768, out_features=768, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (layer_norm_1): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (pos_wise_ff_layer): PositionWiseFeedForward(
+          (pos_wise_feed_forward): Sequential(
+            (0): Linear(in_features=768, out_features=3072, bias=True)
+            (1): GELU(approximate='none')
+            (2): Dropout(p=0.0, inplace=False)
+            (3): Linear(in_features=3072, out_features=768, bias=True)
+            (4): Dropout(p=0.0, inplace=False)
+          )
+        )
+        (layer_norm_2): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (dropout): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (final_layer_norm): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+)
+Experiment:  vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693564390
+Starting Broad Fine Alternate Class Training...
+Starting Train/Eval...
+[tensor(0.6496, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4756, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.5469), 'Acc@1_fine': tensor(0.0781)}
+Ep Metrics is defaultdict(<class 'list'>, {})
+
+Epoch: 0
+Mode: MODE.TRAIN
+Losses: 2.47558856010437
+Metrics: {}
+Best Acc@1_fine till now: -1
+
+************************************************************************************************************************
+ViTBasicForImageClassification(
+  (embedding_layer): Sequential(
+    (0): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16))
+    (1): Rearrange('b d ph pw -> b (ph pw) d')
+  )
+  (additional_class_tokens): ParameterList(
+      (0): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+      (1): Parameter containing: [torch.float32 of size 1x1x768 (GPU 0)]
+  )
+  (mlp_heads): ModuleList(
+    (0): Linear(in_features=768, out_features=2, bias=True)
+    (1): Linear(in_features=768, out_features=10, bias=True)
+  )
+  (positional_embedding): PositionalEmbedding1D()
+  (transformer_encoder): TransformerEncoder(
+    (tf_blocks): ModuleList(
+      (0-11): 12 x TransformerBlock(
+        (mha): MultiHeadAttention(
+          (query_layer): Linear(in_features=768, out_features=768, bias=True)
+          (key_layer): Linear(in_features=768, out_features=768, bias=True)
+          (value_layer): Linear(in_features=768, out_features=768, bias=True)
+          (out_proj): Linear(in_features=768, out_features=768, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (layer_norm_1): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (pos_wise_ff_layer): PositionWiseFeedForward(
+          (pos_wise_feed_forward): Sequential(
+            (0): Linear(in_features=768, out_features=3072, bias=True)
+            (1): GELU(approximate='none')
+            (2): Dropout(p=0.0, inplace=False)
+            (3): Linear(in_features=3072, out_features=768, bias=True)
+            (4): Dropout(p=0.0, inplace=False)
+          )
+        )
+        (layer_norm_2): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+        (dropout): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (final_layer_norm): LayerNorm((768,), eps=1e-06, elementwise_affine=True)
+)
+Experiment:  vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693564443
+Starting Broad Fine Alternate Class Training...
+Starting Train/Eval...
+[tensor(0.6496, device='cuda:0', grad_fn=<NllLossBackward0>), tensor(2.4756, device='cuda:0', grad_fn=<NllLossBackward0>)]
+{'Acc@1_broad': tensor(0.5469), 'Acc@1_fine': tensor(0.0781)}
+Ep Metrics is defaultdict(<class 'list'>, {'Acc@1_broad_broad': [tensor(0.5469)], 'Acc@1_broad_fine': [tensor(0.5469)], 'Acc@1_fine_broad': [tensor(0.0781)], 'Acc@1_fine_fine': [tensor(0.0781)]})
+
+Epoch: 0
+Mode: MODE.TRAIN
+Losses: 2.47558856010437
+Metrics: {'Acc@1_broad_broad': 0.546875, 'Acc@1_broad_fine': 0.546875, 'Acc@1_fine_broad': 0.078125, 'Acc@1_fine_fine': 0.078125}
+Best Acc@1_fine till now: -1
+
