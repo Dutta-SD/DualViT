@@ -201,3 +201,69 @@ Metrics: {'Acc@1_broad': 0.73556924, 'Acc@1_fine': 0.4727309}
 Best Acc@1_fine till now: 0.5104498267173767
 
 Epoch took 1020.11 s
+
+Epoch: 9
+Mode: MODE.TRAIN
+Losses: 1.2758064851584032
+Metrics: {'Acc@1_broad': 0.7253037, 'Acc@1_fine': 0.53806347}
+Best Acc@1_fine till now: 0.5293118357658386
+
+Train Metrics increased from: 0.5293118357658386 -> 0.5380634665489197
+
+Epoch: 9
+Mode: MODE.EVAL
+Losses: 1.0099945075952323
+Metrics: {'Acc@1_broad': 0.6922771, 'Acc@1_fine': 0.48984873}
+Best Acc@1_fine till now: 0.5104498267173767
+
+Epoch took 1018.88 s
+
+Epoch: 10
+Mode: MODE.TRAIN
+Losses: 1.2473893327938625
+Metrics: {'Acc@1_broad': 0.7225663, 'Acc@1_fine': 0.54975224}
+Best Acc@1_fine till now: 0.5380634665489197
+
+Train Metrics increased from: 0.5380634665489197 -> 0.5497522354125977
+
+Epoch: 10
+Mode: MODE.EVAL
+Losses: 0.9471573866666503
+Metrics: {'Acc@1_broad': 0.7643312, 'Acc@1_fine': 0.4870621}
+Best Acc@1_fine till now: 0.5104498267173767
+
+Epoch took 1019.38 s
+
+Epoch: 11
+Mode: MODE.TRAIN
+Losses: 1.2211735132710098
+Metrics: {'Acc@1_broad': 0.7059223, 'Acc@1_fine': 0.55904335}
+Best Acc@1_fine till now: 0.5497522354125977
+
+Train Metrics increased from: 0.5497522354125977 -> 0.5590433478355408
+
+Epoch: 11
+Mode: MODE.EVAL
+Losses: 0.9918973429757318
+Metrics: {'Acc@1_broad': 0.7142715, 'Acc@1_fine': 0.4825836}
+Best Acc@1_fine till now: 0.5104498267173767
+
+Epoch took 1018.41 s
+
+Epoch: 12
+Mode: MODE.TRAIN
+Losses: 1.1288627255755617
+Metrics: {'Acc@1_broad': 0.6891784, 'Acc@1_fine': 0.5969869}
+Best Acc@1_fine till now: 0.5590433478355408
+
+Train Metrics increased from: 0.5590433478355408 -> 0.5969868898391724
+
+Epoch: 12
+Mode: MODE.EVAL
+Losses: 0.9233828297086583
+Metrics: {'Acc@1_broad': 0.6786425, 'Acc@1_fine': 0.5709594}
+Best Acc@1_fine till now: 0.5104498267173767
+
+Eval Metrics increased from: 0.5104498267173767 -> 0.5709593892097473
+Model CKPT saved at: ./checkpoints/vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111.pt
+Epoch took 1020.22 s
