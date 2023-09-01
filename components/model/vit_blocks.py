@@ -210,3 +210,16 @@ class TransformerEncoder(nn.Module):
         for block in self.tf_blocks:
             x = block(x, mask)
         return x
+
+
+class TransformerBlockGroupBase(nn.Module):
+    def __init__(self, num_blocks=3) -> None:
+        super().__init__()
+        self.blocks = nn.ModuleDict(
+            {f"transformer_block_{i}": TransformerBlock() for i in range(num_blocks)}
+        )
+
+    def forward(self, x):
+        for key in self.blocks.keys():
+            x = self.blocks[key](x)
+        return x

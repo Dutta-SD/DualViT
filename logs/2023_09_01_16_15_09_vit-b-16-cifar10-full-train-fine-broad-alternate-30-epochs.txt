@@ -267,3 +267,55 @@ Best Acc@1_fine till now: 0.5104498267173767
 Eval Metrics increased from: 0.5104498267173767 -> 0.5709593892097473
 Model CKPT saved at: ./checkpoints/vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111.pt
 Epoch took 1020.22 s
+
+Epoch: 13
+Mode: MODE.TRAIN
+Losses: 1.1087852964163436
+Metrics: {'Acc@1_broad': 0.6734335, 'Acc@1_fine': 0.60294116}
+Best Acc@1_fine till now: 0.5969868898391724
+
+Train Metrics increased from: 0.5969868898391724 -> 0.6029411554336548
+
+Epoch: 13
+Mode: MODE.EVAL
+Losses: 0.9258744840978816
+Metrics: {'Acc@1_broad': 0.6691879, 'Acc@1_fine': 0.5713575}
+Best Acc@1_fine till now: 0.5709593892097473
+
+Eval Metrics increased from: 0.5709593892097473 -> 0.5713574886322021
+Model CKPT saved at: ./checkpoints/vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111.pt
+Epoch took 1020.17 s
+
+Epoch: 14
+Mode: MODE.TRAIN
+Losses: 1.0991234546122344
+Metrics: {'Acc@1_broad': 0.6717751, 'Acc@1_fine': 0.6070173}
+Best Acc@1_fine till now: 0.6029411554336548
+
+Train Metrics increased from: 0.6029411554336548 -> 0.6070172786712646
+
+Epoch: 14
+Mode: MODE.EVAL
+Losses: 0.9280008361407905
+Metrics: {'Acc@1_broad': 0.66401273, 'Acc@1_fine': 0.57115847}
+Best Acc@1_fine till now: 0.5713574886322021
+
+Epoch took 1017.85 s
+
+Epoch: 15
+Mode: MODE.TRAIN
+Losses: 1.0935587754182499
+Metrics: {'Acc@1_broad': 0.6716352, 'Acc@1_fine': 0.61099344}
+Best Acc@1_fine till now: 0.6070172786712646
+
+Train Metrics increased from: 0.6070172786712646 -> 0.6109934449195862
+
+Epoch: 15
+Mode: MODE.EVAL
+Losses: 0.9228278392819083
+Metrics: {'Acc@1_broad': 0.66809314, 'Acc@1_fine': 0.575836}
+Best Acc@1_fine till now: 0.5713574886322021
+
+Eval Metrics increased from: 0.5713574886322021 -> 0.5758360028266907
+Model CKPT saved at: ./checkpoints/vit-b-16-cifar10-full-train-fine-broad-alternate-30-epochs_1693565111.pt
+Epoch took 1019.95 s
