@@ -1,14 +1,18 @@
-# Decomposed model via Cifar 10
+# Decomposed model via CIFAR 10
 # TODO: This is hardcoded. Parse hierarchichal tree and create blocks regarding the same
 
 
+import torch
 from torch import nn
-from components.model.vit_blocks import TransformerBlockGroup
-from components.model.split import segregate_samples
-from components.model.pretrained import PreTrainedWordEmbeddings
-from components.model.tree import LabelHierarchyTree
 
-LANG_MODEL_NAME = "bert-base-uncased"
+from components.model.pretrained import PreTrainedWordEmbeddings
+from components.model.split import segregate_samples
+from components.model.tree import LabelHierarchyTree
+from components.model.vit_blocks import TransformerBlockGroup
+from einops import repeat
+from pprint import pprint
+
+LANG_MODEL_NAME = "distilbert-base-uncased"
 
 
 lang_model = PreTrainedWordEmbeddings(LANG_MODEL_NAME)
@@ -34,9 +38,67 @@ class TransformerDecomposed(nn.Module):
         self.net_l1 = net_l1
         self.net_l2 = net_l2
         self.net_l3 = net_l3
+        self.segregator = segregate_samples
 
-    def forward(self, x, super_label_info):
-        # 0 is the root for super_label_info
-        outputs_l1 = self.net_l1(x)
-        super_class_label_1 = super_label_info[1]
-        
+    def reshape_external_queries(self, q, batch_dim):
+        return repeat(q, "c d -> b c d", b=batch_dim)
+
+    def segregate_batch(self, x, words):
+        """
+        Takes a batch and segregates into samples belonging to different super classes
+
+        words: word vectors at same level. Eg for CIFAR 10, we can have this as
+        ('animal', 'vehicle')
+        """
+        batch_dim, *_ = x.shape
+        external_queries = torch.stack([lang_model(word) for word in words])
+        external_queries = self.reshape_external_queries(external_queries, batch_dim)
+        _, output_dict = self.segregator(external_queries, x, x)
+        return {word: output_dict[idx] for idx, word in enumerate(words)}
+
+    def print_tensor_dict(self, t_dict):
+        # Useful for debugging dicitonaries
+        d = {key: value.shape for key, value in t_dict.items()}
+        pprint(f"tensor dict is: {d}")
+
+    def forward(self, batch):
+        # Initial Block
+        output = self.net_l1(batch)
+
+        # Level 1 split
+        super_class_label_1 = [item[0] for item in label_tree.get_elements_at_depth(1)]
+        seg_samples_1 = self.segregate_batch(output, super_class_label_1)
+
+        output_1 = {
+            label: self.net_l2[label](seg_samples_1[label])
+            for label in super_class_label_1
+        }
+
+        # Level 2 split
+        # TODO: Make general
+        super_class_label_2_animal = [
+            item[0] for item in label_tree.get_immediate_children("animal")
+        ]
+        super_class_label_2_vehicle = [
+            item[0] for item in label_tree.get_immediate_children("vehicle")
+        ]
+
+        super_class_label_2_total = [
+            item[0] for item in label_tree.get_elements_at_depth(2)
+        ]
+
+        animal_sub_output = self.segregate_batch(
+            output_1["animal"], super_class_label_2_animal
+        )
+        vehicle_sub_output = self.segregate_batch(
+            output_1["vehicle"], super_class_label_2_vehicle
+        )
+
+        seg_samples_2 = {**animal_sub_output, **vehicle_sub_output}
+        output_2 = {
+            label: self.net_l3[label](seg_samples_2[label])
+            for label in super_class_label_2_total
+        }
+
+        # Level 3
+        # TODO: how to do this???

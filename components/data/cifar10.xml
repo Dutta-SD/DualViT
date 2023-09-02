@@ -15,10 +15,10 @@
             <dog label="0" />
             <cat label="1" />
         </domestic>
-        <herbivores label="1">
+        <herbivore label="1">
             <deer label="0" />
             <horse label="1" />
-        </herbivores>
+        </herbivore>
         <other_animal label="2">
             <bird label="0" />
             <frog label="1" />

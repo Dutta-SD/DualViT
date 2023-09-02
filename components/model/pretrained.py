@@ -14,14 +14,12 @@ class PreTrainedWordEmbeddings(nn.Module):
     def forward(self, word: str):
         encoded_text = self.tokenizer(word, return_tensors="pt")
         output = self.model(**encoded_text)
-        return output["last_hidden_state"][:, 0]
-        
+        return output["last_hidden_state"][:, 0].squeeze(0)
+
 
 if __name__ == "__main__":
     device = torch.device("cpu")
     tik = time.time()
-    be_model = PreTrainedWordEmbeddings('distilbert-base-uncased').to(device)
+    be_model = PreTrainedWordEmbeddings("distilbert-base-uncased").to(device)
     tok = time.time()
     print(f"{device} run time = {tok - tik} s")
-    
-    

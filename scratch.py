@@ -1,4 +1,7 @@
-from components.model.cifar_10_split import TransformerBlockGroup
+from components.model.cifar_10_split import TransformerDecomposed
+import torch
 
-net = TransformerBlockGroup(num_blocks=3)
-print(net)
+net = TransformerDecomposed()
+batch = torch.rand(32, 197, 768)
+
+net(batch)
