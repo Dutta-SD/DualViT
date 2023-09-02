@@ -1177,3 +1177,55 @@ Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.5896696}
 Best Acc@1_fine till now: 0.5911624431610107
 
 Epoch took 1017.37 s
+
+Epoch: 71
+Mode: MODE.TRAIN
+Losses: 1.0298295632347731
+Metrics: {'Acc@1_broad': 0.84371006, 'Acc@1_fine': 0.63255274}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 71
+Mode: MODE.EVAL
+Losses: 0.7545276122393122
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.05 s
+
+Epoch: 72
+Mode: MODE.TRAIN
+Losses: 1.02710693312423
+Metrics: {'Acc@1_broad': 0.8447091, 'Acc@1_fine': 0.63475066}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 72
+Mode: MODE.EVAL
+Losses: 0.7552413774808501
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.59056526}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.27 s
+
+Epoch: 73
+Mode: MODE.TRAIN
+Losses: 1.0308874779954895
+Metrics: {'Acc@1_broad': 0.8438499, 'Acc@1_fine': 0.63535005}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 73
+Mode: MODE.EVAL
+Losses: 0.7551389785044512
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.58907247}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.46 s
+
+Epoch: 74
+Mode: MODE.TRAIN
+Losses: 1.0282190683705117
+Metrics: {'Acc@1_broad': 0.8439298, 'Acc@1_fine': 0.63586956}
+Best Acc@1_fine till now: 0.6365888714790344
+

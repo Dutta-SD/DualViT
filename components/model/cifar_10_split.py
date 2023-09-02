@@ -1,8 +1,9 @@
 # Decomposed model for CIFAR 10
 # TODO: This is hardcoded. Parse hierarchichal tree and create blocks regarding the same
 # TODO: Need to add positional embedding and additional class token logic
-# TODO: Do we at all need [cls] token or can we do mean at the last step of MLP head
-# TODO: How to decide output for block?
+# TODO: Do we at all need [cls] token or can we do mean at the last step of MLP head -no use global pooling
+# TODO: How to decide output for block? - By number of classes
+# TODO: Add if-else logic for empty batch
 
 
 import torch
