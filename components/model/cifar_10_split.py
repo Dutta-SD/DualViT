@@ -1,5 +1,8 @@
-# Decomposed model via CIFAR 10
+# Decomposed model for CIFAR 10
 # TODO: This is hardcoded. Parse hierarchichal tree and create blocks regarding the same
+# TODO: Need to add positional embedding and additional class token logic
+# TODO: Do we at all need [cls] token or can we do mean at the last step of MLP head
+# TODO: How to decide output for block?
 
 
 import torch
@@ -75,7 +78,6 @@ class TransformerDecomposed(nn.Module):
         }
 
         # Level 2 split
-        # TODO: Make general
         super_class_label_2_animal = [
             item[0] for item in label_tree.get_immediate_children("animal")
         ]
@@ -101,4 +103,3 @@ class TransformerDecomposed(nn.Module):
         }
 
         # Level 3
-        # TODO: how to do this???
