@@ -1057,3 +1057,18 @@ Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.58847535}
 Best Acc@1_fine till now: 0.5911624431610107
 
 Epoch took 1016.92 s
+
+Epoch: 63
+Mode: MODE.TRAIN
+Losses: 1.0269797822398603
+Metrics: {'Acc@1_broad': 0.84378994, 'Acc@1_fine': 0.63505036}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 63
+Mode: MODE.EVAL
+Losses: 0.7549555121808295
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.36 s

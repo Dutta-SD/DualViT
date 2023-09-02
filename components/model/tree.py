@@ -6,7 +6,7 @@ class LabelHierarchyTree:
         self.root = ET.parse(xml_path).getroot()
 
     def format_list_elements(self, elements):
-        return [(e.tag, e.attrib) for e in elements]
+        return [(e.tag, e.attrib["label"]) for e in elements]
 
     def _get_at_depth(self, element, depth):
         elements = []

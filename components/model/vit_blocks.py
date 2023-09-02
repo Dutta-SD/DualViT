@@ -212,7 +212,7 @@ class TransformerEncoder(nn.Module):
         return x
 
 
-class TransformerBlockGroupBase(nn.Module):
+class TransformerBlockGroup(nn.Module):
     def __init__(self, num_blocks=3) -> None:
         super().__init__()
         self.blocks = nn.ModuleDict(

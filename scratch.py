@@ -1,4 +1,4 @@
-from components.model.cifar_10_split import TransformerBlockGroupBase
+from components.model.cifar_10_split import TransformerBlockGroup
 
-net = TransformerBlockGroupBase(num_blocks=3)
+net = TransformerBlockGroup(num_blocks=3)
 print(net)
