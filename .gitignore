@@ -257,3 +257,5 @@ pyrightconfig.json
 checkpoints/
 data/
 !components/data
+
+.vscode/

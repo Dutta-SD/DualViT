@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class>
     <vehicle label="0">
-        <heavy>
+        <heavy label="0">
             <aeroplane label="0" />
-            <ship />
+            <ship label="1" />
         </heavy>
-        <light>
-            <car />
-            <truck />
+        <light label="1">
+            <car label="0" />
+            <truck label="1" />
         </light>
     </vehicle>
     <animal label="1">
-        <domestic>
-            <dog />
-            <cat />
+        <domestic label="0">
+            <dog label="0" />
+            <cat label="1" />
         </domestic>
-        <herbivores>
-            <deer />
-            <horse />
+        <herbivores label="1">
+            <deer label="0" />
+            <horse label="1" />
         </herbivores>
-        <!-- Change random to appropriate word vector -->
-        <random>
-            <bird />
-            <frog />
-        </random>
+        <other_animal label="2">
+            <bird label="0" />
+            <frog label="1" />
+        </other_animal>
     </animal>
 </class>
