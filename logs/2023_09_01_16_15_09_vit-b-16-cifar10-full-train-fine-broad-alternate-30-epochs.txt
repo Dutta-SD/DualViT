@@ -1229,3 +1229,2404 @@ Losses: 1.0282190683705117
 Metrics: {'Acc@1_broad': 0.8439298, 'Acc@1_fine': 0.63586956}
 Best Acc@1_fine till now: 0.6365888714790344
 
+
+Epoch: 74
+Mode: MODE.EVAL
+Losses: 0.7562698562433765
+Metrics: {'Acc@1_broad': 0.8428543, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.79 s
+
+Epoch: 75
+Mode: MODE.TRAIN
+Losses: 1.0297881572905099
+Metrics: {'Acc@1_broad': 0.84566814, 'Acc@1_fine': 0.63433105}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 75
+Mode: MODE.EVAL
+Losses: 0.7547871576752633
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.59056526}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.30 s
+
+Epoch: 76
+Mode: MODE.TRAIN
+Losses: 1.0302905957869557
+Metrics: {'Acc@1_broad': 0.8440497, 'Acc@1_fine': 0.6334319}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 76
+Mode: MODE.EVAL
+Losses: 0.7555597872491095
+Metrics: {'Acc@1_broad': 0.84345144, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.42 s
+
+Epoch: 77
+Mode: MODE.TRAIN
+Losses: 1.0266186634597876
+Metrics: {'Acc@1_broad': 0.8443294, 'Acc@1_fine': 0.636489}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 77
+Mode: MODE.EVAL
+Losses: 0.7551318583594766
+Metrics: {'Acc@1_broad': 0.8428543, 'Acc@1_fine': 0.5902667}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.61 s
+
+Epoch: 78
+Mode: MODE.TRAIN
+Losses: 1.0276921252765314
+Metrics: {'Acc@1_broad': 0.84450924, 'Acc@1_fine': 0.6349904}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 78
+Mode: MODE.EVAL
+Losses: 0.7561556500424246
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.5887739}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.51 s
+
+Epoch: 79
+Mode: MODE.TRAIN
+Losses: 1.0296534267075532
+Metrics: {'Acc@1_broad': 0.8428309, 'Acc@1_fine': 0.6337716}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 79
+Mode: MODE.EVAL
+Losses: 0.7550059154060236
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.86 s
+
+Epoch: 80
+Mode: MODE.TRAIN
+Losses: 1.0290851584633294
+Metrics: {'Acc@1_broad': 0.84440935, 'Acc@1_fine': 0.6337316}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 80
+Mode: MODE.EVAL
+Losses: 0.75584144743195
+Metrics: {'Acc@1_broad': 0.84345144, 'Acc@1_fine': 0.58867437}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.98 s
+
+Epoch: 81
+Mode: MODE.TRAIN
+Losses: 1.028184974285038
+Metrics: {'Acc@1_broad': 0.84410965, 'Acc@1_fine': 0.63341194}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 81
+Mode: MODE.EVAL
+Losses: 0.7572595397378229
+Metrics: {'Acc@1_broad': 0.8431529, 'Acc@1_fine': 0.58867437}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.76 s
+
+Epoch: 82
+Mode: MODE.TRAIN
+Losses: 1.0275583789324212
+Metrics: {'Acc@1_broad': 0.84434944, 'Acc@1_fine': 0.6362292}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 82
+Mode: MODE.EVAL
+Losses: 0.7548157778230442
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.92 s
+
+Epoch: 83
+Mode: MODE.TRAIN
+Losses: 1.02508460065288
+Metrics: {'Acc@1_broad': 0.8434103, 'Acc@1_fine': 0.636489}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 83
+Mode: MODE.EVAL
+Losses: 0.7545004749943496
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1018.55 s
+
+Epoch: 84
+Mode: MODE.TRAIN
+Losses: 1.0296145126490337
+Metrics: {'Acc@1_broad': 0.8435502, 'Acc@1_fine': 0.6345908}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 84
+Mode: MODE.EVAL
+Losses: 0.7557675438416991
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.58867437}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.81 s
+
+Epoch: 85
+Mode: MODE.TRAIN
+Losses: 1.0295898988271308
+Metrics: {'Acc@1_broad': 0.84420955, 'Acc@1_fine': 0.6344709}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 85
+Mode: MODE.EVAL
+Losses: 0.7546615189143048
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1018.19 s
+
+Epoch: 86
+Mode: MODE.TRAIN
+Losses: 1.0289380718070222
+Metrics: {'Acc@1_broad': 0.84464914, 'Acc@1_fine': 0.6336517}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 86
+Mode: MODE.EVAL
+Losses: 0.7550041742005925
+Metrics: {'Acc@1_broad': 0.84345144, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1018.21 s
+
+Epoch: 87
+Mode: MODE.TRAIN
+Losses: 1.0309739069408164
+Metrics: {'Acc@1_broad': 0.84464914, 'Acc@1_fine': 0.6344909}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 87
+Mode: MODE.EVAL
+Losses: 0.7554885792979009
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5892715}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.65 s
+
+Epoch: 88
+Mode: MODE.TRAIN
+Losses: 1.0285943136038378
+Metrics: {'Acc@1_broad': 0.84378994, 'Acc@1_fine': 0.63409126}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 88
+Mode: MODE.EVAL
+Losses: 0.7554130537589644
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5883758}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.78 s
+
+Epoch: 89
+Mode: MODE.TRAIN
+Losses: 1.0283941961157963
+Metrics: {'Acc@1_broad': 0.84390986, 'Acc@1_fine': 0.6340113}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 89
+Mode: MODE.EVAL
+Losses: 0.7548275902202934
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.5889729}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.73 s
+
+Epoch: 90
+Mode: MODE.TRAIN
+Losses: 0.36268909220271706
+Metrics: {'Acc@1_broad': 0.8441296, 'Acc@1_fine': 0.63289243}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 90
+Mode: MODE.EVAL
+Losses: 0.7551659834422882
+Metrics: {'Acc@1_broad': 0.843949, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.45 s
+
+Epoch: 91
+Mode: MODE.TRAIN
+Losses: 1.0282135307788849
+Metrics: {'Acc@1_broad': 0.8439298, 'Acc@1_fine': 0.63403136}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 91
+Mode: MODE.EVAL
+Losses: 0.7540818272502559
+Metrics: {'Acc@1_broad': 0.843949, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.23 s
+
+Epoch: 92
+Mode: MODE.TRAIN
+Losses: 1.029082405368995
+Metrics: {'Acc@1_broad': 0.8446691, 'Acc@1_fine': 0.63463074}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 92
+Mode: MODE.EVAL
+Losses: 0.7544887894942502
+Metrics: {'Acc@1_broad': 0.8445462, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.52 s
+
+Epoch: 93
+Mode: MODE.TRAIN
+Losses: 1.0290876055312583
+Metrics: {'Acc@1_broad': 0.844809, 'Acc@1_fine': 0.634391}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 93
+Mode: MODE.EVAL
+Losses: 0.7553381902776706
+Metrics: {'Acc@1_broad': 0.84365046, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.80 s
+
+Epoch: 94
+Mode: MODE.TRAIN
+Losses: 1.0267564401297313
+Metrics: {'Acc@1_broad': 0.8446691, 'Acc@1_fine': 0.63566977}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 94
+Mode: MODE.EVAL
+Losses: 0.75593936220286
+Metrics: {'Acc@1_broad': 0.84365046, 'Acc@1_fine': 0.58907247}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.43 s
+
+Epoch: 95
+Mode: MODE.TRAIN
+Losses: 1.0294621824608434
+Metrics: {'Acc@1_broad': 0.8431706, 'Acc@1_fine': 0.6340713}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 95
+Mode: MODE.EVAL
+Losses: 0.7552891563932607
+Metrics: {'Acc@1_broad': 0.84365046, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.29 s
+
+Epoch: 96
+Mode: MODE.TRAIN
+Losses: 1.030969615939938
+Metrics: {'Acc@1_broad': 0.84464914, 'Acc@1_fine': 0.63211316}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 96
+Mode: MODE.EVAL
+Losses: 0.75473647816166
+Metrics: {'Acc@1_broad': 0.84365046, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.27 s
+
+Epoch: 97
+Mode: MODE.TRAIN
+Losses: 1.0301746943265275
+Metrics: {'Acc@1_broad': 0.84462917, 'Acc@1_fine': 0.6334319}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 97
+Mode: MODE.EVAL
+Losses: 0.7552677019481446
+Metrics: {'Acc@1_broad': 0.843949, 'Acc@1_fine': 0.58907247}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.19 s
+
+Epoch: 98
+Mode: MODE.TRAIN
+Losses: 1.0298401530441421
+Metrics: {'Acc@1_broad': 0.8441896, 'Acc@1_fine': 0.6351702}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 98
+Mode: MODE.EVAL
+Losses: 0.7530713676457192
+Metrics: {'Acc@1_broad': 0.84484476, 'Acc@1_fine': 0.5908638}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.13 s
+
+Epoch: 99
+Mode: MODE.TRAIN
+Losses: 1.029469560479264
+Metrics: {'Acc@1_broad': 0.8444294, 'Acc@1_fine': 0.63537}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 99
+Mode: MODE.EVAL
+Losses: 0.7546005981742956
+Metrics: {'Acc@1_broad': 0.84484476, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.45 s
+
+Epoch: 100
+Mode: MODE.TRAIN
+Losses: 1.0284814788862262
+Metrics: {'Acc@1_broad': 0.84373003, 'Acc@1_fine': 0.63453084}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 100
+Mode: MODE.EVAL
+Losses: 0.7550448472522626
+Metrics: {'Acc@1_broad': 0.84424764, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.88 s
+
+Epoch: 101
+Mode: MODE.TRAIN
+Losses: 1.0292915616498883
+Metrics: {'Acc@1_broad': 0.8440297, 'Acc@1_fine': 0.6350304}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 101
+Mode: MODE.EVAL
+Losses: 0.7548722328653761
+Metrics: {'Acc@1_broad': 0.843949, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.75 s
+
+Epoch: 102
+Mode: MODE.TRAIN
+Losses: 1.0284031845267168
+Metrics: {'Acc@1_broad': 0.8438499, 'Acc@1_fine': 0.63616925}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 102
+Mode: MODE.EVAL
+Losses: 0.7541788306775367
+Metrics: {'Acc@1_broad': 0.84484476, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.42 s
+
+Epoch: 103
+Mode: MODE.TRAIN
+Losses: 1.0270371578843391
+Metrics: {'Acc@1_broad': 0.84482896, 'Acc@1_fine': 0.6359295}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 103
+Mode: MODE.EVAL
+Losses: 0.7551728924083861
+Metrics: {'Acc@1_broad': 0.843949, 'Acc@1_fine': 0.58907247}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.66 s
+
+Epoch: 104
+Mode: MODE.TRAIN
+Losses: 1.0264475177925871
+Metrics: {'Acc@1_broad': 0.8425911, 'Acc@1_fine': 0.63535005}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 104
+Mode: MODE.EVAL
+Losses: 0.7557005460854549
+Metrics: {'Acc@1_broad': 0.84424764, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.72 s
+
+Epoch: 105
+Mode: MODE.TRAIN
+Losses: 1.0271491851952985
+Metrics: {'Acc@1_broad': 0.8453485, 'Acc@1_fine': 0.63463074}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 105
+Mode: MODE.EVAL
+Losses: 0.7555064257163151
+Metrics: {'Acc@1_broad': 0.843949, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.28 s
+
+Epoch: 106
+Mode: MODE.TRAIN
+Losses: 1.0289221805379825
+Metrics: {'Acc@1_broad': 0.8443894, 'Acc@1_fine': 0.6342711}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 106
+Mode: MODE.EVAL
+Losses: 0.7562971228531971
+Metrics: {'Acc@1_broad': 0.84365046, 'Acc@1_fine': 0.5887739}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.58 s
+
+Epoch: 107
+Mode: MODE.TRAIN
+Losses: 1.0273170189174545
+Metrics: {'Acc@1_broad': 0.84363014, 'Acc@1_fine': 0.63588953}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 107
+Mode: MODE.EVAL
+Losses: 0.7548840068233241
+Metrics: {'Acc@1_broad': 0.84424764, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.29 s
+
+Epoch: 108
+Mode: MODE.TRAIN
+Losses: 1.0284783103124564
+Metrics: {'Acc@1_broad': 0.84522855, 'Acc@1_fine': 0.6351103}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 108
+Mode: MODE.EVAL
+Losses: 0.7553713251451019
+Metrics: {'Acc@1_broad': 0.84424764, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.59 s
+
+Epoch: 109
+Mode: MODE.TRAIN
+Losses: 1.0289964377880096
+Metrics: {'Acc@1_broad': 0.84472907, 'Acc@1_fine': 0.63544995}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 109
+Mode: MODE.EVAL
+Losses: 0.7552946175739264
+Metrics: {'Acc@1_broad': 0.8445462, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.93 s
+
+Epoch: 110
+Mode: MODE.TRAIN
+Losses: 1.0306651267554143
+Metrics: {'Acc@1_broad': 0.8442695, 'Acc@1_fine': 0.6330523}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 110
+Mode: MODE.EVAL
+Losses: 0.7548611697972201
+Metrics: {'Acc@1_broad': 0.84424764, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.41 s
+
+Epoch: 111
+Mode: MODE.TRAIN
+Losses: 1.0275904325877918
+Metrics: {'Acc@1_broad': 0.8444693, 'Acc@1_fine': 0.6345908}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 111
+Mode: MODE.EVAL
+Losses: 0.755936115553045
+Metrics: {'Acc@1_broad': 0.8433519, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.07 s
+
+Epoch: 112
+Mode: MODE.TRAIN
+Losses: 1.0287470074413378
+Metrics: {'Acc@1_broad': 0.84496886, 'Acc@1_fine': 0.63409126}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 112
+Mode: MODE.EVAL
+Losses: 0.7550520599837516
+Metrics: {'Acc@1_broad': 0.84365046, 'Acc@1_fine': 0.5892715}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.81 s
+
+Epoch: 113
+Mode: MODE.TRAIN
+Losses: 1.0297929386958442
+Metrics: {'Acc@1_broad': 0.84522855, 'Acc@1_fine': 0.63371164}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 113
+Mode: MODE.EVAL
+Losses: 0.7549883686243348
+Metrics: {'Acc@1_broad': 0.84424764, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.87 s
+
+Epoch: 114
+Mode: MODE.TRAIN
+Losses: 1.0287428415949693
+Metrics: {'Acc@1_broad': 0.84516865, 'Acc@1_fine': 0.63453084}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 114
+Mode: MODE.EVAL
+Losses: 0.7541780375940784
+Metrics: {'Acc@1_broad': 0.84424764, 'Acc@1_fine': 0.5901672}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.61 s
+
+Epoch: 115
+Mode: MODE.TRAIN
+Losses: 1.0280113011369925
+Metrics: {'Acc@1_broad': 0.8441696, 'Acc@1_fine': 0.6345109}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 115
+Mode: MODE.EVAL
+Losses: 0.7557093688541916
+Metrics: {'Acc@1_broad': 0.8433519, 'Acc@1_fine': 0.5892715}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.23 s
+
+Epoch: 116
+Mode: MODE.TRAIN
+Losses: 1.0272460348923187
+Metrics: {'Acc@1_broad': 0.8436501, 'Acc@1_fine': 0.63600945}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 116
+Mode: MODE.EVAL
+Losses: 0.7544762792101332
+Metrics: {'Acc@1_broad': 0.843949, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.26 s
+
+Epoch: 117
+Mode: MODE.TRAIN
+Losses: 1.0281391458590623
+Metrics: {'Acc@1_broad': 0.8433104, 'Acc@1_fine': 0.6333919}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 117
+Mode: MODE.EVAL
+Losses: 0.7544875690227102
+Metrics: {'Acc@1_broad': 0.8445462, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.56 s
+
+Epoch: 118
+Mode: MODE.TRAIN
+Losses: 1.0258797237940152
+Metrics: {'Acc@1_broad': 0.8439298, 'Acc@1_fine': 0.63403136}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 118
+Mode: MODE.EVAL
+Losses: 0.7549288983747457
+Metrics: {'Acc@1_broad': 0.84424764, 'Acc@1_fine': 0.5892715}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.71 s
+
+Epoch: 119
+Mode: MODE.TRAIN
+Losses: 1.028384871342603
+Metrics: {'Acc@1_broad': 0.84363014, 'Acc@1_fine': 0.634411}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 119
+Mode: MODE.EVAL
+Losses: 0.756358060772252
+Metrics: {'Acc@1_broad': 0.84424764, 'Acc@1_fine': 0.5889729}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.36 s
+
+Epoch: 120
+Mode: MODE.TRAIN
+Losses: 0.36170119679797336
+Metrics: {'Acc@1_broad': 0.8451886, 'Acc@1_fine': 0.6331921}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 120
+Mode: MODE.EVAL
+Losses: 0.7553670831072102
+Metrics: {'Acc@1_broad': 0.84365046, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.38 s
+
+Epoch: 121
+Mode: MODE.TRAIN
+Losses: 1.03092526269081
+Metrics: {'Acc@1_broad': 0.8445293, 'Acc@1_fine': 0.63443094}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 121
+Mode: MODE.EVAL
+Losses: 0.7552270430857968
+Metrics: {'Acc@1_broad': 0.843949, 'Acc@1_fine': 0.5889729}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.18 s
+
+Epoch: 122
+Mode: MODE.TRAIN
+Losses: 1.0289066302044618
+Metrics: {'Acc@1_broad': 0.8445293, 'Acc@1_fine': 0.63419116}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 122
+Mode: MODE.EVAL
+Losses: 0.75506155472842
+Metrics: {'Acc@1_broad': 0.84484476, 'Acc@1_fine': 0.5883758}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1018.12 s
+
+Epoch: 123
+Mode: MODE.TRAIN
+Losses: 1.0275923535799432
+Metrics: {'Acc@1_broad': 0.84386986, 'Acc@1_fine': 0.6358296}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 123
+Mode: MODE.EVAL
+Losses: 0.7544237213909246
+Metrics: {'Acc@1_broad': 0.84424764, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.74 s
+
+Epoch: 124
+Mode: MODE.TRAIN
+Losses: 1.0278104839422513
+Metrics: {'Acc@1_broad': 0.8451087, 'Acc@1_fine': 0.6359894}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 124
+Mode: MODE.EVAL
+Losses: 0.7550437009068811
+Metrics: {'Acc@1_broad': 0.84365046, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.55 s
+
+Epoch: 125
+Mode: MODE.TRAIN
+Losses: 1.0305709583527596
+Metrics: {'Acc@1_broad': 0.84369004, 'Acc@1_fine': 0.633292}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 125
+Mode: MODE.EVAL
+Losses: 0.754353481160987
+Metrics: {'Acc@1_broad': 0.843949, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.68 s
+
+Epoch: 126
+Mode: MODE.TRAIN
+Losses: 1.0298661383064203
+Metrics: {'Acc@1_broad': 0.8451487, 'Acc@1_fine': 0.6344709}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 126
+Mode: MODE.EVAL
+Losses: 0.755235488627367
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.49 s
+
+Epoch: 127
+Mode: MODE.TRAIN
+Losses: 1.028880418109162
+Metrics: {'Acc@1_broad': 0.84474903, 'Acc@1_fine': 0.63481057}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 127
+Mode: MODE.EVAL
+Losses: 0.7556131057868338
+Metrics: {'Acc@1_broad': 0.8428543, 'Acc@1_fine': 0.5889729}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.38 s
+
+Epoch: 128
+Mode: MODE.TRAIN
+Losses: 1.0283736979107723
+Metrics: {'Acc@1_broad': 0.84376997, 'Acc@1_fine': 0.6359095}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 128
+Mode: MODE.EVAL
+Losses: 0.754859587948793
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.5887739}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.41 s
+
+Epoch: 129
+Mode: MODE.TRAIN
+Losses: 1.0287736095583346
+Metrics: {'Acc@1_broad': 0.8453485, 'Acc@1_fine': 0.6346507}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 129
+Mode: MODE.EVAL
+Losses: 0.7550304086439928
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.46 s
+
+Epoch: 130
+Mode: MODE.TRAIN
+Losses: 1.0287137651230063
+Metrics: {'Acc@1_broad': 0.8436501, 'Acc@1_fine': 0.63541}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 130
+Mode: MODE.EVAL
+Losses: 0.7550523817349392
+Metrics: {'Acc@1_broad': 0.84345144, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.43 s
+
+Epoch: 131
+Mode: MODE.TRAIN
+Losses: 1.0274356250720256
+Metrics: {'Acc@1_broad': 0.84353024, 'Acc@1_fine': 0.6329923}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 131
+Mode: MODE.EVAL
+Losses: 0.7567286325298297
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.23 s
+
+Epoch: 132
+Mode: MODE.TRAIN
+Losses: 1.0304469709353679
+Metrics: {'Acc@1_broad': 0.84295076, 'Acc@1_fine': 0.63379157}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 132
+Mode: MODE.EVAL
+Losses: 0.7560587081180257
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.43 s
+
+Epoch: 133
+Mode: MODE.TRAIN
+Losses: 1.0272494880744563
+Metrics: {'Acc@1_broad': 0.8435702, 'Acc@1_fine': 0.63381153}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 133
+Mode: MODE.EVAL
+Losses: 0.7541865570719835
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.80 s
+
+Epoch: 134
+Mode: MODE.TRAIN
+Losses: 1.0286211094740407
+Metrics: {'Acc@1_broad': 0.8440697, 'Acc@1_fine': 0.6337716}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 134
+Mode: MODE.EVAL
+Losses: 0.754424733198752
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.5908638}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.30 s
+
+Epoch: 135
+Mode: MODE.TRAIN
+Losses: 1.0293936241618202
+Metrics: {'Acc@1_broad': 0.8446891, 'Acc@1_fine': 0.6349704}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 135
+Mode: MODE.EVAL
+Losses: 0.7549078836562527
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.72 s
+
+Epoch: 136
+Mode: MODE.TRAIN
+Losses: 1.0298041545826455
+Metrics: {'Acc@1_broad': 0.8434703, 'Acc@1_fine': 0.633292}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 136
+Mode: MODE.EVAL
+Losses: 0.7546925867913635
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.29 s
+
+Epoch: 137
+Mode: MODE.TRAIN
+Losses: 1.029459998888128
+Metrics: {'Acc@1_broad': 0.8445892, 'Acc@1_fine': 0.6326726}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 137
+Mode: MODE.EVAL
+Losses: 0.754901669824579
+Metrics: {'Acc@1_broad': 0.8431529, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.72 s
+
+Epoch: 138
+Mode: MODE.TRAIN
+Losses: 1.028947573031306
+Metrics: {'Acc@1_broad': 0.84482896, 'Acc@1_fine': 0.63475066}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 138
+Mode: MODE.EVAL
+Losses: 0.7546470576695575
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5902667}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.37 s
+
+Epoch: 139
+Mode: MODE.TRAIN
+Losses: 1.0301886691766626
+Metrics: {'Acc@1_broad': 0.84516865, 'Acc@1_fine': 0.63369167}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 139
+Mode: MODE.EVAL
+Losses: 0.7557772863063084
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.5887739}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.28 s
+
+Epoch: 140
+Mode: MODE.TRAIN
+Losses: 1.0286300658722363
+Metrics: {'Acc@1_broad': 0.8444294, 'Acc@1_fine': 0.634371}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 140
+Mode: MODE.EVAL
+Losses: 0.7540051565048801
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5908638}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.36 s
+
+Epoch: 141
+Mode: MODE.TRAIN
+Losses: 1.0284321088620159
+Metrics: {'Acc@1_broad': 0.84373003, 'Acc@1_fine': 0.6340513}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 141
+Mode: MODE.EVAL
+Losses: 0.755047020781192
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.51 s
+
+Epoch: 142
+Mode: MODE.TRAIN
+Losses: 1.0292849943156133
+Metrics: {'Acc@1_broad': 0.84349024, 'Acc@1_fine': 0.6331921}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 142
+Mode: MODE.EVAL
+Losses: 0.755657218159384
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.43 s
+
+Epoch: 143
+Mode: MODE.TRAIN
+Losses: 1.027130932149375
+Metrics: {'Acc@1_broad': 0.84420955, 'Acc@1_fine': 0.6355099}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 143
+Mode: MODE.EVAL
+Losses: 0.7555919934040422
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5902667}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.94 s
+
+Epoch: 144
+Mode: MODE.TRAIN
+Losses: 1.0299497364122239
+Metrics: {'Acc@1_broad': 0.84444934, 'Acc@1_fine': 0.6340113}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 144
+Mode: MODE.EVAL
+Losses: 0.7535544408924261
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.5908638}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.17 s
+
+Epoch: 145
+Mode: MODE.TRAIN
+Losses: 1.027281590892226
+Metrics: {'Acc@1_broad': 0.84450924, 'Acc@1_fine': 0.63596946}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 145
+Mode: MODE.EVAL
+Losses: 0.7540213927436786
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.59056526}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.21 s
+
+Epoch: 146
+Mode: MODE.TRAIN
+Losses: 1.0295047642629775
+Metrics: {'Acc@1_broad': 0.8452086, 'Acc@1_fine': 0.6336317}
+Best Acc@1_fine till now: 0.6365888714790344
+
+
+Epoch: 146
+Mode: MODE.EVAL
+Losses: 0.7557568246866487
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.58907247}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.90 s
+
+Epoch: 147
+Mode: MODE.TRAIN
+Losses: 1.0260034734788148
+Metrics: {'Acc@1_broad': 0.84472907, 'Acc@1_fine': 0.6376279}
+Best Acc@1_fine till now: 0.6365888714790344
+
+Train Metrics increased from: 0.6365888714790344 -> 0.637627899646759
+
+Epoch: 147
+Mode: MODE.EVAL
+Losses: 0.7536391443128039
+Metrics: {'Acc@1_broad': 0.84494424, 'Acc@1_fine': 0.5908638}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.60 s
+
+Epoch: 148
+Mode: MODE.TRAIN
+Losses: 1.030536576686308
+Metrics: {'Acc@1_broad': 0.8439298, 'Acc@1_fine': 0.6342511}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 148
+Mode: MODE.EVAL
+Losses: 0.7551217618261933
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.20 s
+
+Epoch: 149
+Mode: MODE.TRAIN
+Losses: 1.0300736280201037
+Metrics: {'Acc@1_broad': 0.8442295, 'Acc@1_fine': 0.6331921}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 149
+Mode: MODE.EVAL
+Losses: 0.7548949189816311
+Metrics: {'Acc@1_broad': 0.84345144, 'Acc@1_fine': 0.5902667}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.02 s
+
+Epoch: 150
+Mode: MODE.TRAIN
+Losses: 0.3612489029384025
+Metrics: {'Acc@1_broad': 0.84502876, 'Acc@1_fine': 0.63535005}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 150
+Mode: MODE.EVAL
+Losses: 0.7544430877752365
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.36 s
+
+Epoch: 151
+Mode: MODE.TRAIN
+Losses: 1.0265239029741653
+Metrics: {'Acc@1_broad': 0.8455882, 'Acc@1_fine': 0.63547}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 151
+Mode: MODE.EVAL
+Losses: 0.7537349516134353
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.5908638}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.53 s
+
+Epoch: 152
+Mode: MODE.TRAIN
+Losses: 1.0291537988521253
+Metrics: {'Acc@1_broad': 0.8440497, 'Acc@1_fine': 0.63409126}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 152
+Mode: MODE.EVAL
+Losses: 0.7557537277128287
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.25 s
+
+Epoch: 153
+Mode: MODE.TRAIN
+Losses: 1.0275704608396496
+Metrics: {'Acc@1_broad': 0.84325045, 'Acc@1_fine': 0.6361293}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 153
+Mode: MODE.EVAL
+Losses: 0.7540220429373395
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.73 s
+
+Epoch: 154
+Mode: MODE.TRAIN
+Losses: 1.0290722689207863
+Metrics: {'Acc@1_broad': 0.8442295, 'Acc@1_fine': 0.63547}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 154
+Mode: MODE.EVAL
+Losses: 0.7551690223300533
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.58 s
+
+Epoch: 155
+Mode: MODE.TRAIN
+Losses: 1.0294167233245146
+Metrics: {'Acc@1_broad': 0.8435502, 'Acc@1_fine': 0.6340713}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 155
+Mode: MODE.EVAL
+Losses: 0.7535557818545657
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.59056526}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.23 s
+
+Epoch: 156
+Mode: MODE.TRAIN
+Losses: 1.029445713895666
+Metrics: {'Acc@1_broad': 0.84420955, 'Acc@1_fine': 0.63341194}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 156
+Mode: MODE.EVAL
+Losses: 0.7556312862000648
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.93 s
+
+Epoch: 157
+Mode: MODE.TRAIN
+Losses: 1.027213332217063
+Metrics: {'Acc@1_broad': 0.8452486, 'Acc@1_fine': 0.63467073}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 157
+Mode: MODE.EVAL
+Losses: 0.7535332016599406
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.59056526}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.16 s
+
+Epoch: 158
+Mode: MODE.TRAIN
+Losses: 1.030085705277865
+Metrics: {'Acc@1_broad': 0.8445293, 'Acc@1_fine': 0.6345508}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 158
+Mode: MODE.EVAL
+Losses: 0.7533559812956555
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.5908638}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.18 s
+
+Epoch: 159
+Mode: MODE.TRAIN
+Losses: 1.030259294811722
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.63181347}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 159
+Mode: MODE.EVAL
+Losses: 0.7545142775508249
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.03 s
+
+Epoch: 160
+Mode: MODE.TRAIN
+Losses: 1.0293135621663554
+Metrics: {'Acc@1_broad': 0.84440935, 'Acc@1_fine': 0.6358296}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 160
+Mode: MODE.EVAL
+Losses: 0.7544432930695782
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.24 s
+
+Epoch: 161
+Mode: MODE.TRAIN
+Losses: 1.0284587205828304
+Metrics: {'Acc@1_broad': 0.8451487, 'Acc@1_fine': 0.63457084}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 161
+Mode: MODE.EVAL
+Losses: 0.7543378458565967
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5902667}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.62 s
+
+Epoch: 162
+Mode: MODE.TRAIN
+Losses: 1.0304958741835621
+Metrics: {'Acc@1_broad': 0.8443694, 'Acc@1_fine': 0.6346108}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 162
+Mode: MODE.EVAL
+Losses: 0.7542971647848749
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.40 s
+
+Epoch: 163
+Mode: MODE.TRAIN
+Losses: 1.0295195571906732
+Metrics: {'Acc@1_broad': 0.84450924, 'Acc@1_fine': 0.6330523}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 163
+Mode: MODE.EVAL
+Losses: 0.7550348523221199
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.69 s
+
+Epoch: 164
+Mode: MODE.TRAIN
+Losses: 1.0281276444492438
+Metrics: {'Acc@1_broad': 0.84396976, 'Acc@1_fine': 0.63525015}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 164
+Mode: MODE.EVAL
+Losses: 0.7540183141353024
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5902667}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.47 s
+
+Epoch: 165
+Mode: MODE.TRAIN
+Losses: 1.0301959334736894
+Metrics: {'Acc@1_broad': 0.8440697, 'Acc@1_fine': 0.63541}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 165
+Mode: MODE.EVAL
+Losses: 0.7536728990021025
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.36 s
+
+Epoch: 166
+Mode: MODE.TRAIN
+Losses: 1.0278451515890448
+Metrics: {'Acc@1_broad': 0.84386986, 'Acc@1_fine': 0.6344709}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 166
+Mode: MODE.EVAL
+Losses: 0.7545747982373663
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.26 s
+
+Epoch: 167
+Mode: MODE.TRAIN
+Losses: 1.0274131632674381
+Metrics: {'Acc@1_broad': 0.84506875, 'Acc@1_fine': 0.63403136}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 167
+Mode: MODE.EVAL
+Losses: 0.7552175854516637
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.80 s
+
+Epoch: 168
+Mode: MODE.TRAIN
+Losses: 1.028632316976557
+Metrics: {'Acc@1_broad': 0.8439498, 'Acc@1_fine': 0.63481057}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 168
+Mode: MODE.EVAL
+Losses: 0.7542218561669823
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.66 s
+
+Epoch: 169
+Mode: MODE.TRAIN
+Losses: 1.0278968952043588
+Metrics: {'Acc@1_broad': 0.8442695, 'Acc@1_fine': 0.6345109}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 169
+Mode: MODE.EVAL
+Losses: 0.753513810266355
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5902667}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.16 s
+
+Epoch: 170
+Mode: MODE.TRAIN
+Losses: 1.0288515083320307
+Metrics: {'Acc@1_broad': 0.8449888, 'Acc@1_fine': 0.6362892}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 170
+Mode: MODE.EVAL
+Losses: 0.7553388117130395
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.84 s
+
+Epoch: 171
+Mode: MODE.TRAIN
+Losses: 1.0287806186682122
+Metrics: {'Acc@1_broad': 0.84492886, 'Acc@1_fine': 0.63381153}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 171
+Mode: MODE.EVAL
+Losses: 0.7559408641355053
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.53 s
+
+Epoch: 172
+Mode: MODE.TRAIN
+Losses: 1.0279620093915163
+Metrics: {'Acc@1_broad': 0.84502876, 'Acc@1_fine': 0.6344709}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 172
+Mode: MODE.EVAL
+Losses: 0.7549834676134358
+Metrics: {'Acc@1_broad': 0.84494424, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.05 s
+
+Epoch: 173
+Mode: MODE.TRAIN
+Losses: 1.0289816627721957
+Metrics: {'Acc@1_broad': 0.8452486, 'Acc@1_fine': 0.6350703}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 173
+Mode: MODE.EVAL
+Losses: 0.7539372695194688
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.22 s
+
+Epoch: 174
+Mode: MODE.TRAIN
+Losses: 1.0280751053177182
+Metrics: {'Acc@1_broad': 0.84492886, 'Acc@1_fine': 0.6344709}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 174
+Mode: MODE.EVAL
+Losses: 0.7553783134575103
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.22 s
+
+Epoch: 175
+Mode: MODE.TRAIN
+Losses: 1.0292263993674227
+Metrics: {'Acc@1_broad': 0.8435702, 'Acc@1_fine': 0.6338315}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 175
+Mode: MODE.EVAL
+Losses: 0.7535864335431415
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.5902667}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1018.22 s
+
+Epoch: 176
+Mode: MODE.TRAIN
+Losses: 1.0279451784727824
+Metrics: {'Acc@1_broad': 0.8446891, 'Acc@1_fine': 0.6340713}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 176
+Mode: MODE.EVAL
+Losses: 0.7542664391599643
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.59056526}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.45 s
+
+Epoch: 177
+Mode: MODE.TRAIN
+Losses: 1.028754469683713
+Metrics: {'Acc@1_broad': 0.844809, 'Acc@1_fine': 0.6357297}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 177
+Mode: MODE.EVAL
+Losses: 0.7543671591456529
+Metrics: {'Acc@1_broad': 0.84494424, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.13 s
+
+Epoch: 178
+Mode: MODE.TRAIN
+Losses: 1.0278305486035164
+Metrics: {'Acc@1_broad': 0.84386986, 'Acc@1_fine': 0.6363291}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 178
+Mode: MODE.EVAL
+Losses: 0.7544428156629489
+Metrics: {'Acc@1_broad': 0.84494424, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.60 s
+
+Epoch: 179
+Mode: MODE.TRAIN
+Losses: 1.028586486263958
+Metrics: {'Acc@1_broad': 0.84450924, 'Acc@1_fine': 0.6351702}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 179
+Mode: MODE.EVAL
+Losses: 0.7548458946358626
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.58907247}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.36 s
+
+Epoch: 180
+Mode: MODE.TRAIN
+Losses: 0.36131349539436647
+Metrics: {'Acc@1_broad': 0.84390986, 'Acc@1_fine': 0.63541}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 180
+Mode: MODE.EVAL
+Losses: 0.7543844171580235
+Metrics: {'Acc@1_broad': 0.843551, 'Acc@1_fine': 0.59076434}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.31 s
+
+Epoch: 181
+Mode: MODE.TRAIN
+Losses: 1.027901979587267
+Metrics: {'Acc@1_broad': 0.84339035, 'Acc@1_fine': 0.6346907}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 181
+Mode: MODE.EVAL
+Losses: 0.754049201110366
+Metrics: {'Acc@1_broad': 0.8447452, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.33 s
+
+Epoch: 182
+Mode: MODE.TRAIN
+Losses: 1.0295644669276673
+Metrics: {'Acc@1_broad': 0.8444893, 'Acc@1_fine': 0.6338515}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 182
+Mode: MODE.EVAL
+Losses: 0.7548858554215189
+Metrics: {'Acc@1_broad': 0.84444666, 'Acc@1_fine': 0.5892715}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.82 s
+
+Epoch: 183
+Mode: MODE.TRAIN
+Losses: 1.0301422998880791
+Metrics: {'Acc@1_broad': 0.84484893, 'Acc@1_fine': 0.6344709}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 183
+Mode: MODE.EVAL
+Losses: 0.7539636904646636
+Metrics: {'Acc@1_broad': 0.8447452, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.37 s
+
+Epoch: 184
+Mode: MODE.TRAIN
+Losses: 1.0306357508882538
+Metrics: {'Acc@1_broad': 0.8447091, 'Acc@1_fine': 0.632273}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 184
+Mode: MODE.EVAL
+Losses: 0.7568003100574396
+Metrics: {'Acc@1_broad': 0.84384954, 'Acc@1_fine': 0.58867437}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.52 s
+
+Epoch: 185
+Mode: MODE.TRAIN
+Losses: 1.030718327407032
+Metrics: {'Acc@1_broad': 0.84584796, 'Acc@1_fine': 0.6338715}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 185
+Mode: MODE.EVAL
+Losses: 0.755326213540545
+Metrics: {'Acc@1_broad': 0.84384954, 'Acc@1_fine': 0.5892715}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.45 s
+
+Epoch: 186
+Mode: MODE.TRAIN
+Losses: 1.0270763663837061
+Metrics: {'Acc@1_broad': 0.8446092, 'Acc@1_fine': 0.63413125}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 186
+Mode: MODE.EVAL
+Losses: 0.753744785240881
+Metrics: {'Acc@1_broad': 0.84444666, 'Acc@1_fine': 0.5904658}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.44 s
+
+Epoch: 187
+Mode: MODE.TRAIN
+Losses: 1.0283217292155147
+Metrics: {'Acc@1_broad': 0.84482896, 'Acc@1_fine': 0.63457084}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 187
+Mode: MODE.EVAL
+Losses: 0.7551738520621494
+Metrics: {'Acc@1_broad': 0.84384954, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.42 s
+
+Epoch: 188
+Mode: MODE.TRAIN
+Losses: 1.0288455613586298
+Metrics: {'Acc@1_broad': 0.8442295, 'Acc@1_fine': 0.6346907}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 188
+Mode: MODE.EVAL
+Losses: 0.7544732647621708
+Metrics: {'Acc@1_broad': 0.84384954, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.70 s
+
+Epoch: 189
+Mode: MODE.TRAIN
+Losses: 1.0278627470021358
+Metrics: {'Acc@1_broad': 0.8435502, 'Acc@1_fine': 0.6358496}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 189
+Mode: MODE.EVAL
+Losses: 0.7540024252264363
+Metrics: {'Acc@1_broad': 0.8441481, 'Acc@1_fine': 0.59076434}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.20 s
+
+Epoch: 190
+Mode: MODE.TRAIN
+Losses: 1.0295691058001555
+Metrics: {'Acc@1_broad': 0.8441896, 'Acc@1_fine': 0.63475066}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 190
+Mode: MODE.EVAL
+Losses: 0.7549656161172374
+Metrics: {'Acc@1_broad': 0.84444666, 'Acc@1_fine': 0.5892715}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.37 s
+
+Epoch: 191
+Mode: MODE.TRAIN
+Losses: 1.0280389766711409
+Metrics: {'Acc@1_broad': 0.8450487, 'Acc@1_fine': 0.63389146}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 191
+Mode: MODE.EVAL
+Losses: 0.7571150207310725
+Metrics: {'Acc@1_broad': 0.84384954, 'Acc@1_fine': 0.5883758}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1030.64 s
+
+Epoch: 192
+Mode: MODE.TRAIN
+Losses: 1.0320101413885345
+Metrics: {'Acc@1_broad': 0.84482896, 'Acc@1_fine': 0.6324928}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 192
+Mode: MODE.EVAL
+Losses: 0.7542204375194895
+Metrics: {'Acc@1_broad': 0.8441481, 'Acc@1_fine': 0.59076434}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.21 s
+
+Epoch: 193
+Mode: MODE.TRAIN
+Losses: 1.0295788957487286
+Metrics: {'Acc@1_broad': 0.84430945, 'Acc@1_fine': 0.6352102}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 193
+Mode: MODE.EVAL
+Losses: 0.7543135609976046
+Metrics: {'Acc@1_broad': 0.8441481, 'Acc@1_fine': 0.5897691}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.74 s
+
+Epoch: 194
+Mode: MODE.TRAIN
+Losses: 1.0300936977881605
+Metrics: {'Acc@1_broad': 0.84450924, 'Acc@1_fine': 0.63443094}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 194
+Mode: MODE.EVAL
+Losses: 0.7545232517514259
+Metrics: {'Acc@1_broad': 0.84444666, 'Acc@1_fine': 0.5897691}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.11 s
+
+Epoch: 195
+Mode: MODE.TRAIN
+Losses: 1.0262479673870994
+Metrics: {'Acc@1_broad': 0.845868, 'Acc@1_fine': 0.63485056}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 195
+Mode: MODE.EVAL
+Losses: 0.753623885761021
+Metrics: {'Acc@1_broad': 0.84444666, 'Acc@1_fine': 0.59036624}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1018.23 s
+
+Epoch: 196
+Mode: MODE.TRAIN
+Losses: 1.027209287561724
+Metrics: {'Acc@1_broad': 0.84506875, 'Acc@1_fine': 0.63535005}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 196
+Mode: MODE.EVAL
+Losses: 0.7537158646496238
+Metrics: {'Acc@1_broad': 0.84444666, 'Acc@1_fine': 0.59096336}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.03 s
+
+Epoch: 197
+Mode: MODE.TRAIN
+Losses: 1.0303549296258356
+Metrics: {'Acc@1_broad': 0.84376997, 'Acc@1_fine': 0.6338315}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 197
+Mode: MODE.EVAL
+Losses: 0.7570103844924337
+Metrics: {'Acc@1_broad': 0.843551, 'Acc@1_fine': 0.58827627}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.91 s
+
+Epoch: 198
+Mode: MODE.TRAIN
+Losses: 1.0266436139488464
+Metrics: {'Acc@1_broad': 0.8439498, 'Acc@1_fine': 0.6357097}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 198
+Mode: MODE.EVAL
+Losses: 0.7557078048017374
+Metrics: {'Acc@1_broad': 0.84384954, 'Acc@1_fine': 0.58907247}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.24 s
+
+Epoch: 199
+Mode: MODE.TRAIN
+Losses: 1.0297833789340065
+Metrics: {'Acc@1_broad': 0.8441496, 'Acc@1_fine': 0.633352}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 199
+Mode: MODE.EVAL
+Losses: 0.7550506539120796
+Metrics: {'Acc@1_broad': 0.84384954, 'Acc@1_fine': 0.58907247}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.93 s
+
+Epoch: 200
+Mode: MODE.TRAIN
+Losses: 1.0276673750194443
+Metrics: {'Acc@1_broad': 0.8441896, 'Acc@1_fine': 0.636469}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 200
+Mode: MODE.EVAL
+Losses: 0.7542668713410948
+Metrics: {'Acc@1_broad': 0.843551, 'Acc@1_fine': 0.5902667}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.34 s
+
+Epoch: 201
+Mode: MODE.TRAIN
+Losses: 1.0292698149485966
+Metrics: {'Acc@1_broad': 0.84462917, 'Acc@1_fine': 0.6339514}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 201
+Mode: MODE.EVAL
+Losses: 0.754553693494979
+Metrics: {'Acc@1_broad': 0.84384954, 'Acc@1_fine': 0.589371}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.01 s
+
+Epoch: 202
+Mode: MODE.TRAIN
+Losses: 1.028091574797545
+Metrics: {'Acc@1_broad': 0.8433104, 'Acc@1_fine': 0.63413125}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 202
+Mode: MODE.EVAL
+Losses: 0.7558334129536228
+Metrics: {'Acc@1_broad': 0.843551, 'Acc@1_fine': 0.58907247}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.12 s
+
+Epoch: 203
+Mode: MODE.TRAIN
+Losses: 1.0272875669057413
+Metrics: {'Acc@1_broad': 0.84378994, 'Acc@1_fine': 0.6363291}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 203
+Mode: MODE.EVAL
+Losses: 0.7535762727070766
+Metrics: {'Acc@1_broad': 0.8447452, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.37 s
+
+Epoch: 204
+Mode: MODE.TRAIN
+Losses: 1.0299911271123325
+Metrics: {'Acc@1_broad': 0.8439498, 'Acc@1_fine': 0.63429105}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 204
+Mode: MODE.EVAL
+Losses: 0.7565188620500504
+Metrics: {'Acc@1_broad': 0.84384954, 'Acc@1_fine': 0.5887739}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.13 s
+
+Epoch: 205
+Mode: MODE.TRAIN
+Losses: 1.028893714975518
+Metrics: {'Acc@1_broad': 0.84594786, 'Acc@1_fine': 0.6344509}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 205
+Mode: MODE.EVAL
+Losses: 0.7537248822723984
+Metrics: {'Acc@1_broad': 0.8447452, 'Acc@1_fine': 0.5896696}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.88 s
+
+Epoch: 206
+Mode: MODE.TRAIN
+Losses: 1.029543151635953
+Metrics: {'Acc@1_broad': 0.8442295, 'Acc@1_fine': 0.6339714}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 206
+Mode: MODE.EVAL
+Losses: 0.7560736054827453
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5881767}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.88 s
+
+Epoch: 207
+Mode: MODE.TRAIN
+Losses: 1.0290397784441634
+Metrics: {'Acc@1_broad': 0.84396976, 'Acc@1_fine': 0.6332321}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 207
+Mode: MODE.EVAL
+Losses: 0.7538130250611123
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.02 s
+
+Epoch: 208
+Mode: MODE.TRAIN
+Losses: 1.0289133382422844
+Metrics: {'Acc@1_broad': 0.8450487, 'Acc@1_fine': 0.6349704}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 208
+Mode: MODE.EVAL
+Losses: 0.7553524793523132
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.58996814}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.55 s
+
+Epoch: 209
+Mode: MODE.TRAIN
+Losses: 1.0301052686351035
+Metrics: {'Acc@1_broad': 0.8421116, 'Acc@1_fine': 0.6320732}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 209
+Mode: MODE.EVAL
+Losses: 0.755082553122074
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.5881767}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.14 s
+
+Epoch: 210
+Mode: MODE.TRAIN
+Losses: 0.36105148945851706
+Metrics: {'Acc@1_broad': 0.844769, 'Acc@1_fine': 0.63389146}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 210
+Mode: MODE.EVAL
+Losses: 0.7535308542524933
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.20 s
+
+Epoch: 211
+Mode: MODE.TRAIN
+Losses: 1.027218814929733
+Metrics: {'Acc@1_broad': 0.8440897, 'Acc@1_fine': 0.6342511}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 211
+Mode: MODE.EVAL
+Losses: 0.754519094185085
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.40 s
+
+Epoch: 212
+Mode: MODE.TRAIN
+Losses: 1.02806790199731
+Metrics: {'Acc@1_broad': 0.8446691, 'Acc@1_fine': 0.6331522}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 212
+Mode: MODE.EVAL
+Losses: 0.7547031180683974
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.58957005}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.53 s
+
+Epoch: 213
+Mode: MODE.TRAIN
+Losses: 1.0295693333953848
+Metrics: {'Acc@1_broad': 0.8440697, 'Acc@1_fine': 0.6350703}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 213
+Mode: MODE.EVAL
+Losses: 0.7544554701181734
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.34 s
+
+Epoch: 214
+Mode: MODE.TRAIN
+Losses: 1.028761646479292
+Metrics: {'Acc@1_broad': 0.8459279, 'Acc@1_fine': 0.6338315}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 214
+Mode: MODE.EVAL
+Losses: 0.7546502952078346
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5892715}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.35 s
+
+Epoch: 215
+Mode: MODE.TRAIN
+Losses: 1.0301344476240066
+Metrics: {'Acc@1_broad': 0.8445692, 'Acc@1_fine': 0.6334519}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 215
+Mode: MODE.EVAL
+Losses: 0.7556741528070656
+Metrics: {'Acc@1_broad': 0.84345144, 'Acc@1_fine': 0.5892715}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.85 s
+
+Epoch: 216
+Mode: MODE.TRAIN
+Losses: 1.029589367415899
+Metrics: {'Acc@1_broad': 0.84496886, 'Acc@1_fine': 0.63371164}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 216
+Mode: MODE.EVAL
+Losses: 0.7543582184489366
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5904658}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.30 s
+
+Epoch: 217
+Mode: MODE.TRAIN
+Losses: 1.0305364475683179
+Metrics: {'Acc@1_broad': 0.84450924, 'Acc@1_fine': 0.63191336}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 217
+Mode: MODE.EVAL
+Losses: 0.7555716542206752
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5892715}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.35 s
+
+Epoch: 218
+Mode: MODE.TRAIN
+Losses: 1.0285155142817046
+Metrics: {'Acc@1_broad': 0.8430706, 'Acc@1_fine': 0.6334919}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 218
+Mode: MODE.EVAL
+Losses: 0.7543135008234887
+Metrics: {'Acc@1_broad': 0.84345144, 'Acc@1_fine': 0.5898686}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.13 s
+
+Epoch: 219
+Mode: MODE.TRAIN
+Losses: 1.027503489762011
+Metrics: {'Acc@1_broad': 0.84373003, 'Acc@1_fine': 0.6350304}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 219
+Mode: MODE.EVAL
+Losses: 0.7540656107056672
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5900677}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.03 s
+
+Epoch: 220
+Mode: MODE.TRAIN
+Losses: 1.0291526479946682
+Metrics: {'Acc@1_broad': 0.84462917, 'Acc@1_fine': 0.6341112}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 220
+Mode: MODE.EVAL
+Losses: 0.7555095728035945
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5885748}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.31 s
+
+Epoch: 221
+Mode: MODE.TRAIN
+Losses: 1.0306477481904237
+Metrics: {'Acc@1_broad': 0.8441696, 'Acc@1_fine': 0.6357497}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 221
+Mode: MODE.EVAL
+Losses: 0.7541596330939584
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5897691}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.59 s
+
+Epoch: 222
+Mode: MODE.TRAIN
+Losses: 1.0283928893106369
+Metrics: {'Acc@1_broad': 0.84472907, 'Acc@1_fine': 0.63433105}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 222
+Mode: MODE.EVAL
+Losses: 0.7548370989644604
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.58827627}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.47 s
+
+Epoch: 223
+Mode: MODE.TRAIN
+Losses: 1.0272212789186737
+Metrics: {'Acc@1_broad': 0.8454484, 'Acc@1_fine': 0.6352302}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 223
+Mode: MODE.EVAL
+Losses: 0.7549943507761713
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.58917195}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.32 s
+
+Epoch: 224
+Mode: MODE.TRAIN
+Losses: 1.0288126300972746
+Metrics: {'Acc@1_broad': 0.8438499, 'Acc@1_fine': 0.63568974}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 224
+Mode: MODE.EVAL
+Losses: 0.7549455580627842
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.58947057}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.12 s
+
+Epoch: 225
+Mode: MODE.TRAIN
+Losses: 1.0293892357507934
+Metrics: {'Acc@1_broad': 0.84642744, 'Acc@1_fine': 0.6356498}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 225
+Mode: MODE.EVAL
+Losses: 0.7540791897921805
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.5900677}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.19 s
+
+Epoch: 226
+Mode: MODE.TRAIN
+Losses: 1.0296232943492167
+Metrics: {'Acc@1_broad': 0.84454924, 'Acc@1_fine': 0.63419116}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 226
+Mode: MODE.EVAL
+Losses: 0.755147503344876
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.58947057}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.16 s
+
+Epoch: 227
+Mode: MODE.TRAIN
+Losses: 1.0289488803700109
+Metrics: {'Acc@1_broad': 0.8441496, 'Acc@1_fine': 0.63399136}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 227
+Mode: MODE.EVAL
+Losses: 0.7545477148548813
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.58917195}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.22 s
+
+Epoch: 228
+Mode: MODE.TRAIN
+Losses: 1.030967838395282
+Metrics: {'Acc@1_broad': 0.8447091, 'Acc@1_fine': 0.6332121}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 228
+Mode: MODE.EVAL
+Losses: 0.7544291046489576
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5900677}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.39 s
+
+Epoch: 229
+Mode: MODE.TRAIN
+Losses: 1.0271793592463978
+Metrics: {'Acc@1_broad': 0.8443894, 'Acc@1_fine': 0.63678867}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 229
+Mode: MODE.EVAL
+Losses: 0.7545182935086785
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5897691}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1016.99 s
+
+Epoch: 230
+Mode: MODE.TRAIN
+Losses: 1.0309063248012378
+Metrics: {'Acc@1_broad': 0.84570813, 'Acc@1_fine': 0.6331122}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 230
+Mode: MODE.EVAL
+Losses: 0.754817228550744
+Metrics: {'Acc@1_broad': 0.84404856, 'Acc@1_fine': 0.5897691}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.23 s
+
+Epoch: 231
+Mode: MODE.TRAIN
+Losses: 1.0302053561905766
+Metrics: {'Acc@1_broad': 0.8451487, 'Acc@1_fine': 0.63495046}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 231
+Mode: MODE.EVAL
+Losses: 0.754152008397564
+Metrics: {'Acc@1_broad': 0.8443471, 'Acc@1_fine': 0.5897691}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.06 s
+
+Epoch: 232
+Mode: MODE.TRAIN
+Losses: 1.0287232017120742
+Metrics: {'Acc@1_broad': 0.84434944, 'Acc@1_fine': 0.63351184}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 232
+Mode: MODE.EVAL
+Losses: 0.7528195834368657
+Metrics: {'Acc@1_broad': 0.8446457, 'Acc@1_fine': 0.59036624}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.13 s
+
+Epoch: 233
+Mode: MODE.TRAIN
+Losses: 1.0286686678066888
+Metrics: {'Acc@1_broad': 0.84444934, 'Acc@1_fine': 0.63586956}
+Best Acc@1_fine till now: 0.637627899646759
+
+
+Epoch: 233
+Mode: MODE.EVAL
+Losses: 0.7540534433855373
+Metrics: {'Acc@1_broad': 0.84375, 'Acc@1_fine': 0.5900677}
+Best Acc@1_fine till now: 0.5911624431610107
+
+Epoch took 1017.06 s
+
+Epoch: 234
+Mode: MODE.TRAIN
+Losses: 1.0321265558147674
+Metrics: {'Acc@1_broad': 0.8451087, 'Acc@1_fine': 0.63361174}
+Best Acc@1_fine till now: 0.637627899646759
+
