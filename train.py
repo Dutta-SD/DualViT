@@ -23,7 +23,7 @@ model_params = {
     "img_height": 32,
     "img_width": 32,
     "img_in_channels": 3,
-    "patch_dim": 2, # reduced patch size
+    "patch_dim": 2,  # reduced patch size
     "emb_dim": 384,
     "num_layers": 7,
     "num_attention_heads": 12,

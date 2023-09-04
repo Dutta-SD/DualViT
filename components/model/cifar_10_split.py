@@ -8,6 +8,7 @@
 
 import torch
 from torch import nn
+from torch.nn import functional as F
 
 from components.model.pretrained import PreTrainedWordEmbeddings
 from components.model.split import segregate_samples
@@ -15,12 +16,14 @@ from components.model.tree import LabelHierarchyTree
 from components.model.vit_blocks import TransformerBlockGroup
 from einops import repeat
 from pprint import pprint
+from typing import Dict, Tuple
 
 LANG_MODEL_NAME = "distilbert-base-uncased"
+CIFAR_10_HIERARCHICAL_LABEL_PATH = "components/data/cifar10.xml"
 
 
 lang_model = PreTrainedWordEmbeddings(LANG_MODEL_NAME)
-label_tree = LabelHierarchyTree("components/data/cifar10.xml")
+label_tree = LabelHierarchyTree(CIFAR_10_HIERARCHICAL_LABEL_PATH)
 
 net_l1 = TransformerBlockGroup(num_blocks=4)
 net_l2 = {
@@ -43,6 +46,25 @@ class TransformerDecomposed(nn.Module):
         self.net_l2 = net_l2
         self.net_l3 = net_l3
         self.segregator = segregate_samples
+        self.num_classes = 10  # change
+
+    def get_labels_and_pred(
+        self,
+        pred_labels_dict: Dict,
+        fine_labels: int,
+    ) -> Tuple[torch.FloatTensor, torch.IntTensor]:
+        """
+        Return output from model and expanded labels
+        Order the labels_dict and expand the fine_label
+
+        y_pred, y_true
+        """
+        one_hot_fine_labels = F.one_hot(fine_labels, self.num_classes)
+        preds = torch.cat(tuple(pred_labels_dict.values()), dim=-1)  # [B, C]
+        return preds, one_hot_fine_labels
+
+    def global_pool_sequence(self, batch):
+        return torch.mean(batch, dim=-2)  # [B, D]
 
     def reshape_external_queries(self, q, batch_dim):
         return repeat(q, "c d -> b c d", b=batch_dim)
