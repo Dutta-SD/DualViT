@@ -11,7 +11,7 @@ from torch import nn
 from torch.nn import functional as F
 
 from components.model.lang import PreTrainedWordEmbeddings
-from components.model.split import segregate_samples
+from components.model.split import segregate_samples_within_batch
 from components.model.tree import LabelHierarchyTree
 from components.model.vit_blocks import TransformerBlockGroup
 from einops import repeat
@@ -45,7 +45,7 @@ class TransformerDecomposed(nn.Module):
         self.net_l1 = net_l1
         self.net_l2 = net_l2
         self.net_l3 = net_l3
-        self.segregator = segregate_samples
+        self.segregator = segregate_samples_within_batch
         self.num_classes = 10  # change
 
     def get_labels_and_pred(
@@ -65,6 +65,7 @@ class TransformerDecomposed(nn.Module):
 
     def global_pool_sequence(self, batch):
         return torch.mean(batch, dim=-2)  # [B, D]
+
 
     def reshape_external_queries(self, q, batch_dim):
         return repeat(q, "c d -> b c d", b=batch_dim)
@@ -126,3 +127,4 @@ class TransformerDecomposed(nn.Module):
         }
 
         # Level 3
+
