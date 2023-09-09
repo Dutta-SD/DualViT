@@ -66,7 +66,6 @@ class TransformerDecomposed(nn.Module):
     def global_pool_sequence(self, batch):
         return torch.mean(batch, dim=-2)  # [B, D]
 
-
     def reshape_external_queries(self, q, batch_dim):
         return repeat(q, "c d -> b c d", b=batch_dim)
 
@@ -127,4 +126,3 @@ class TransformerDecomposed(nn.Module):
         }
 
         # Level 3
-

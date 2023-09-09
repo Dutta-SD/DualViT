@@ -4,7 +4,6 @@ from transformers.models.vit.configuration_vit import ViTConfig
 from transformers.models.vit.modeling_vit import ViTForImageClassification
 
 
-
 class VitImageClassificationBroadFine(ViTForImageClassification):
     def __init__(self, config: ViTConfig) -> None:
         super().__init__(config)
@@ -22,7 +21,9 @@ class VitImageClassificationBroadFine(ViTForImageClassification):
         embs = self.vit.embeddings
         self.num_outputs = len(num_output_nodes)
         num_patches = embs.patch_embeddings.num_patches
-        embs.position_embeddings = nn.Parameter(torch.randn(1, num_patches + self.num_outputs, self.config.hidden_size))
+        embs.position_embeddings = nn.Parameter(
+            torch.randn(1, num_patches + self.num_outputs, self.config.hidden_size)
+        )
         self.classifier = nn.ModuleList(
             [
                 nn.Linear(self.config.hidden_size, num_output_nodes[i])
@@ -43,13 +44,14 @@ class VitImageClassificationBroadFine(ViTForImageClassification):
             op_list.append(self.classifier[idx](t))
 
         return op_list
-        
 
 
 if __name__ == "__main__":
-    pt_model = VitImageClassificationBroadFine.from_pretrained("aaraki/vit-base-patch16-224-in21k-finetuned-cifar10")
+    pt_model = VitImageClassificationBroadFine.from_pretrained(
+        "aaraki/vit-base-patch16-224-in21k-finetuned-cifar10"
+    )
     rand_tensor = torch.rand(32, 3, 224, 224)
-    pt_model.pre_forward_adjust((2, 10, 15, 23)) # For cifar 10
+    pt_model.pre_forward_adjust((2, 10))  # For cifar 10
     ops = pt_model(rand_tensor)
 
     for op in ops:
