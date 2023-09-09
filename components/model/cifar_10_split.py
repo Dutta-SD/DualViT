@@ -10,7 +10,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from components.model.pretrained import PreTrainedWordEmbeddings
+from components.model.lang import PreTrainedWordEmbeddings
 from components.model.split import segregate_samples
 from components.model.tree import LabelHierarchyTree
 from components.model.vit_blocks import TransformerBlockGroup
