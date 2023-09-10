@@ -11,7 +11,7 @@ from torch import nn
 from torch.nn import functional as F
 
 from components.model.lang import PreTrainedWordEmbeddings
-from components.model.split import segregate_samples_within_batch
+from components.model.decomposed.split import segregate_samples_within_batch
 from components.model.tree import LabelHierarchyTree
 from components.model.vit_blocks import TransformerBlockGroup
 from einops import repeat
