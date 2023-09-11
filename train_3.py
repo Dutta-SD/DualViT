@@ -4,7 +4,7 @@ import torch
 from torch import nn
 
 from components.model.vit import ViTBasicForImageClassification
-from components.trainer.custom import BroadAndFineAlternateTrainer
+from components.trainer.custom import BroadFineAlternateModifiedTrainer
 from components.utils import *
 from constants import *
 from datetime import datetime
@@ -68,7 +68,7 @@ trainer_params = {
     "model_checkpoint_dir": WEIGHT_FOLDER_PATH,
     "description": DESC,
 }
-trainer = BroadAndFineAlternateTrainer(**trainer_params)
+trainer = BroadFineAlternateModifiedTrainer(**trainer_params)
 run_kawrgs = {
     "broad_class_CE": nn.CrossEntropyLoss(),
     "fine_class_CE": nn.CrossEntropyLoss(),
