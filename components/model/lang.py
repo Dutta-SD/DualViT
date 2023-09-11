@@ -21,5 +21,7 @@ if __name__ == "__main__":
     device = torch.device("cpu")
     tik = time.time()
     be_model = PreTrainedWordEmbeddings("distilbert-base-uncased").to(device)
+    op = be_model("word")
+    print(op.shape)
     tok = time.time()
     print(f"{device} run time = {tok - tik} s")

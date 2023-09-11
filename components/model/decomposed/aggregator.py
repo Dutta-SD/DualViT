@@ -1,5 +1,5 @@
-import torch
 from components.model.vit_blocks import TransformerBlockGroup
+from components.model.decomposed.entity import TransformerData
 
 
 class Aggregator:
@@ -18,16 +18,17 @@ class Aggregator:
         }
         self.curr_level_keys = labels_list
 
-    def aggregate(self, input_dict: dict[str, torch.FloatTensor], check: bool = True):
+    def aggregate(self, input_dict: dict[str, TransformerData], check: bool = True):
         if check:
             self.alert_for_invalid_keys(input_dict)
 
         output = {}
 
         for key in self.curr_level_keys:
-            ip = input_dict[key]
+            ip = input_dict[key].data
+            labels = input_dict[key].labels
             op = self.all_models[key](ip)
-            output[key] = op
+            output[key] = TransformerData(data=op, labels=labels)
 
         return output
 

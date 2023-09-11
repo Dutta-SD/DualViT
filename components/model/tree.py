@@ -5,8 +5,10 @@ class LabelHierarchyTree:
     def __init__(self, xml_path) -> None:
         self.root = ET.parse(xml_path).getroot()
 
-    def format_list_elements(self, elements):
-        return [(e.tag, e.attrib["label"]) for e in elements]
+    def format_list_elements(self, elements, names_only=False):
+        return [
+            (e.tag, e.attrib["label"]) if not names_only else e.tag for e in elements
+        ]
 
     def _get_at_depth(self, element, depth):
         elements = []
@@ -21,13 +23,17 @@ class LabelHierarchyTree:
         elements = self._get_at_depth(self.root, depth)
         return self.format_list_elements(elements)
 
-    def get_immediate_children(self, element_name):
+    def get_immediate_children(self, element_name, names_only=False):
         new_name = f".//{element_name}"
         imm_children = []
         matching_elements = self.root.findall(new_name)
         for e in matching_elements:
             imm_children.extend([child for child in e])
-        return self.format_list_elements(imm_children)
+        return self.format_list_elements(imm_children, names_only)
+
+    def is_leaf(self, name: str):
+        all_children = self.get_immediate_children(name)
+        return len(all_children) == 0
 
 
 if __name__ == "__main__":
