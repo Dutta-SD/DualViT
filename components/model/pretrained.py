@@ -38,12 +38,14 @@ class VitImageClassificationBroadFine(ViTForImageClassification):
         outputs = self.vit.layernorm(self.vit(x)[0])
 
         op_list = []
+        emb_list = []
 
         for idx in range(self.num_outputs):
             t = outputs[:, idx]
             op_list.append(self.classifier[idx](t))
+            emb_list.append(t)
 
-        return op_list
+        return emb_list, op_list
 
 
 if __name__ == "__main__":
