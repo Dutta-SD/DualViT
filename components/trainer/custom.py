@@ -1,8 +1,11 @@
 # Trainer for fine classes training only
 from components.trainer.base import BaseTrainer
 import torch
+from torch.nn import functional as F
 from collections import defaultdict
 from constants import ALT_FREQ
+
+# from components.model.pretrained import VitImageClassificationBroadFin
 
 
 class BroadClassTrainer(BaseTrainer):
@@ -86,12 +89,58 @@ class BroadAndFineAlternateTrainer(BaseTrainer):
 
     def get_outputs(self, model_inputs, **kwargs) -> tuple[list, dict]:
         # fine is last
-        broad_logits, fine_logits = self.model(model_inputs["pixel_values"])
-        criterion_broad = kwargs[self.criterion_name_broad]
+        emb_list, op_list = self.model(model_inputs["pixel_values"])
+        broad_logits, fine_logits = op_list
+        broad_emb, fine_emb = emb_list
+
+        broad_logits_seg = []
+        fine_logits_seg = []
+
+        for idx in range(2):
+            broad_logits_seg.append(broad_emb[model_inputs["broad_labels"] == idx])
+
+        for idx in range(10):
+            fine_logits_seg.append(fine_emb[model_inputs["fine_labels"] == idx])
+
+        class_0 = torch.mean(broad_logits_seg[0], 1)
+        class_1 = torch.mean(broad_logits_seg[1], 1)
+
+        fine_class_0 = torch.mean(fine_logits_seg[0], 1)
+        fine_class_1 = torch.mean(fine_logits_seg[1], 1)
+        fine_class_2 = torch.mean(fine_logits_seg[2], 1)
+        fine_class_3 = torch.mean(fine_logits_seg[3], 1)
+        fine_class_4 = torch.mean(fine_logits_seg[4], 1)
+        fine_class_5 = torch.mean(fine_logits_seg[5], 1)
+        fine_class_6 = torch.mean(fine_logits_seg[6], 1)
+        fine_class_7 = torch.mean(fine_logits_seg[7], 1)
+        fine_class_8 = torch.mean(fine_logits_seg[8], 1)
+        fine_class_9 = torch.mean(fine_logits_seg[9], 1)
+
+        mean_fine_0 = torch.mean(
+            (fine_class_0, fine_class_1, fine_class_8, fine_class_9), 1
+        )
+        mean_fine_1 = torch.mean(
+            (
+                fine_class_2,
+                fine_class_3,
+                fine_class_4,
+                fine_class_5,
+                fine_class_6,
+                fine_class_7,
+            ),
+            1,
+        )
+
+        loss_0 = F.l1_loss(mean_fine_0, class_0)
+        loss_1 = F.l1_loss(mean_fine_1, class_1)
+
+        # criterion_broad = kwargs[self.criterion_name_broad]
         criterion_fine = kwargs[self.criterion_name_fine]
 
-        loss_broad = criterion_broad(broad_logits, model_inputs["broad_labels"])
+        # loss_broad = criterion_broad(broad_logits, model_inputs["broad_labels"])
         loss_fine = criterion_fine(fine_logits, model_inputs["fine_labels"])
+
+        loss_broad = loss_fine + loss_0 + loss_1
 
         metrics = {}
 
