@@ -3,17 +3,15 @@ import sys
 import torch
 from torch import nn
 
-from components.model.vit import ViTBasicForImageClassification
-from transformers.models.vit import ViTConfig
 from components.model.pretrained import VitImageClassificationBroadFine
-from components.trainer.custom import BroadAndFineAlternateTrainer
+from components.trainer.custom import BroadFineAlternateModifiedTrainer
 from components.utils import *
 from constants import *
 from datetime import datetime
 
 # Settings for directing output to a file
 str_format = "%Y_%m_%d_%H_%M_%S"
-log_file = open(f"logs/{datetime.now().strftime(str_format)}_{DESC}.txt", "a")
+log_file = open(f"logs/{datetime.now().strftime(str_format)}_{DESC}.log", "a")
 sys.stdout = log_file
 
 # Main Evaluation
@@ -47,6 +45,7 @@ model_params = {
 model = VitImageClassificationBroadFine.from_pretrained(VIT_PRETRAINED_MODEL_1)
 print(model)
 model.pre_forward_adjust((2, 10))
+model = to_device(model, DEVICE)
 
 optimizer = torch.optim.SGD(
     model.parameters(),
@@ -73,7 +72,7 @@ trainer_params = {
     "model_checkpoint_dir": WEIGHT_FOLDER_PATH,
     "description": DESC,
 }
-trainer = BroadAndFineAlternateTrainer(**trainer_params)
+trainer = BroadFineAlternateModifiedTrainer(**trainer_params)
 run_kawrgs = {
     "broad_class_CE": nn.CrossEntropyLoss(),
     "fine_class_CE": nn.CrossEntropyLoss(),

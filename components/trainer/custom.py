@@ -72,7 +72,7 @@ class FineClassTrainer(BaseTrainer):
         return [loss], metrics
 
 
-class BroadAndFineAlternateTrainer(BaseTrainer):
+class BroadFineAlternateModifiedTrainer(BaseTrainer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         print("Starting Broad Fine Alternate Class Training...")
@@ -93,43 +93,55 @@ class BroadAndFineAlternateTrainer(BaseTrainer):
         broad_logits, fine_logits = op_list
         broad_emb, fine_emb = emb_list
 
-        broad_logits_seg = []
-        fine_logits_seg = []
+        broad_emb_seg = []
+        fine_emb_seg = []
 
         for idx in range(2):
-            broad_logits_seg.append(broad_emb[model_inputs["broad_labels"] == idx])
+            broad_emb_seg.append(broad_emb[model_inputs["broad_labels"] == idx])
 
         for idx in range(10):
-            fine_logits_seg.append(fine_emb[model_inputs["fine_labels"] == idx])
+            fine_emb_seg.append(fine_emb[model_inputs["fine_labels"] == idx])
 
-        class_0 = torch.mean(broad_logits_seg[0], 1)
-        class_1 = torch.mean(broad_logits_seg[1], 1)
+        class_0 = torch.mean(broad_emb_seg[0], 0).unsqueeze(0)
+        class_1 = torch.mean(broad_emb_seg[1], 0).unsqueeze(0)
 
-        fine_class_0 = torch.mean(fine_logits_seg[0], 1)
-        fine_class_1 = torch.mean(fine_logits_seg[1], 1)
-        fine_class_2 = torch.mean(fine_logits_seg[2], 1)
-        fine_class_3 = torch.mean(fine_logits_seg[3], 1)
-        fine_class_4 = torch.mean(fine_logits_seg[4], 1)
-        fine_class_5 = torch.mean(fine_logits_seg[5], 1)
-        fine_class_6 = torch.mean(fine_logits_seg[6], 1)
-        fine_class_7 = torch.mean(fine_logits_seg[7], 1)
-        fine_class_8 = torch.mean(fine_logits_seg[8], 1)
-        fine_class_9 = torch.mean(fine_logits_seg[9], 1)
+        fine_class_0 = torch.mean(fine_emb_seg[0], 0).unsqueeze(0)
+        fine_class_1 = torch.mean(fine_emb_seg[1], 0).unsqueeze(0)
+        fine_class_2 = torch.mean(fine_emb_seg[2], 0).unsqueeze(0)
+        fine_class_3 = torch.mean(fine_emb_seg[3], 0).unsqueeze(0)
+        fine_class_4 = torch.mean(fine_emb_seg[4], 0).unsqueeze(0)
+        fine_class_5 = torch.mean(fine_emb_seg[5], 0).unsqueeze(0)
+        fine_class_6 = torch.mean(fine_emb_seg[6], 0).unsqueeze(0)
+        fine_class_7 = torch.mean(fine_emb_seg[7], 0).unsqueeze(0)
+        fine_class_8 = torch.mean(fine_emb_seg[8], 0).unsqueeze(0)
+        fine_class_9 = torch.mean(fine_emb_seg[9], 0).unsqueeze(0)
 
         mean_fine_0 = torch.mean(
-            (fine_class_0, fine_class_1, fine_class_8, fine_class_9), 1
-        )
-        mean_fine_1 = torch.mean(
-            (
-                fine_class_2,
-                fine_class_3,
-                fine_class_4,
-                fine_class_5,
-                fine_class_6,
-                fine_class_7,
+            torch.cat(
+                (
+                    fine_class_0,
+                    fine_class_1,
+                    fine_class_8,
+                    fine_class_9,
+                ),
+                0,
             ),
-            1,
-        )
+            0,
+        ).unsqueeze(0)
+        mean_fine_1 = torch.mean(
+            torch.cat(
+                (
+                    fine_class_2,
+                    fine_class_3,
+                    fine_class_4,
+                    fine_class_5,
+                    fine_class_6,
+                    fine_class_7,
+                ),
+                0,
+            ),
+            0,
+        ).unsqueeze(0)
 
         loss_0 = F.l1_loss(mean_fine_0, class_0)
         loss_1 = F.l1_loss(mean_fine_1, class_1)
