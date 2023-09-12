@@ -59,6 +59,12 @@ class VitClassificationDecomposed(nn.Module):
         )
 
         self.positional_embedding = PositionalEmbedding1D(self.seq_len, self.emb_dim)
+        self.classifiers = nn.ModuleDict(
+            {
+                name: nn.Linear(self.emb_dim, 1)
+                for name in self.label_tree.getall_leaves(ROOT_KEY)
+            }
+        )
 
     def _init_transform(
         self,
@@ -100,6 +106,7 @@ class VitClassificationDecomposed(nn.Module):
 
     def forward(self, raw: dict[str, torch.FloatTensor]):
         ip = self._init_transform(raw)
+
         for curr_depth in range(self.max_depth):
             print(f"Pre Aggregator @ Depth:  {curr_depth}")
             self.debug_dict(ip)
@@ -113,3 +120,25 @@ class VitClassificationDecomposed(nn.Module):
 
             print(f"Post Segregator @ Depth:  {curr_depth}")
             self.debug_dict(ip)
+
+        # Final Segregation to leaves
+        ip = self.segregator.segregate(ip, bypass_to_leaf=True)
+
+        print("Final Segregation to Leaves")
+        self.debug_dict(ip)
+
+        op = {}
+
+        for leaf_key in ip.keys():
+            data = ip[leaf_key].data.squeeze(0)  # 1 Z D -> Z D
+            labels = ip[leaf_key].labels.T  # Z 1
+
+            op[leaf_key] = TransformerData(
+                data=self.classifiers[leaf_key](data),  # Z D -> Z 1
+                labels=labels,  # Z 1
+            )
+
+        print("Final Output: ")
+        self.debug_dict(op)
+
+        return op

@@ -27,30 +27,61 @@ class Segregator:
     def is_empty_embeddings(self, tfr_data: TransformerData):
         return tfr_data.data.shape[1] == 0
 
+    @torch.no_grad()
     def segregate(
         self,
         model_input: dict[str, TransformerData],
+        bypass_to_leaf: bool = False,
     ) -> dict[str, TransformerData]:
-        # Assume data is (1, Z, D)
+        """Assume data is (1, Z, D), where Z is arbitrary"""
         seg_output = {}
+
         for parent_key in model_input.keys():
             tfr_data = model_input[parent_key]
-            if self.label_tree.is_leaf(parent_key) or self.is_empty_embeddings(
-                tfr_data
+            is_empty = self.is_empty_embeddings(tfr_data)
+
+            if self.label_tree.is_leaf(parent_key) and (
+                not bypass_to_leaf and is_empty
             ):
                 parent_output = {parent_key: tfr_data}
+
+            elif bypass_to_leaf and is_empty:
+                parent_output = self.get_output_empty_bypass(
+                    parent_key, tfr_data, bypass=True
+                )
             else:
-                parent_output = self.get_output_non_leaf(parent_key, tfr_data)
+                parent_output = self.get_output_non_leaf(
+                    parent_key, tfr_data, bypass=bypass_to_leaf
+                )
 
             seg_output = {**seg_output, **parent_output}
 
         return seg_output
 
-    def get_output_non_leaf(self, parent_key, tfr_data: TransformerData):
+    def get_output_empty_bypass(self, parent_key: str, tfr_data: TransformerData):
         parent_data = tfr_data.data
         parent_labels = tfr_data.labels
 
-        all_child_keys = self.label_tree.get_immediate_children(parent_key, names=True)
+        all_child_keys = self.label_tree.getall_leaves(parent_key, names=True)
+        return {
+            key: TransformerData(data=parent_data, labels=parent_labels)
+            for key in all_child_keys
+        }
+
+    def get_output_non_leaf(
+        self,
+        parent_key: str,
+        tfr_data: TransformerData,
+        bypass=False,
+    ):
+        parent_data = tfr_data.data
+        parent_labels = tfr_data.labels
+
+        all_child_keys = (
+            self.label_tree.get_immediate_children(parent_key, names=True)
+            if not bypass
+            else self.label_tree.getall_leaves(parent_key, names=True)
+        )
 
         child_embs = self.get_embeddings(all_child_keys)
 
