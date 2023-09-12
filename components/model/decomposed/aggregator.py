@@ -1,8 +1,9 @@
 from components.model.vit_blocks import TransformerBlockGroup
 from components.model.decomposed.entity import TransformerData
+from torch import nn as nn
 
 
-class Aggregator:
+class Aggregator(nn.Module):
     """
     Contains a bunch of encoder blocks.
     Takes in multiple inputs and gives out multiple outputs
@@ -11,22 +12,25 @@ class Aggregator:
 
     def __init__(self, num_blocks: int, labels_list: list[str]):
         super().__init__()
-        self.n_inputs = self.n_blocks = num_blocks
-        self.all_models = {
-            labels_list[idx]: TransformerBlockGroup(self.n_blocks)
-            for idx in range(self.n_inputs)
-        }
+        self.n_blocks = num_blocks
+        self.n_inputs = len(labels_list)
+        self.all_models = nn.ModuleDict(
+            {
+                labels_list[idx]: TransformerBlockGroup(self.n_blocks)
+                for idx in range(self.n_inputs)
+            }
+        )
         self.curr_level_keys = labels_list
 
-    def aggregate(self, input_dict: dict[str, TransformerData], check: bool = True):
+    def forward(self, model_input: dict[str, TransformerData], check: bool = True):
         if check:
-            self.alert_for_invalid_keys(input_dict)
+            self.alert_for_invalid_keys(model_input)
 
         output = {}
 
         for key in self.curr_level_keys:
-            ip = input_dict[key].data
-            labels = input_dict[key].labels
+            ip = model_input[key].data
+            labels = model_input[key].labels
             op = self.all_models[key](ip)
             output[key] = TransformerData(data=op, labels=labels)
 

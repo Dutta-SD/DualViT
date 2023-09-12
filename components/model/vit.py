@@ -1,10 +1,10 @@
-import torch
-from torch import nn
-from einops.layers.torch import Rearrange
 import einops
-from components.utils import *
-from components.trainer.clf import ImageClassificationBase
+import torch
+from einops.layers.torch import Rearrange
+from torch import nn
+
 from components.model.vit_blocks import *
+from components.utils import *
 
 
 class ViTBasicForImageClassification(nn.Module):

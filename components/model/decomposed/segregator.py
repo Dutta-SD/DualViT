@@ -50,9 +50,7 @@ class Segregator:
         parent_data = tfr_data.data
         parent_labels = tfr_data.labels
 
-        all_child_keys = self.label_tree.get_immediate_children(
-            parent_key, names_only=True
-        )
+        all_child_keys = self.label_tree.get_immediate_children(parent_key, names=True)
 
         child_embs = self.get_embeddings(all_child_keys)
 
