@@ -64,7 +64,7 @@ class BaseTrainer:
         pass
 
     def update_results_and_log(self, results, epoch_losses, epoch_metrics):
-        results["losses"] = epoch_losses
+        results["losses"] = np.mean(epoch_losses)
         results["metrics"] = {name: np.mean(met) for name, met in epoch_metrics.items()}
 
         print()

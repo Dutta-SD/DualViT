@@ -12,8 +12,8 @@ from datetime import datetime
 # Settings for directing output to a file
 str_format = "%Y_%m_%d_%H_%M_%S"
 CURR_TIME = datetime.now().strftime(str_format)
-LOG_FILE_NAME = f"logs/EXP-{CURR_TIME}_{DESC}.txt"
-# LOG_FILE_NAME = f"logs/TEST-{DESC}.txt"
+# LOG_FILE_NAME = f"logs/EXP-{CURR_TIME}_{DESC}.txt"
+LOG_FILE_NAME = f"logs/TEST-{DESC}.txt"
 log_file = open(LOG_FILE_NAME, "a")
 sys.stdout = log_file
 
@@ -30,16 +30,24 @@ model = VitImageClassificationBroadFine.from_pretrained(VIT_PRETRAINED_MODEL_1)
 model.pre_forward_adjust((2, 10))
 model = to_device(model, DEVICE)
 
+# optimizer = torch.optim.SGD(
+#     model.parameters(),
+#     lr=LEARNING_RATE,
+#     weight_decay=WEIGHT_DECAY,
+# )
 optimizer = torch.optim.SGD(
-    model.parameters(),
-    lr=LEARNING_RATE,
+    [
+        {"params": model.vit.parameters(), "lr": 5e-5},
+        {"params": model.classifier.parameters(), "lr": 1e-3},
+    ],
     weight_decay=WEIGHT_DECAY,
+    momentum=0.9,
 )
 
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer,
     mode="max",
-    # min_lr=MIN_LR
+    verbose=True,
 )
 
 ### Training
