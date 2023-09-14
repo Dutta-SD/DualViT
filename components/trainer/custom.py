@@ -118,43 +118,17 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
             torch.mean(broad_emb_seg[1], 0).unsqueeze(0)
         )
 
-        fine_class_0 = self.get_filtered_tensor(
-            torch.mean(fine_emb_seg[0], 0).unsqueeze(0)
-        )
-        fine_class_1 = self.get_filtered_tensor(
-            torch.mean(fine_emb_seg[1], 0).unsqueeze(0)
-        )
-        fine_class_2 = self.get_filtered_tensor(
-            torch.mean(fine_emb_seg[2], 0).unsqueeze(0)
-        )
-        fine_class_3 = self.get_filtered_tensor(
-            torch.mean(fine_emb_seg[3], 0).unsqueeze(0)
-        )
-        fine_class_4 = self.get_filtered_tensor(
-            torch.mean(fine_emb_seg[4], 0).unsqueeze(0)
-        )
-        fine_class_5 = self.get_filtered_tensor(
-            torch.mean(fine_emb_seg[5], 0).unsqueeze(0)
-        )
-        fine_class_6 = self.get_filtered_tensor(
-            torch.mean(fine_emb_seg[6], 0).unsqueeze(0)
-        )
-        fine_class_7 = self.get_filtered_tensor(
-            torch.mean(fine_emb_seg[7], 0).unsqueeze(0)
-        )
-        fine_class_8 = self.get_filtered_tensor(
-            torch.mean(fine_emb_seg[8], 0).unsqueeze(0)
-        )
-        fine_class_9 = self.get_filtered_tensor(
-            torch.mean(fine_emb_seg[9], 0).unsqueeze(0)
-        )
+        fine_means = [
+            self.get_filtered_tensor(torch.mean(fine_emb_seg[i], 0).unsqueeze(0))
+            for i in range(10)
+        ]
 
         fine_0_cat = torch.cat(
             (
-                fine_class_0,
-                fine_class_1,
-                fine_class_8,
-                fine_class_9,
+                fine_means[0],
+                fine_means[1],
+                fine_means[8],
+                fine_means[9],
             ),
             dim=0,
         )
@@ -162,12 +136,12 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
         mean_fine_0 = torch.mean(fine_0_cat, 0).unsqueeze(0)
         fine_1_cat = torch.cat(
             (
-                fine_class_2,
-                fine_class_3,
-                fine_class_4,
-                fine_class_5,
-                fine_class_6,
-                fine_class_7,
+                fine_means[2],
+                fine_means[3],
+                fine_means[4],
+                fine_means[5],
+                fine_means[6],
+                fine_means[7],
             ),
             dim=0,
         )
@@ -178,23 +152,11 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
         loss_0 = broad_criteria(mean_fine_0, mean_broad_0)
         loss_1 = broad_criteria(mean_fine_1, mean_fine_0)
 
-        # criterion_broad = kwargs[self.criterion_name_broad]
         criterion_fine = kwargs[self.criterion_name_fine]
 
-        # loss_broad = criterion_broad(broad_logits, model_inputs["broad_labels"])
         loss_fine = criterion_fine(fine_logits, model_inputs["fine_labels"])
 
         loss_broad = loss_0 + loss_1
-        # print(
-        #     "Loss 0: ",
-        #     loss_0.detach().item(),
-        #     "Loss 1: ",
-        #     loss_1.detach().item(),
-        #     "Loss Fine: ",
-        #     loss_fine.detach().item(),
-        #     "Loss Broad: ",
-        #     loss_broad.detach().item(),
-        # )
 
         metrics = {}
 
@@ -215,7 +177,7 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
     def get_curr_loss_idx(self, epoch):
         # Val % len(loss_list) for more general
         val, _ = divmod(epoch, ALT_FREQ)
-        return val % 2
+        return (val + 1) % 2
 
     def _train(self, epoch, **kwargs):
         print("\n\nCURR EPOCH: ", epoch)
@@ -228,7 +190,6 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
 
             loss_idx = self.get_curr_loss_idx(epoch)
-            print("Traing Current Loss IDX: ", loss_idx)
             loss = loss_list[loss_idx]
             loss.backward()
             epoch_losses.append(loss.item())
@@ -236,8 +197,6 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
             for opt in self.optimizer_list:
                 opt.step()
                 opt.zero_grad()
-
-            # break
 
         results = self.update_results_and_log(results, epoch_losses, epoch_metrics)
 
@@ -263,8 +222,6 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
 
             loss = loss_list[loss_idx]
             epoch_losses.append(loss.item())
-
-            # break
 
         results = self.update_results_and_log(results, epoch_losses, epoch_metrics)
 
