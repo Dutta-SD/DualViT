@@ -11,39 +11,22 @@ from datetime import datetime
 
 # Settings for directing output to a file
 str_format = "%Y_%m_%d_%H_%M_%S"
-log_file = open(f"logs/{datetime.now().strftime(str_format)}_{DESC}.log", "a")
+CURR_TIME = datetime.now().strftime(str_format)
+LOG_FILE_NAME = f"logs/EXP-{CURR_TIME}_{DESC}.txt"
+# LOG_FILE_NAME = f"logs/TEST-{DESC}.txt"
+log_file = open(LOG_FILE_NAME, "a")
 sys.stdout = log_file
 
 # Main Evaluation
 print("*" * 120)
+print("Started at: ", CURR_TIME)
 
 train_dl, test_dl = DeviceDataLoader(train_dl, DEVICE), DeviceDataLoader(
     test_dl, DEVICE
 )
 
-model_params = {
-    "img_height": 224,
-    "img_width": 224,
-    "img_in_channels": 3,
-    "patch_dim": 16,  # reduced patch size
-    "emb_dim": 768,
-    "num_layers": 12,
-    "num_attention_heads": 12,
-    "pwff_hidden_dim": 3072,
-    "num_classification_heads": 2,
-    "mlp_outputs_list": (2, 10),  # Cifar 10 default
-    "p_dropout": 0.0,
-    "qkv_bias": True,
-    "pwff_bias": True,
-    "clf_head_bias": True,
-    "conv_bias": True,
-}
-
-# model = ViTBasicForImageClassification(**model_params)
-# model = to_device(model, DEVICE)
-
 model = VitImageClassificationBroadFine.from_pretrained(VIT_PRETRAINED_MODEL_1)
-print(model)
+# print(model)
 model.pre_forward_adjust((2, 10))
 model = to_device(model, DEVICE)
 
@@ -55,7 +38,7 @@ optimizer = torch.optim.SGD(
 
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer,
-    mode="min",
+    mode="max",
     # min_lr=MIN_LR
 )
 
@@ -73,10 +56,7 @@ trainer_params = {
     "description": DESC,
 }
 trainer = BroadFineAlternateModifiedTrainer(**trainer_params)
-run_kawrgs = {
-    "broad_class_CE": nn.CrossEntropyLoss(),
-    "fine_class_CE": nn.CrossEntropyLoss(),
-}
+run_kawrgs = {"fine_class_CE": nn.CrossEntropyLoss()}
 
 trainer.run(**run_kawrgs)
 
