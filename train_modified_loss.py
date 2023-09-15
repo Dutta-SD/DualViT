@@ -17,17 +17,19 @@ LOG_FILE_NAME = f"logs/TEST-{DESC}.txt"
 log_file = open(LOG_FILE_NAME, "a")
 sys.stdout = log_file
 
+DESC="vit-b-16-modified-loss-updated-google-weights_1694713704"
+
 # Main Evaluation
 print("*" * 120)
 print("Started at: ", CURR_TIME)
 
-train_dl, test_dl = DeviceDataLoader(train_dl, DEVICE), DeviceDataLoader(
-    test_dl, DEVICE
-)
+ckpt = torch.load("./checkpoints/vit-b-16-modified-loss-updated-google-weights_1694713704.pt")
+print("Checkpoint Loaded...")
 
-model = VitImageClassificationBroadFine.from_pretrained(VIT_PRETRAINED_MODEL_1)
+# model = VitImageClassificationBroadFine.from_pretrained(VIT_PRETRAINED_MODEL_2)
+model = ckpt["model"]
 # print(model)
-model.pre_forward_adjust((2, 10))
+# model.pre_forward_adjust((2, 10))
 model = to_device(model, DEVICE)
 
 # optimizer = torch.optim.SGD(
@@ -43,6 +45,7 @@ optimizer = torch.optim.SGD(
     weight_decay=WEIGHT_DECAY,
     momentum=0.9,
 )
+optimizer.load_state_dict(ckpt["opt"][0])
 
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer,
@@ -62,6 +65,9 @@ trainer_params = {
     "best_score_key": "Acc@1_fine",  # Set it as per need
     "model_checkpoint_dir": WEIGHT_FOLDER_PATH,
     "description": DESC,
+    "uniq_desc": False,
+    "best_train_score": ckpt["best_train_score"],
+    "best_test_score": ckpt["best_test_score"],
 }
 trainer = BroadFineAlternateModifiedTrainer(**trainer_params)
 run_kawrgs = {"fine_class_CE": nn.CrossEntropyLoss()}
