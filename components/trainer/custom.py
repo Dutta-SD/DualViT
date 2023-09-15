@@ -4,6 +4,7 @@ import torch
 from torch.nn import functional as F
 from collections import defaultdict
 from constants import ALT_FREQ
+import numpy as np
 
 # from components.model.pretrained import VitImageClassificationBroadFin
 
@@ -98,6 +99,9 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
         broad_logits, fine_logits = ouput_list
         broad_emb, fine_emb = embedding_list
 
+        fine_emb_clone = fine_emb.detach().clone()
+        fine_emb_clone.requires_grad=False
+
         broad_emb_seg = []
         fine_emb_seg = []
 
@@ -108,7 +112,7 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
 
         for idx in range(10):
             fine_emb_seg.append(
-                self.get_filtered_tensor(fine_emb[model_inputs["fine_labels"] == idx])
+                self.get_filtered_tensor(fine_emb_clone[model_inputs["fine_labels"] == idx])
             )
 
         mean_broad_0 = self.get_filtered_tensor(
@@ -177,14 +181,14 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
     def get_curr_loss_idx(self, epoch):
         # Val % len(loss_list) for more general
         val, _ = divmod(epoch, ALT_FREQ)
-        return (val + 1) % 2
+        return val % 2
 
     def _train(self, epoch, **kwargs):
         print("\n\nCURR EPOCH: ", epoch)
         self.model.train()
         epoch_metrics, epoch_losses, results = self._init_params(self.mode.TRAIN, epoch)
 
-        for _, batch in enumerate(self.train_dl):
+        for batch_idx, batch in enumerate(self.train_dl):
             loss_list, metrics = self._get_losses_and_metrics(batch, **kwargs)
 
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
@@ -213,7 +217,7 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
         self.model.eval()
         epoch_metrics, epoch_losses, results = self._init_params(self.mode.EVAL, epoch)
 
-        for _, batch in enumerate(self.test_dl):
+        for batch_idx, batch in enumerate(self.test_dl):
             loss_list, metrics = self._get_losses_and_metrics(batch, **kwargs)
 
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
@@ -246,3 +250,17 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
         epoch_losses = []
         epoch_metrics = defaultdict(list)
         return epoch_metrics, epoch_losses, results
+
+    def update_results_and_log(self, results, epoch_losses, epoch_metrics):
+        results["losses"] = np.mean(epoch_losses)
+        results["metrics"] = {name: np.mean(met) for name, met in epoch_metrics.items()}
+
+        print()
+        print(f"Epoch: {results['epoch']} Summary")
+        print(f"Mode: {results['mode']}")
+        print(f"Losses: {results['losses']}")
+        print(f"Metrics: {results['metrics']}")
+        print(f"Best {self.best_score_key} till now: {results['best']}")
+        print()
+
+        return results

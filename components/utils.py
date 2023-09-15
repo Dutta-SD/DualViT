@@ -69,7 +69,8 @@ class CIFAR10MultiLabelDataset(CIFAR10):
         super().__init__(*args, **kwargs)
 
     def __len__(self):
-        return super().__len__()
+        return 8000 if self.train else 2000
+        # return super().__len__()
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
         img_tensor, fine_label = super().__getitem__(index)
@@ -123,4 +124,9 @@ test_dl = DataLoader(
     shuffle=True,
     num_workers=2,
     pin_memory=True,
+)
+
+train_dl, test_dl = (
+    DeviceDataLoader(train_dl, DEVICE), 
+    DeviceDataLoader(test_dl, DEVICE),
 )

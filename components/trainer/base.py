@@ -26,6 +26,8 @@ class BaseTrainer:
         model_checkpoint_dir: str,
         description: str = "",
         uniq_desc: bool = True,
+        best_train_score: float = -1,
+        best_test_score: float = -1,
     ) -> None:
         super().__init__()
         self.num_epochs = num_epochs
@@ -36,8 +38,8 @@ class BaseTrainer:
         self.scheduler_list = scheduler_list
         self.metrics_list = metrics_list
         self.best_score_key = best_score_key
-        self.best_train_score = -1
-        self.best_test_score = -1
+        self.best_train_score = best_train_score
+        self.best_test_score = best_test_score
         self.mode = Enum("MODE", ["TRAIN", "EVAL"])
         self.ckpt_dir = model_checkpoint_dir
         self.exp_name = (
@@ -90,6 +92,8 @@ class BaseTrainer:
                 "model": self.model,
                 "opt": [opt.state_dict() for opt in self.optimizer_list],
                 "tags": ["vit"],
+                "best_train_score": self.best_train_score,
+                "best_test_score": self.best_test_score,
             },
             self.ckpt_full_path,
         )
