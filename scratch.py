@@ -56,26 +56,32 @@
 # for i in x.iter():
 #     print(i.tag)
 
-import torch
-from components.model.tree import LabelHierarchyTree
+# import torch
+# from components.model.tree import LabelHierarchyTree
 
-lt = LabelHierarchyTree("components/data/cifar10.xml")
-# print(lt.get_elements_at_depth(3))
+# lt = LabelHierarchyTree("components/data/cifar10.xml")
+# # print(lt.get_elements_at_depth(3))
 
-from components.model.decomposed.decomposed import VitClassificationDecomposed
+# from components.model.decomposed.decomposed import VitClassificationDecomposed
 
-model = VitClassificationDecomposed(
-    img_height=224,
-    img_width=224,
-    img_in_channels=3,
-    patch_dim=16,
-    emb_dim=768,
-    label_tree=lt,
-)
-b = 8
-ip = {
-    "pixel_values": torch.randn(b, 3, 224, 224),
-    "labels": torch.randint(0, 10, size=(b, 1)),
-}
+# model = VitClassificationDecomposed(
+#     img_height=224,
+#     img_width=224,
+#     img_in_channels=3,
+#     patch_dim=16,
+#     emb_dim=768,
+#     label_tree=lt,
+# )
+# b = 8
+# ip = {
+#     "pixel_values": torch.randn(b, 3, 224, 224),
+#     "labels": torch.randint(0, 10, size=(b, 1)),
+# }
 
-model(ip)
+# model(ip)
+
+from components.trainer.alternate import BroadFineAlternateModifiedTrainer
+import constants
+
+for epoch in range(constants.EPOCHS):
+    print(epoch, BroadFineAlternateModifiedTrainer.get_curr_loss_idx(epoch))
