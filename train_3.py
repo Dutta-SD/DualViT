@@ -4,7 +4,7 @@ import torch
 from torch import nn
 
 from components.model.vit import ViTBasicForImageClassification
-from components.trainer.custom import BroadFineAlternateModifiedTrainer
+from components.trainer.alternate import BroadFineAlternateModifiedTrainer
 from components.utils import *
 from constants import *
 from datetime import datetime

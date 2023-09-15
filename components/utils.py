@@ -69,8 +69,8 @@ class CIFAR10MultiLabelDataset(CIFAR10):
         super().__init__(*args, **kwargs)
 
     def __len__(self):
-        return 8000 if self.train else 2000
-        # return super().__len__()
+        # return 800 if self.train else 200
+        return super().__len__()
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
         img_tensor, fine_label = super().__getitem__(index)
