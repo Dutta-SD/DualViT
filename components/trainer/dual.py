@@ -1,5 +1,5 @@
 from components.trainer.base import BaseTrainer
-from constants import ALT_FREQ, EPOCHS
+from constants import VIT_PRETRAINED_MODEL_2
 
 
 import numpy as np
@@ -9,10 +9,10 @@ import torch
 from collections import defaultdict
 
 
-class BroadFineAlternateModifiedTrainer(BaseTrainer):
+class VitDualModelTrainer(BaseTrainer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print("Starting Broad Fine Training with Modified Loss ...")
+        print("Starting Dual Model Training Training with Modified Loss ...")
         self.criterion_name_fine = "fine_class_CE"
 
     def batch_2_model_input(self, batch):
@@ -26,16 +26,15 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
     def get_filtered_tensor(self, tensor: torch.IntTensor):
         _, *rest = tensor.shape
         if torch.isnan(tensor).sum() > 0:
-            return torch.empty((0, *rest), device=tensor.device)
+            return torch.empty((0, *rest), device=tensor.device, requires_grad=True)
         return tensor
 
     def get_outputs(self, model_inputs, **kwargs) -> tuple[list, dict]:
-        # fine is last
-        embedding_list, ouput_list = self.model(model_inputs["pixel_values"])
-        broad_logits, fine_logits = ouput_list
-        broad_emb, fine_emb = embedding_list
+        emb_fine, output_fine, emb_broad, output_broad = self.model(
+            model_inputs["pixel_values"]
+        )
 
-        fine_emb_clone = fine_emb.detach().clone()
+        fine_emb_clone = emb_fine.detach().clone()
         fine_emb_clone.requires_grad = False
 
         broad_emb_seg = []
@@ -43,7 +42,7 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
 
         for idx in range(2):
             broad_emb_seg.append(
-                self.get_filtered_tensor(broad_emb[model_inputs["broad_labels"] == idx])
+                self.get_filtered_tensor(emb_broad[model_inputs["broad_labels"] == idx])
             )
 
         for idx in range(10):
@@ -96,7 +95,7 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
 
         criterion_fine = kwargs[self.criterion_name_fine]
 
-        loss_fine = criterion_fine(fine_logits, model_inputs["fine_labels"])
+        loss_fine = criterion_fine(output_fine, model_inputs["fine_labels"])
 
         loss_broad = loss_0 + loss_1
 
@@ -106,40 +105,31 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
             for metric_key, metric_fxn in self.metrics_list:
                 # Eg: Acc@1_broad, Acc@1_fine
                 metrics[f"{metric_key}_broad"] = metric_fxn(
-                    broad_logits.clone().detach().cpu(),
+                    output_broad.clone().detach().cpu(),
                     model_inputs["broad_labels"].clone().detach().cpu(),
                 )
                 metrics[f"{metric_key}_fine"] = metric_fxn(
-                    fine_logits.clone().detach().cpu(),
+                    output_fine.clone().detach().cpu(),
                     model_inputs["fine_labels"].clone().detach().cpu(),
                 )
 
         return [loss_broad, loss_fine], metrics
 
-    @staticmethod
-    def get_curr_loss_idx(epoch):
-        lim = int(EPOCHS // 3)
-        if epoch < lim:
-            return 1
-
-        # Val % len(loss_list) for more general
-        val, _ = divmod(epoch - lim, ALT_FREQ)
-        return val % 2
-
     def _train(self, epoch, **kwargs):
-        print("\n\nCURR EPOCH: ", epoch)
+        print("\nCURR EPOCH: ", epoch)
         self.model.train()
         epoch_metrics, epoch_losses, results = self._init_params(self.mode.TRAIN, epoch)
 
         for batch_idx, batch in enumerate(self.train_dl):
             loss_list, metrics = self._get_losses_and_metrics(batch, **kwargs)
+            loss_broad, loss_fine = loss_list
 
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
 
-            loss_idx = BroadFineAlternateModifiedTrainer.get_curr_loss_idx(epoch)
-            loss = loss_list[loss_idx]
-            loss.backward()
-            epoch_losses.append(loss.item())
+            loss_broad.backward()
+            loss_fine.backward()
+
+            epoch_losses.append([loss_broad.item(), loss_fine.item()])
 
             for opt in self.optimizer_list:
                 opt.step()
@@ -162,13 +152,11 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
 
         for batch_idx, batch in enumerate(self.test_dl):
             loss_list, metrics = self._get_losses_and_metrics(batch, **kwargs)
+            loss_broad, loss_fine = loss_list
 
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
 
-            loss_idx = BroadFineAlternateModifiedTrainer.get_curr_loss_idx(epoch)
-
-            loss = loss_list[loss_idx]
-            epoch_losses.append(loss.item())
+            epoch_losses.append([loss_broad.item(), loss_fine.item()])
 
         results = self.update_results_and_log(results, epoch_losses, epoch_metrics)
 
@@ -195,7 +183,7 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
         return epoch_metrics, epoch_losses, results
 
     def update_results_and_log(self, results, epoch_losses, epoch_metrics):
-        results["losses"] = np.mean(epoch_losses)
+        results["losses"] = np.mean(epoch_losses, axis=0)
         results["metrics"] = {name: np.mean(met) for name, met in epoch_metrics.items()}
 
         print()

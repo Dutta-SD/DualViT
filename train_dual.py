@@ -3,8 +3,11 @@ import sys
 import torch
 from torch import nn
 
-from components.model.pretrained import VitImageClassificationBroadFine
-from components.trainer.alternate import BroadFineAlternateModifiedTrainer
+from components.model.pretrained import (
+    VitDualModelBroadFine,
+    VitImageClassificationSingleClassToken,
+)
+from components.trainer.dual import VitDualModelTrainer
 from components.utils import *
 from constants import *
 from datetime import datetime
@@ -26,23 +29,28 @@ print("Started at: ", CURR_TIME)
 # ckpt = torch.load("./checkpoints/vit-b-16-modified-loss-updated-google-weights_1694713704.pt")
 # print("Checkpoint Loaded...")
 
-model = VitImageClassificationBroadFine.from_pretrained(VIT_PRETRAINED_MODEL_2)
+fine_model = VitImageClassificationSingleClassToken.from_pretrained(
+    VIT_PRETRAINED_MODEL_2
+)
+fine_model.pre_forward_adjust(10)  # For cifar 10
+
+broad_model = VitImageClassificationSingleClassToken.from_pretrained(
+    VIT_PRETRAINED_MODEL_2
+)
+broad_model.pre_forward_adjust(2)  # For cifar 10 2 classes
+
+model = VitDualModelBroadFine(fine_model, broad_model)
+
 # model = ckpt["model"]
 # print(model)
-model.pre_forward_adjust((2, 10))
 model = to_device(model, DEVICE)
 
-# optimizer = torch.optim.SGD(
-#     model.parameters(),
-#     lr=LEARNING_RATE,
-#     weight_decay=WEIGHT_DECAY,
-# )
 optimizer = torch.optim.SGD(
     [
-        {"params": model.vit.embeddings.parameters(), "lr": 1e-3},
-        {"params": model.vit.encoder.parameters(), "lr": 1e-5},
-        {"params": model.vit.layernorm.parameters(), "lr": 1e-5},
-        {"params": model.classifier.parameters(), "lr": 1e-3},
+        {"params": model.model_fine.vit.parameters(), "lr": 1e-5},
+        {"params": model.model_broad.vit.parameters(), "lr": 1e-5},
+        {"params": model.model_fine.classifier.parameters(), "lr": 1e-3},
+        {"params": model.model_broad.classifier.parameters(), "lr": 1e-3},
     ],
     weight_decay=WEIGHT_DECAY,
     momentum=0.9,
@@ -50,7 +58,10 @@ optimizer = torch.optim.SGD(
 # optimizer.load_state_dict(ckpt["opt"][0])
 
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-    optimizer, mode="max", verbose=True, min_lr=MIN_LR
+    optimizer,
+    mode="max",
+    verbose=True,
+    min_lr=MIN_LR,
 )
 
 ### Training
@@ -65,11 +76,11 @@ trainer_params = {
     "best_score_key": "Acc@1_fine",  # Set it as per need
     "model_checkpoint_dir": WEIGHT_FOLDER_PATH,
     "description": DESC,
-    # "uniq_desc": False,
+    # "uniq_desc": False, # Uncomment if loading checkpoint
     # "best_train_score": ckpt["best_train_score"],
     # "best_test_score": ckpt["best_test_score"],
 }
-trainer = BroadFineAlternateModifiedTrainer(**trainer_params)
+trainer = VitDualModelTrainer(**trainer_params)
 run_kawrgs = {"fine_class_CE": nn.CrossEntropyLoss()}
 
 trainer.run(**run_kawrgs)
