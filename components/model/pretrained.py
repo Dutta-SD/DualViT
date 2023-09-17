@@ -48,13 +48,66 @@ class VitImageClassificationBroadFine(ViTForImageClassification):
         return emb_list, op_list
 
 
+class VitImageClassificationSingleClassToken(ViTForImageClassification):
+    def __init__(self, config: ViTConfig) -> None:
+        super().__init__(config)
+
+    def pre_forward_adjust(self, num_output: int):
+        # Changes the classifier
+        cfg = self.vit.config
+        self.num_outputs = 1
+        self.classifier = nn.Linear(cfg.hidden_size, num_output)
+
+    def forward(self, x, *args, **kwargs):
+        outputs = self.vit.layernorm(self.vit(x)[0])
+
+        final_embedding = outputs[:, 0]
+        final_logits = self.classifier(final_embedding)
+
+        return final_embedding, final_logits
+
+
+class VitDualModelBroadFine(nn.Module):
+    def __init__(
+        self,
+        model_fine: VitImageClassificationSingleClassToken,
+        model_broad: VitImageClassificationSingleClassToken,
+    ):
+        super().__init__()
+        self.model_fine = model_fine
+        self.model_broad = model_broad
+
+    def forward(self, x):
+        emb_fine, output_fine = self.model_fine(x)
+        emb_broad, output_broad = self.model_broad(x)
+
+        return emb_fine, output_fine, emb_broad, output_broad
+
+
 if __name__ == "__main__":
-    pt_model = VitImageClassificationBroadFine.from_pretrained(
-        "aaraki/vit-base-patch16-224-in21k-finetuned-cifar10"
+    # pt_model = VitImageClassificationBroadFine.from_pretrained(
+    #     "aaraki/vit-base-patch16-224-in21k-finetuned-cifar10"
+    # )
+    # rand_tensor = torch.rand(32, 3, 224, 224)
+    # pt_model.pre_forward_adjust((2, 10))  # For cifar 10
+    # ops = pt_model(rand_tensor)
+
+    # for op in ops:
+    #     print(op.shape)
+    fine_model = VitImageClassificationSingleClassToken.from_pretrained(
+        "google/vit-base-patch16-224"
     )
-    rand_tensor = torch.rand(32, 3, 224, 224)
-    pt_model.pre_forward_adjust((2, 10))  # For cifar 10
-    ops = pt_model(rand_tensor)
+    fine_model.pre_forward_adjust(10)  # For cifar 10
+
+    broad_model = VitImageClassificationSingleClassToken.from_pretrained(
+        "google/vit-base-patch16-224"
+    )
+    broad_model.pre_forward_adjust(2)  # For cifar 10 2 classes
+
+    model = VitDualModelBroadFine(fine_model, broad_model)
+
+    rand_tensor = torch.rand(4, 3, 224, 224)
+    ops = model(rand_tensor)
 
     for op in ops:
         print(op.shape)

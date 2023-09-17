@@ -69,5 +69,3 @@ class FineClassTrainer(BaseTrainer):
                 )
 
         return [loss], metrics
-
-
