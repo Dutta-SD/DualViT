@@ -1,5 +1,4 @@
 from components.trainer.base import BaseTrainer
-from constants import VIT_PRETRAINED_MODEL_2
 
 
 import numpy as np
@@ -14,9 +13,12 @@ class VitDualModelTrainer(BaseTrainer):
         super().__init__(*args, **kwargs)
         print("Starting Dual Model Training Training with Modified Loss ...")
         self.criterion_name_fine = "fine_class_CE"
+        self.criterion_name_broad = "broad_class_CE"
 
     def batch_2_model_input(self, batch):
         imgs, fine_labels, broad_labels = batch
+        # print("Fine Labels Unique Labels: ", torch.unique(fine_labels))
+        # print("Broad Labels Unique Labels: ", torch.unique(broad_labels))
         return {
             "pixel_values": imgs,
             "fine_labels": fine_labels,
@@ -25,9 +27,15 @@ class VitDualModelTrainer(BaseTrainer):
 
     def get_filtered_tensor(self, tensor: torch.IntTensor):
         _, *rest = tensor.shape
-        if torch.isnan(tensor).sum() > 0:
+        if self.is_problem_tensor(tensor):
             return torch.empty((0, *rest), device=tensor.device, requires_grad=True)
         return tensor
+
+    def is_problem_tensor(self, tensor):
+        return torch.isnan(tensor).sum() > 0
+
+    def get_safe_zero(self, tensor):
+        return torch.tensor(0.0, device=tensor.device, requires_grad=True)
 
     def get_outputs(self, model_inputs, **kwargs) -> tuple[list, dict]:
         emb_fine, output_fine, emb_broad, output_broad = self.model(
@@ -93,11 +101,17 @@ class VitDualModelTrainer(BaseTrainer):
         loss_0 = broad_criteria(mean_fine_0, mean_broad_0)
         loss_1 = broad_criteria(mean_fine_1, mean_fine_0)
 
+        loss_0 = torch.nan_to_num(loss_0)
+
+        loss_1 = torch.nan_to_num(loss_1)
+
         criterion_fine = kwargs[self.criterion_name_fine]
+        criterion_broad = kwargs[self.criterion_name_broad]
 
         loss_fine = criterion_fine(output_fine, model_inputs["fine_labels"])
 
-        loss_broad = loss_0 + loss_1
+        loss_broad_dummy = loss_0 + loss_1
+        loss_broad = criterion_broad(output_broad, model_inputs["broad_labels"])
 
         metrics = {}
 
@@ -113,7 +127,7 @@ class VitDualModelTrainer(BaseTrainer):
                     model_inputs["fine_labels"].clone().detach().cpu(),
                 )
 
-        return [loss_broad, loss_fine], metrics
+        return [loss_broad, loss_fine, loss_broad_dummy], metrics
 
     def _train(self, epoch, **kwargs):
         print("\nCURR EPOCH: ", epoch)
@@ -122,14 +136,16 @@ class VitDualModelTrainer(BaseTrainer):
 
         for batch_idx, batch in enumerate(self.train_dl):
             loss_list, metrics = self._get_losses_and_metrics(batch, **kwargs)
-            loss_broad, loss_fine = loss_list
+            loss_broad, loss_fine, loss_broad_dummy = loss_list
 
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
 
             loss_broad.backward()
-            loss_fine.backward()
+            # loss_fine.backward()
 
-            epoch_losses.append([loss_broad.item(), loss_fine.item()])
+            epoch_losses.append(
+                [loss_broad.item(), loss_fine.item(), loss_broad_dummy.item()]
+            )
 
             for opt in self.optimizer_list:
                 opt.step()
@@ -152,11 +168,13 @@ class VitDualModelTrainer(BaseTrainer):
 
         for batch_idx, batch in enumerate(self.test_dl):
             loss_list, metrics = self._get_losses_and_metrics(batch, **kwargs)
-            loss_broad, loss_fine = loss_list
+            loss_broad, loss_fine, loss_broad_dummy = loss_list
 
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
 
-            epoch_losses.append([loss_broad.item(), loss_fine.item()])
+            epoch_losses.append(
+                [loss_broad.item(), loss_fine.item(), loss_broad_dummy.item()]
+            )
 
         results = self.update_results_and_log(results, epoch_losses, epoch_metrics)
 

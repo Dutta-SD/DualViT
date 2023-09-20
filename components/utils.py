@@ -69,7 +69,7 @@ class CIFAR10MultiLabelDataset(CIFAR10):
         super().__init__(*args, **kwargs)
 
     def __len__(self):
-        # return 800 if self.train else 200
+        # return 80 if self.train else 20
         return super().__len__()
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
