@@ -3,6 +3,8 @@ from torch import nn
 import torch
 from transformers import AutoModel, AutoTokenizer
 
+from components.utils import to_device, DEVICE
+
 
 class PreTrainedWordEmbeddings(nn.Module):
     def __init__(self, model_name) -> None:
@@ -12,7 +14,7 @@ class PreTrainedWordEmbeddings(nn.Module):
 
     @torch.no_grad()
     def forward(self, word: str):
-        encoded_text = self.tokenizer(word, return_tensors="pt")
+        encoded_text = self.tokenizer(word, return_tensors="pt").to(DEVICE)
         output = self.model(**encoded_text)
         return output["last_hidden_state"][:, 0].squeeze(0)
 
