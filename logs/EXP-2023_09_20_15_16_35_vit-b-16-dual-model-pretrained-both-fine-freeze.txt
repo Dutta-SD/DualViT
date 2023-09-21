@@ -6,3 +6,23 @@ Starting Dual Model Training Training with Modified Loss ...
 Starting Train/Eval...
 
 CURR EPOCH:  0
+
+Epoch: 0 Summary
+Mode: MODE.TRAIN
+Losses: [ 0.02283129  0.04922618 22.55534864]
+Metrics: {'Acc@1_broad': 0.9928, 'Acc@1_fine': 0.9853}
+Best Acc@1_broad till now: 0.9850800037384033
+
+Train Metrics increased from: 0.9850800037384033 -> 0.9927999973297119
+
+Epoch: 0 Summary
+Mode: MODE.EVAL
+Losses: [6.25095771e-03 6.25729427e-02 2.28403484e+01]
+Metrics: {'Acc@1_broad': 0.9984, 'Acc@1_fine': 0.9804}
+Best Acc@1_broad till now: 0.980400025844574
+
+Eval Metrics increased from: 0.980400025844574 -> 0.9983999729156494
+Model CKPT saved at: ./checkpoints/vit-b-16-dual-model-pretrained-both_1694963453.pt.pt
+Epoch took 1309.12 s
+
+CURR EPOCH:  1
