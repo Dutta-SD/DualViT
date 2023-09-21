@@ -9,9 +9,9 @@ import torchvision.transforms as tf
 from torch.utils.data import DataLoader
 
 
-def accuracy(outputs, labels):
-    _, preds = torch.max(outputs, dim=1)
-    return torch.tensor(torch.sum(preds == labels).item() / len(preds))
+def accuracy(y_pred, y_true):
+    _, preds = torch.max(y_pred, dim=1)
+    return torch.tensor(torch.sum(preds == y_true).item() / len(preds))
 
 
 def set_seed(seed: int = 42) -> None:
@@ -69,7 +69,7 @@ class CIFAR10MultiLabelDataset(CIFAR10):
         super().__init__(*args, **kwargs)
 
     def __len__(self):
-        # return 8192 if self.train else 2048
+        # return 10000 if self.train else 8000
         return super().__len__()
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:

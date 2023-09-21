@@ -1,6 +1,0 @@
-{
-    "python.linting.enabled": true,
-    "python.formatting.provider": "black",
-    "python.formatting.blackPath": "/home/sandip/miniconda3/envs/sandip-env/bin/black
-
-}

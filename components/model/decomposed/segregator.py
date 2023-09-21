@@ -6,8 +6,11 @@ from components.model.decomposed.entity import TransformerData
 from components.model.decomposed.split import segregate_samples_within_batch
 from components.model.lang import PreTrainedWordEmbeddings
 from components.model.tree import LabelHierarchyTree
+from components.utils import DEVICE, to_device
 
-_emb_generator = PreTrainedWordEmbeddings(ViTDecomposedConfig.LANG_MODEL_NAME)
+_emb_generator = to_device(
+    PreTrainedWordEmbeddings(ViTDecomposedConfig.LANG_MODEL_NAME), DEVICE
+)
 
 
 class Segregator:
@@ -46,9 +49,7 @@ class Segregator:
                 parent_output = {parent_key: tfr_data}
 
             elif bypass_to_leaf and is_empty:
-                parent_output = self.get_output_empty_bypass(
-                    parent_key, tfr_data, bypass=True
-                )
+                parent_output = self.get_output_empty_bypass(parent_key, tfr_data)
             else:
                 parent_output = self.get_output_non_leaf(
                     parent_key, tfr_data, bypass=bypass_to_leaf
