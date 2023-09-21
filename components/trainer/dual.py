@@ -96,7 +96,7 @@ class VitDualModelTrainer(BaseTrainer):
         )
         mean_fine_1 = torch.mean(fine_1_cat, 0).unsqueeze(0)
 
-        broad_criteria = lambda x, y: torch.linalg.norm(x - y)
+        broad_criteria = lambda x, y: torch.linalg.norm(x - y, 1)
 
         loss_0 = broad_criteria(mean_fine_0, mean_broad_0)
         loss_1 = broad_criteria(mean_fine_1, mean_fine_0)
@@ -106,12 +106,12 @@ class VitDualModelTrainer(BaseTrainer):
         loss_1 = torch.nan_to_num(loss_1)
 
         criterion_fine = kwargs[self.criterion_name_fine]
-        criterion_broad = kwargs[self.criterion_name_broad]
+        # criterion_broad = kwargs[self.criterion_name_broad]
 
         loss_fine = criterion_fine(output_fine, model_inputs["fine_labels"])
 
-        loss_broad_dummy = loss_0 + loss_1
-        loss_broad = criterion_broad(output_broad, model_inputs["broad_labels"])
+        loss_broad = loss_0 + loss_1
+        # loss_broad = criterion_broad(output_broad, model_inputs["broad_labels"])
 
         metrics = {}
 
@@ -127,7 +127,7 @@ class VitDualModelTrainer(BaseTrainer):
                     model_inputs["fine_labels"].clone().detach().cpu(),
                 )
 
-        return [loss_broad, loss_fine, loss_broad_dummy], metrics
+        return [loss_broad, loss_fine], metrics
 
     def _train(self, epoch, **kwargs):
         print("\nCURR EPOCH: ", epoch)
@@ -136,16 +136,15 @@ class VitDualModelTrainer(BaseTrainer):
 
         for batch_idx, batch in enumerate(self.train_dl):
             loss_list, metrics = self._get_losses_and_metrics(batch, **kwargs)
-            loss_broad, loss_fine, loss_broad_dummy = loss_list
+            loss_broad, loss_fine = loss_list
 
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
 
+            # Different model with no connections, so no need of retain_graph
             loss_broad.backward()
-            # loss_fine.backward()
+            loss_fine.backward()
 
-            epoch_losses.append(
-                [loss_broad.item(), loss_fine.item(), loss_broad_dummy.item()]
-            )
+            epoch_losses.append([loss_broad.item(), loss_fine.item()])
 
             for opt in self.optimizer_list:
                 opt.step()
@@ -168,13 +167,11 @@ class VitDualModelTrainer(BaseTrainer):
 
         for batch_idx, batch in enumerate(self.test_dl):
             loss_list, metrics = self._get_losses_and_metrics(batch, **kwargs)
-            loss_broad, loss_fine, loss_broad_dummy = loss_list
+            loss_broad, loss_fine = loss_list
 
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
 
-            epoch_losses.append(
-                [loss_broad.item(), loss_fine.item(), loss_broad_dummy.item()]
-            )
+            epoch_losses.append([loss_broad.item(), loss_fine.item()])
 
         results = self.update_results_and_log(results, epoch_losses, epoch_metrics)
 

@@ -112,8 +112,9 @@ from constants import VIT_PRETRAINED_MODEL_2
 
 # print(*[name for name, p in model.named_parameters() if p.requires_grad], sep="\n")
 import torch
+from torch.nn import functional as F
 
-DESC = "vit-b-16-dual-model-pretrained-both_1694963453.pt"
+DESC = "vit-b-16-dual-model-pretrained-both_1694963453.pt.pt"
 
 ckpt = torch.load(f"./checkpoints/{DESC}")
 model: VitDualModelBroadFine = ckpt["model"]
@@ -125,7 +126,14 @@ with torch.no_grad():
         x, fine_labels, broad_labels = batch
         emb_fine, output_fine, emb_broad, output_broad = model(x)
 
+        print("Batch Size:", x.shape[0])
+
         print(
-            "L2 diff between broad and fine:", torch.linalg.norm(emb_fine - emb_broad)
+            "L2 diff between broad embedding and fine embedding:",
+            torch.linalg.norm(emb_fine - emb_broad).item(),
+        )
+        print(
+            "L1 diff between broad embedding and fine embedding:",
+            F.l1_loss(emb_fine, emb_broad).item(),
         )
         break
