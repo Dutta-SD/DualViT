@@ -1,17 +1,34 @@
-from einops import rearrange, repeat
 import torch
 import torch.nn as nn
-from components.model.decomposed.aggregator import Aggregator
-from components.model.decomposed.entity import TransformerData
-from components.model.decomposed.segregator import Segregator
+from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 
-from components.model.tree import LabelHierarchyTree
-from components.model.vit_blocks import PositionalEmbedding1D
+from vish.model.decomposed.aggregator import Aggregator
+from vish.model.decomposed.entity import TransformerData
+from vish.model.decomposed.segregator import Segregator
+from vish.model.tree import LabelHierarchyTree
+from vish.model.vit_blocks import PositionalEmbedding1D
 
 ROOT_KEY = "class"
 DATA_KEY = "pixel_values"
 LABEL_KEY = "labels"
+
+
+def debug_dict(d: dict[str, TransformerData]):
+    for key, value in d.items():
+        print("\tKey:", key)
+        print(
+            "\t\tValue -> Data Shape: ",
+            value.data.shape,
+            "DType:",
+            value.data.dtype,
+        )
+        print(
+            "\t\tValue -> Label Shape: ",
+            value.labels.shape,
+            "DType:",
+            value.labels.dtype,
+        )
 
 
 class VitClassificationDecomposed(nn.Module):
@@ -78,7 +95,7 @@ class VitClassificationDecomposed(nn.Module):
         """Converts image into required embeddings
 
         We assume initial data is the form of a dictionary,
-        with 3 dimensional image input as raw[`pixel_values`]
+        with 3-dimensional image input as raw[`pixel_values`]
         and labels as raw[`labels`]
 
         We convert it to `TransformerData` class required for the model
@@ -93,22 +110,6 @@ class VitClassificationDecomposed(nn.Module):
         final_labels = repeat(labels, "b 1 -> 1 (b n)", n=self.seq_len)
 
         return {ROOT_KEY: TransformerData(data=final_data, labels=final_labels)}
-
-    def debug_dict(self, d: dict[str, TransformerData]):
-        for key, value in d.items():
-            print("\tKey:", key)
-            print(
-                "\t\tValue -> Data Shape: ",
-                value.data.shape,
-                "DType:",
-                value.data.dtype,
-            )
-            print(
-                "\t\tValue -> Label Shape: ",
-                value.labels.shape,
-                "DType:",
-                value.labels.dtype,
-            )
 
     def forward(self, raw: dict[str, torch.FloatTensor]):
         ip = self._init_transform(raw)

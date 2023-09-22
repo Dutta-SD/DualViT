@@ -256,7 +256,7 @@ pyrightconfig.json
 # Additional Ignores
 checkpoints/
 data/
-!components/data
+!vish/data
 
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode

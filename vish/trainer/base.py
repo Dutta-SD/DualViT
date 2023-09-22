@@ -1,11 +1,12 @@
+import time
+from enum import Enum
 from typing import Any, Callable
+
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as opt
 from torch.utils.data import DataLoader
-from enum import Enum
-import time
-import numpy as np
 
 
 class BaseTrainer:
@@ -60,10 +61,10 @@ class BaseTrainer:
         }
 
     def batch_2_model_input(self, batch) -> Any:
-        pass
+        raise NotImplementedError()
 
     def get_outputs(self, model_inputs, **kwargs) -> tuple[list, dict]:
-        pass
+        raise NotImplementedError()
 
     def update_results_and_log(self, results, epoch_losses, epoch_metrics):
         results["losses"] = np.mean(epoch_losses)
@@ -90,7 +91,7 @@ class BaseTrainer:
         torch.save(
             {
                 "model": self.model,
-                "opt": [opt.state_dict() for opt in self.optimizer_list],
+                "opt": [op.state_dict() for op in self.optimizer_list],
                 "tags": ["vit"],
                 "best_train_score": self.best_train_score,
                 "best_test_score": self.best_test_score,

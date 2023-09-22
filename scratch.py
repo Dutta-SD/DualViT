@@ -1,4 +1,4 @@
-# # from components.model.cifar_10_split import TransformerDecomposed
+# # from vish.model.cifar_10_split import TransformerDecomposed
 # # import torch
 
 # # net = TransformerDecomposed()
@@ -24,13 +24,13 @@
 
 # # print(output.shape)
 
-# # from components.model.decomposed.segregator import Segregator
-# # from components.model.tree import LabelHierarchyTree
-# # from components.model.decomposed.entity import TransformerData
+# # from vish.model.decomposed.segregator import Segregator
+# # from vish.model.tree import LabelHierarchyTree
+# # from vish.model.decomposed.entity import TransformerData
 # # import torch
 
 
-# # lt = LabelHierarchyTree("components/data/cifar10.xml")
+# # lt = LabelHierarchyTree("vish/data/cifar10.xml")
 # # sg = Segregator(lt)
 
 # # ip = {
@@ -57,12 +57,12 @@
 # #     print(i.tag)
 
 # # import torch
-# # from components.model.tree import LabelHierarchyTree
+# # from vish.model.tree import LabelHierarchyTree
 
-# # lt = LabelHierarchyTree("components/data/cifar10.xml")
+# # lt = LabelHierarchyTree("vish/data/cifar10.xml")
 # # # print(lt.get_elements_at_depth(3))
 
-# # from components.model.decomposed.decomposed import VitClassificationDecomposed
+# # from vish.model.decomposed.decomposed import VitClassificationDecomposed
 
 # # model = VitClassificationDecomposed(
 # #     img_height=224,
@@ -80,19 +80,16 @@
 
 # # model(ip)
 
-# # from components.trainer.alternate import BroadFineAlternateModifiedTrainer
+# # from vish.trainer.alternate import BroadFineAlternateModifiedTrainer
 # # import constants
 
 # # for epoch in range(constants.EPOCHS):
 # #     print(epoch, BroadFineAlternateModifiedTrainer.get_curr_loss_idx(epoch))
 
-from components.model.pretrained import (
+from vish.model.pretrained import (
     VitDualModelBroadFine,
-    VitImageClassificationSingleClassToken,
 )
-from components.utils import DEVICE, to_device, train_dl
-from constants import VIT_PRETRAINED_MODEL_2
-
+from vish.utils import DEVICE, to_device, train_dl
 
 # fine_model = VitImageClassificationSingleClassToken.from_pretrained(
 #     VIT_PRETRAINED_MODEL_2

@@ -1,25 +1,26 @@
 # Decomposed model for CIFAR 10
-# TODO: This is hardcoded. Parse hierarchichal tree and create blocks regarding the same
+# TODO: This is hardcoded. Parse hierarchical tree and create blocks regarding the same
 # TODO: Need to add positional embedding and additional class token logic
 # TODO: Do we at all need [cls] token or can we do mean at the last step of MLP head -no use global pooling
 # TODO: How to decide output for block? - By number of classes
 # TODO: Add if-else logic for empty batch
 
 
-import torch
-from torch import nn
-from torch.nn import functional as F
-
-from components.model.lang import PreTrainedWordEmbeddings
-from components.model.decomposed.split import segregate_samples_within_batch
-from components.model.tree import LabelHierarchyTree
-from components.model.vit_blocks import TransformerBlockGroup
-from einops import repeat
 from pprint import pprint
 from typing import Dict, Tuple
 
+import torch
+from einops import repeat
+from torch import nn
+from torch.nn import functional as F
+
+from vish.model.decomposed.split import segregate_samples_within_batch
+from vish.model.lang import PreTrainedWordEmbeddings
+from vish.model.tree import LabelHierarchyTree
+from vish.model.vit_blocks import TransformerBlockGroup
+
 LANG_MODEL_NAME = "distilbert-base-uncased"
-CIFAR_10_HIERARCHICAL_LABEL_PATH = "components/data/cifar10.xml"
+CIFAR_10_HIERARCHICAL_LABEL_PATH = "vish/data/cifar10.xml"
 
 
 lang_model = PreTrainedWordEmbeddings(LANG_MODEL_NAME)
@@ -39,6 +40,7 @@ net_l3 = {
 }
 
 
+@DeprecationWarning
 class TransformerDecomposed(nn.Module):
     def __init__(self) -> None:
         super().__init__()

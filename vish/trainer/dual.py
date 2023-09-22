@@ -1,11 +1,28 @@
-from components.trainer.base import BaseTrainer
-
+from collections import defaultdict
 
 import numpy as np
 import torch
 
+from vish.trainer.base import BaseTrainer
 
-from collections import defaultdict
+
+def is_problem_tensor(tensor):
+    return torch.isnan(tensor).sum() > 0
+
+
+def get_filtered_tensor(tensor: torch.IntTensor):
+    _, *rest = tensor.shape
+    if is_problem_tensor(tensor):
+        return torch.empty((0, *rest), device=tensor.device, requires_grad=True)
+    return tensor
+
+
+def get_safe_zero(tensor: torch.Tensor):
+    return torch.tensor(0.0, device=tensor.device, requires_grad=True)
+
+
+def broad_criteria(x: torch.Tensor, y: torch.Tensor):
+    return torch.linalg.norm(x - y, 1)
 
 
 class VitDualModelTrainer(BaseTrainer):
@@ -16,26 +33,13 @@ class VitDualModelTrainer(BaseTrainer):
         self.criterion_name_broad = "broad_class_CE"
 
     def batch_2_model_input(self, batch):
-        imgs, fine_labels, broad_labels = batch
-        # print("Fine Labels Unique Labels: ", torch.unique(fine_labels))
-        # print("Broad Labels Unique Labels: ", torch.unique(broad_labels))
+        images, fine_labels, broad_labels = batch
+
         return {
-            "pixel_values": imgs,
+            "pixel_values": images,
             "fine_labels": fine_labels,
             "broad_labels": broad_labels,
         }
-
-    def get_filtered_tensor(self, tensor: torch.IntTensor):
-        _, *rest = tensor.shape
-        if self.is_problem_tensor(tensor):
-            return torch.empty((0, *rest), device=tensor.device, requires_grad=True)
-        return tensor
-
-    def is_problem_tensor(self, tensor):
-        return torch.isnan(tensor).sum() > 0
-
-    def get_safe_zero(self, tensor):
-        return torch.tensor(0.0, device=tensor.device, requires_grad=True)
 
     def get_outputs(self, model_inputs, **kwargs) -> tuple[list, dict]:
         emb_fine, output_fine, emb_broad, output_broad = self.model(
@@ -50,25 +54,19 @@ class VitDualModelTrainer(BaseTrainer):
 
         for idx in range(2):
             broad_emb_seg.append(
-                self.get_filtered_tensor(emb_broad[model_inputs["broad_labels"] == idx])
+                get_filtered_tensor(emb_broad[model_inputs["broad_labels"] == idx])
             )
 
         for idx in range(10):
             fine_emb_seg.append(
-                self.get_filtered_tensor(
-                    fine_emb_clone[model_inputs["fine_labels"] == idx]
-                )
+                get_filtered_tensor(fine_emb_clone[model_inputs["fine_labels"] == idx])
             )
 
-        mean_broad_0 = self.get_filtered_tensor(
-            torch.mean(broad_emb_seg[0], 0).unsqueeze(0)
-        )
-        mean_broad_1 = self.get_filtered_tensor(
-            torch.mean(broad_emb_seg[1], 0).unsqueeze(0)
-        )
+        mean_broad_0 = get_filtered_tensor(torch.mean(broad_emb_seg[0], 0).unsqueeze(0))
+        mean_broad_1 = get_filtered_tensor(torch.mean(broad_emb_seg[1], 0).unsqueeze(0))
 
         fine_means = [
-            self.get_filtered_tensor(torch.mean(fine_emb_seg[i], 0).unsqueeze(0))
+            get_filtered_tensor(torch.mean(fine_emb_seg[i], 0).unsqueeze(0))
             for i in range(10)
         ]
 
@@ -96,8 +94,6 @@ class VitDualModelTrainer(BaseTrainer):
             dim=0,
         )
         mean_fine_1 = torch.mean(fine_1_cat, 0).unsqueeze(0)
-
-        broad_criteria = lambda x, y: torch.linalg.norm(x - y, 1)
 
         loss_0 = broad_criteria(mean_fine_0, mean_broad_0)
         loss_1 = broad_criteria(mean_fine_1, mean_broad_1)

@@ -1,8 +1,8 @@
+import einops
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import einops
-import numpy as np
 
 
 class PositionalEmbedding1D(nn.Module):
@@ -75,7 +75,8 @@ class MultiHeadAttention(nn.Module):
             for mat in [queries, keys, values]
         ]
 
-    def _add_mask(self, scores, mask):
+    @staticmethod
+    def _add_mask(scores, mask):
         mask = mask[:, None, None, :].float()
         scores -= 10000.0 * (1.0 - mask)
         return scores
@@ -90,13 +91,9 @@ class MultiHeadAttention(nn.Module):
 
         query, key, value can be computed from here or externally injected.
         """
-        query_multi_head, key_multi_head, value_multihead = self._split_for_multi_head(
-            *self.to_qkv(x)
-        )
+        queries_mh, keys_mh, values_mh = self._split_for_multi_head(*self.to_qkv(x))
 
-        attn_mat_mh = (
-            query_multi_head @ key_multi_head.transpose(-2, -1)
-        ) / self.norm_factor
+        attn_mat_mh = (queries_mh @ keys_mh.transpose(-2, -1)) / self.norm_factor
 
         if mask is not None:
             attn_mat_mh = self._add_mask(attn_mat_mh, mask)
@@ -104,7 +101,7 @@ class MultiHeadAttention(nn.Module):
         attn_mat_mh = self.dropout(F.softmax(attn_mat_mh, dim=-1))
 
         final_values = einops.rearrange(
-            attn_mat_mh @ value_multihead, "b nh s dh -> b s nh dh"
+            attn_mat_mh @ values_mh, "b nh s dh -> b s nh dh"
         )
         # Concat
         final_values = einops.rearrange(final_values, "b s nh dh -> b s (nh dh)")
@@ -114,7 +111,7 @@ class MultiHeadAttention(nn.Module):
 class PositionWiseFeedForward(nn.Module):
     """
     FeedForward Neural Networks for each
-    element of the seuqence
+    element of the sequence
     """
 
     def __init__(
@@ -176,6 +173,7 @@ class TransformerBlock(nn.Module):
 
     def forward(self, x, mask=None):
         output = x
+        # += is inplace operation, may cause errors
         output = output + self._get_mha_residue(output, mask)
         output = output + self._get_pwff_residue(output)
         return output

@@ -1,9 +1,8 @@
-import time
-from torch import nn
 import torch
+from torch import nn
 from transformers import AutoModel, AutoTokenizer
 
-from components.utils import to_device, DEVICE
+from vish.utils import DEVICE
 
 
 class PreTrainedWordEmbeddings(nn.Module):
@@ -17,13 +16,3 @@ class PreTrainedWordEmbeddings(nn.Module):
         encoded_text = self.tokenizer(word, return_tensors="pt").to(DEVICE)
         output = self.model(**encoded_text)
         return output["last_hidden_state"][:, 0].squeeze(0)
-
-
-if __name__ == "__main__":
-    device = torch.device("cpu")
-    tik = time.time()
-    be_model = PreTrainedWordEmbeddings("distilbert-base-uncased").to(device)
-    op = be_model("word")
-    print(op.shape)
-    tok = time.time()
-    print(f"{device} run time = {tok - tik} s")

@@ -1,12 +1,11 @@
 import sys
 
-import torch
 from torch import nn
 
-from components.model.vit import ViTBasicForImageClassification
-from components.trainer.custom import BroadClassTrainer, FineClassTrainer
-from components.utils import *
-from constants import *
+from vish.model.vit import ViTBasicForImageClassification
+from vish.trainer.custom import BroadClassTrainer, FineClassTrainer
+from vish.utils import *
+from vish.constants import *
 
 # Settings for directing output to a file
 log_file = open(f"log-vit.txt", "a")

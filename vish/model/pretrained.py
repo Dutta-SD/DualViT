@@ -5,18 +5,19 @@ from transformers.models.vit.modeling_vit import ViTForImageClassification
 
 
 class VitImageClassificationBroadFine(ViTForImageClassification):
-    def __init__(self, config: ViTConfig) -> None:
+    def __init__(self, config: ViTConfig):
         super().__init__(config)
+        self.num_outputs = None
 
     def pre_forward_adjust(
         self,
         num_output_nodes: tuple,
-    ):
+    ) -> None:
         """Adjust model before forward
 
         Args:
             num_output_nodes (tuple): The number of labels. Values should be from broad to fine.
-             That is last value should be finest class while first should be the broadest
+             That is last value should be the finest class while first should be the broadest
         """
         embs = self.vit.embeddings
         self.num_outputs = len(num_output_nodes)
@@ -51,6 +52,7 @@ class VitImageClassificationBroadFine(ViTForImageClassification):
 class VitImageClassificationSingleClassToken(ViTForImageClassification):
     def __init__(self, config: ViTConfig) -> None:
         super().__init__(config)
+        self.num_outputs = None
 
     def pre_forward_adjust(self, num_output: int):
         # Changes the classifier

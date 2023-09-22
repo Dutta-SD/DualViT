@@ -1,12 +1,11 @@
 import sys
 
-import torch
 from torch import nn
 
-from components.model.vit import ViTBasicForImageClassification
-from components.trainer.alternate import BroadFineAlternateModifiedTrainer
-from components.utils import *
-from constants import *
+from vish.model.vit import ViTBasicForImageClassification
+from vish.trainer.alternate import BroadFineAlternateModifiedTrainer
+from vish.utils import *
+from vish.constants import *
 from datetime import datetime
 
 # Settings for directing output to a file
