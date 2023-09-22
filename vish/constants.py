@@ -1,5 +1,5 @@
 # Constants
-WEIGHT_FOLDER_PATH = "../checkpoints"
+WEIGHT_FOLDER_PATH = "./checkpoints"
 BATCH_SIZE = 16
 LEARNING_RATE = 1e-3
 WEIGHT_DECAY = 1e-5
