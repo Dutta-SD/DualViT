@@ -1,13 +1,11 @@
 import sys
+from datetime import datetime
 
-import torch
 from torch import nn
 
-from components.model.pretrained import VitImageClassificationBroadFine
-from components.trainer.alternate import BroadFineAlternateModifiedTrainer
-from components.utils import *
-from constants import *
-from datetime import datetime
+from vish.model.pretrained import VitImageClassificationBroadFine
+from vish.trainer.alternate import BroadFineAlternateModifiedTrainer
+from vish.utils import *
 
 # Settings for directing output to a file
 str_format = "%Y_%m_%d_%H_%M_%S"
@@ -53,7 +51,7 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode="max", verbose=True, min_lr=MIN_LR
 )
 
-### Training
+# Training
 trainer_params = {
     "num_epochs": EPOCHS,
     "train_dl": train_dl,

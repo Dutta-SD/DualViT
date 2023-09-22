@@ -1,25 +1,24 @@
 import torch
-from typing import Dict
-from einops import repeat, rearrange
+from einops import repeat
+from torch import Tensor
 
 
 def segregate_samples_within_batch(
     seg_queries: torch.FloatTensor,
     keys: torch.FloatTensor,
     values: torch.FloatTensor,
-) -> Dict[int, torch.FloatTensor]:
+) -> tuple[Tensor, dict]:
     """
     Segregates Values based on given Query Vectors
 
     Args:
-        values: (torch.FloatTensor) Samples of shape [batch, seq, emb_dim]
-
-        keys: (torch.FloatTensor) Samples of shape [batch, seq, emb_dim]
-
-        seg_queries: (torch.FloatTensor) Queries of shape [batch, num_classes, emb_dim]
+        values (torch.FloatTensor): Samples of shape [batch, seq, emb_dim]
+        keys (torch.FloatTensor): Samples of shape [batch, seq, emb_dim]
+        seg_queries (torch.FloatTensor): Queries of shape [batch, num_classes, emb_dim]
 
     Return:
-        Dict[int, torch.FloatTensor] The segregated values based on keys
+        tuple[Tensor, Dict[int, torch.FloatTensor]] The segregated values based on keys and
+        the segregating class indexes
     """
     num_classes = seg_queries.shape[1]
 
@@ -32,11 +31,12 @@ def segregate_samples_within_batch(
     }
 
 
+@DeprecationWarning
 def segregate_samples_within_sample(
     seg_queries: torch.FloatTensor,
     keys: torch.FloatTensor,
     values: torch.FloatTensor,
-) -> Dict[int, torch.FloatTensor]:
+) -> tuple[Tensor, dict]:
     batch_dim, num_classes, emb_dim = seg_queries.shape
 
     dot_product = seg_queries @ keys.transpose(-1, -2)

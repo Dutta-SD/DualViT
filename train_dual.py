@@ -1,16 +1,15 @@
 import sys
+from datetime import datetime
 
-import torch
 from torch import nn
 
-from components.model.pretrained import (
+from vish.model.pretrained import (
     VitDualModelBroadFine,
     VitImageClassificationSingleClassToken,
 )
-from components.trainer.dual import VitDualModelTrainer
-from components.utils import *
-from constants import *
-from datetime import datetime
+from vish.trainer.dual import VitDualModelTrainer
+from vish.utils import *
+from vish.constants import *
 
 # Settings for directing output to a file
 str_format = "%Y_%m_%d_%H_%M_%S"
@@ -71,7 +70,7 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     min_lr=MIN_LR,
 )
 
-### Training
+# Training
 trainer_params = {
     "num_epochs": EPOCHS,
     "train_dl": train_dl,
@@ -88,12 +87,12 @@ trainer_params = {
     # "best_test_score": ckpt["best_test_score"],
 }
 trainer = VitDualModelTrainer(**trainer_params)
-run_kawrgs = {
+run_kwargs = {
     "fine_class_CE": nn.CrossEntropyLoss(),
     # "broad_class_CE": nn.CrossEntropyLoss(),
 }
 
-trainer.run(**run_kawrgs)
+trainer.run(**run_kwargs)
 
 
 print(f"Final Model saved @ {trainer.ckpt_full_path}")

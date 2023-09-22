@@ -1,6 +1,7 @@
-from components.model.vit_blocks import TransformerBlockGroup
-from components.model.decomposed.entity import TransformerData
 from torch import nn as nn
+
+from vish.model.decomposed.entity import TransformerData
+from vish.model.vit_blocks import TransformerBlockGroup
 
 
 class Aggregator(nn.Module):

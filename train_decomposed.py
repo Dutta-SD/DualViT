@@ -1,12 +1,10 @@
 import sys
-
-import torch
-from components.model.decomposed.decomposed import VitClassificationDecomposed
-from components.model.tree import LabelHierarchyTree
-from components.trainer.decomposed import VitDecomposedTrainer
-from components.utils import *
-from constants import *
 from datetime import datetime
+
+from vish.model.decomposed.decomposed import VitClassificationDecomposed
+from vish.model.tree import LabelHierarchyTree
+from vish.trainer.decomposed import VitDecomposedTrainer
+from vish.utils import *
 
 # Set this flag to True if you want to just test the thing.
 # For running complete experiments, set it to False
@@ -40,7 +38,7 @@ print("*" * 120)
 print("Started at: ", CURR_TIME)
 
 # Label tree
-lt = LabelHierarchyTree("components/data/cifar10.xml")
+lt = LabelHierarchyTree("vish/data/cifar10.xml")
 
 
 # MODEL - CIFAR 10
@@ -74,7 +72,7 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     min_lr=MIN_LR,
 )
 
-### Training
+# Training
 trainer_params = {
     "num_epochs": EPOCHS,
     "train_dl": train_dl,

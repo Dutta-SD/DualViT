@@ -1,12 +1,17 @@
-from components.trainer.base import BaseTrainer
-from constants import ALT_FREQ, EPOCHS
-
+from collections import defaultdict
 
 import numpy as np
 import torch
 
+from vish.constants import ALT_FREQ, EPOCHS
+from vish.trainer.base import BaseTrainer
 
-from collections import defaultdict
+
+def get_filtered_tensor(tensor: torch.IntTensor):
+    _, *rest = tensor.shape
+    if torch.isnan(tensor).sum() > 0:
+        return torch.empty((0, *rest), device=tensor.device)
+    return tensor
 
 
 class BroadFineAlternateModifiedTrainer(BaseTrainer):
@@ -23,12 +28,6 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
             "broad_labels": broad_labels,
         }
 
-    def get_filtered_tensor(self, tensor: torch.IntTensor):
-        _, *rest = tensor.shape
-        if torch.isnan(tensor).sum() > 0:
-            return torch.empty((0, *rest), device=tensor.device)
-        return tensor
-
     def get_outputs(self, model_inputs, **kwargs) -> tuple[list, dict]:
         # fine is last
         embedding_list, ouput_list = self.model(model_inputs["pixel_values"])
@@ -43,25 +42,19 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
 
         for idx in range(2):
             broad_emb_seg.append(
-                self.get_filtered_tensor(broad_emb[model_inputs["broad_labels"] == idx])
+                get_filtered_tensor(broad_emb[model_inputs["broad_labels"] == idx])
             )
 
         for idx in range(10):
             fine_emb_seg.append(
-                self.get_filtered_tensor(
-                    fine_emb_clone[model_inputs["fine_labels"] == idx]
-                )
+                get_filtered_tensor(fine_emb_clone[model_inputs["fine_labels"] == idx])
             )
 
-        mean_broad_0 = self.get_filtered_tensor(
-            torch.mean(broad_emb_seg[0], 0).unsqueeze(0)
-        )
-        mean_fine_0 = self.get_filtered_tensor(
-            torch.mean(broad_emb_seg[1], 0).unsqueeze(0)
-        )
+        mean_broad_0 = get_filtered_tensor(torch.mean(broad_emb_seg[0], 0).unsqueeze(0))
+        mean_broad_1 = get_filtered_tensor(torch.mean(broad_emb_seg[1], 0).unsqueeze(0))
 
         fine_means = [
-            self.get_filtered_tensor(torch.mean(fine_emb_seg[i], 0).unsqueeze(0))
+            get_filtered_tensor(torch.mean(fine_emb_seg[i], 0).unsqueeze(0))
             for i in range(10)
         ]
 
@@ -92,7 +85,7 @@ class BroadFineAlternateModifiedTrainer(BaseTrainer):
         broad_criteria = lambda x, y: torch.linalg.norm(x - y)
 
         loss_0 = broad_criteria(mean_fine_0, mean_broad_0)
-        loss_1 = broad_criteria(mean_fine_1, mean_fine_0)
+        loss_1 = broad_criteria(mean_fine_1, mean_broad_1)
 
         criterion_fine = kwargs[self.criterion_name_fine]
 

@@ -1,10 +1,10 @@
 # Trainer for fine classes training only
-from components.trainer.base import BaseTrainer
 import torch
-from torch.nn import functional as F
-from constants import EPOCHS
 
-# from components.model.pretrained import VitImageClassificationBroadFin
+from vish.trainer.base import BaseTrainer
+
+
+# from vish.model.pretrained import VitImageClassificationBroadFin
 
 
 class BroadClassTrainer(BaseTrainer):

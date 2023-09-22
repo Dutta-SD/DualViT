@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from components.utils import accuracy
-from constants import *
+
+from vish.utils import accuracy
 
 
 # TODO: Adapt for multiple outputs.Currently supports 2

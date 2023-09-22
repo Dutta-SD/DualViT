@@ -1,16 +1,19 @@
-from torch import nn as nn
 import torch
 
-from components.model.decomposed.config import ViTDecomposedConfig
-from components.model.decomposed.entity import TransformerData
-from components.model.decomposed.split import segregate_samples_within_batch
-from components.model.lang import PreTrainedWordEmbeddings
-from components.model.tree import LabelHierarchyTree
-from components.utils import DEVICE, to_device
+from vish.model.decomposed.config import ViTDecomposedConfig
+from vish.model.decomposed.entity import TransformerData
+from vish.model.decomposed.split import segregate_samples_within_batch
+from vish.model.lang import PreTrainedWordEmbeddings
+from vish.model.tree import LabelHierarchyTree
+from vish.utils import DEVICE, to_device
 
 _emb_generator = to_device(
     PreTrainedWordEmbeddings(ViTDecomposedConfig.LANG_MODEL_NAME), DEVICE
 )
+
+
+def is_empty_embeddings(tfr_data: TransformerData):
+    return tfr_data.data.shape[1] == 0
 
 
 class Segregator:
@@ -27,9 +30,6 @@ class Segregator:
         embs = [self._emb_generator(word).unsqueeze(0) for word in words]
         return torch.cat(embs, dim=0).unsqueeze(0)
 
-    def is_empty_embeddings(self, tfr_data: TransformerData):
-        return tfr_data.data.shape[1] == 0
-
     @torch.no_grad()
     def segregate(
         self,
@@ -41,7 +41,7 @@ class Segregator:
 
         for parent_key in model_input.keys():
             tfr_data = model_input[parent_key]
-            is_empty = self.is_empty_embeddings(tfr_data)
+            is_empty = is_empty_embeddings(tfr_data)
 
             if self.label_tree.is_leaf(parent_key) and (
                 not bypass_to_leaf and is_empty

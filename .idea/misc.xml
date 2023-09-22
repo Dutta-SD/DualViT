@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="enabledOnReformat" value="true" />
+    <option name="sdkUUID" value="0326f100-259c-4dff-8cfb-dfd42991e912" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="sandip-env" project-jdk-type="Python SDK" />
+</project>

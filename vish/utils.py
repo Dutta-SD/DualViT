@@ -1,15 +1,17 @@
-import torch
 import os
-import numpy as np
 import random
-from typing import Any, Tuple
-from torchvision.datasets import CIFAR10
-from constants import *
+from typing import Any
+
+import numpy as np
+import torch
 import torchvision.transforms as tf
 from torch.utils.data import DataLoader
+from torchvision.datasets import CIFAR10
+
+from vish.constants import *
 
 
-def accuracy(y_pred, y_true):
+def accuracy(y_pred: torch.FloatTensor, y_true: torch.IntTensor):
     _, preds = torch.max(y_pred, dim=1)
     return torch.tensor(torch.sum(preds == y_true).item() / len(preds))
 
@@ -72,7 +74,7 @@ class CIFAR10MultiLabelDataset(CIFAR10):
         # return 10000 if self.train else 8000
         return super().__len__()
 
-    def __getitem__(self, index: int) -> Tuple[Any, Any]:
+    def __getitem__(self, index: int) -> tuple[Any, Any, int | list[int]]:
         img_tensor, fine_label = super().__getitem__(index)
         return img_tensor, fine_label, get_broad_label_cifar10(fine_label)
 
