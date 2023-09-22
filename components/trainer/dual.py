@@ -63,7 +63,7 @@ class VitDualModelTrainer(BaseTrainer):
         mean_broad_0 = self.get_filtered_tensor(
             torch.mean(broad_emb_seg[0], 0).unsqueeze(0)
         )
-        mean_fine_0 = self.get_filtered_tensor(
+        mean_broad_1 = self.get_filtered_tensor(
             torch.mean(broad_emb_seg[1], 0).unsqueeze(0)
         )
 
@@ -83,6 +83,7 @@ class VitDualModelTrainer(BaseTrainer):
         )
 
         mean_fine_0 = torch.mean(fine_0_cat, 0).unsqueeze(0)
+
         fine_1_cat = torch.cat(
             (
                 fine_means[2],
@@ -99,7 +100,7 @@ class VitDualModelTrainer(BaseTrainer):
         broad_criteria = lambda x, y: torch.linalg.norm(x - y, 1)
 
         loss_0 = broad_criteria(mean_fine_0, mean_broad_0)
-        loss_1 = broad_criteria(mean_fine_1, mean_fine_0)
+        loss_1 = broad_criteria(mean_fine_1, mean_broad_1)
 
         loss_0 = torch.nan_to_num(loss_0)
 
