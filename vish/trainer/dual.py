@@ -137,9 +137,7 @@ class VitDualModelTrainer(BaseTrainer):
 
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
 
-            # Different model with no connections, so no need of retain_graph
-            loss_broad.backward()
-            loss_fine.backward()
+            self.update_losses(loss_broad, loss_fine)
 
             epoch_losses.append([loss_broad.item(), loss_fine.item()])
 
@@ -156,6 +154,11 @@ class VitDualModelTrainer(BaseTrainer):
             self.update_best_score(results)
 
         return results
+
+    def update_losses(self, loss_broad, loss_fine):
+        # Different model with no connections, so no need of retain_graph
+        loss_broad.backward()
+        loss_fine.backward()
 
     @torch.no_grad()
     def validate(self, epoch, save_chkpt=True, **kwargs):
@@ -207,3 +210,38 @@ class VitDualModelTrainer(BaseTrainer):
         print()
 
         return results
+
+
+class TPDualTrainer(VitDualModelTrainer):
+    """
+    Dual Training for TP model
+    """
+
+    def update_losses(self, loss_broad, loss_fine):
+        loss_broad.backward(retain_graph=True)
+        loss_fine.backward()
+
+    def get_outputs(self, model_inputs, **kwargs) -> tuple[list, dict]:
+        broad_logits, fine_logits = self.model(model_inputs["pixel_values"])
+
+        criterion_fine = kwargs[self.criterion_name_fine]
+        criterion_broad = kwargs[self.criterion_name_fine]
+
+        loss_fine = criterion_fine(fine_logits, model_inputs["fine_labels"])
+        loss_broad = criterion_broad(broad_logits, model_inputs["broad_labels"])
+
+        metrics = {}
+
+        with torch.no_grad():
+            for metric_key, metric_fxn in self.metrics_list:
+                # Eg: Acc@1_broad, Acc@1_fine
+                metrics[f"{metric_key}_broad"] = metric_fxn(
+                    broad_logits.clone().detach().cpu(),
+                    model_inputs["broad_labels"].clone().detach().cpu(),
+                )
+                metrics[f"{metric_key}_fine"] = metric_fxn(
+                    fine_logits.clone().detach().cpu(),
+                    model_inputs["fine_labels"].clone().detach().cpu(),
+                )
+
+        return [loss_broad, loss_fine], metrics
