@@ -1,5 +1,3 @@
-from typing import Union
-
 import torch
 
 from vish.model.tp.tp_vit import TPVitImageClassification
