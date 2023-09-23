@@ -12,7 +12,7 @@ class VanillaVitTrainer(BaseTrainer):
     Useful for training Vanilla ViT, TP Vit etc
     """
 
-    model: Union[TPVitImageClassification | ViTBasicForImageClassification]
+    model: TPVitImageClassification | ViTBasicForImageClassification
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
