@@ -6,8 +6,8 @@ from einops.layers.torch import Rearrange
 from vish.model.decomposed.aggregator import Aggregator
 from vish.model.decomposed.entity import TransformerData
 from vish.model.decomposed.segregator import Segregator
-from vish.model.tree import LabelHierarchyTree
-from vish.model.vit_blocks import PositionalEmbedding1D
+from vish.model.common.tree import LabelHierarchyTree
+from vish.model.common.vit_blocks import PositionalEmbedding1D
 
 ROOT_KEY = "class"
 DATA_KEY = "pixel_values"

@@ -1,5 +1,5 @@
 from vish.utils import *
-from vish.model.vit import ViTBasicForImageClassification
+from vish.model.vanilla.vit import ViTBasicForImageClassification
 from vish.constants import *
 from datetime import datetime
 import sys

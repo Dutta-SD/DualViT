@@ -3,8 +3,8 @@ import torch
 from vish.model.decomposed.config import ViTDecomposedConfig
 from vish.model.decomposed.entity import TransformerData
 from vish.model.decomposed.split import segregate_samples_within_batch
-from vish.model.lang import PreTrainedWordEmbeddings
-from vish.model.tree import LabelHierarchyTree
+from vish.model.common.lang import PreTrainedWordEmbeddings
+from vish.model.common.tree import LabelHierarchyTree
 from vish.utils import DEVICE, to_device
 
 _emb_generator = to_device(

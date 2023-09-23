@@ -2,7 +2,7 @@ import sys
 from datetime import datetime
 
 from vish.model.decomposed.decomposed import VitClassificationDecomposed
-from vish.model.tree import LabelHierarchyTree
+from vish.model.common.tree import LabelHierarchyTree
 from vish.trainer.decomposed import VitDecomposedTrainer
 from vish.utils import *
 
