@@ -2,7 +2,7 @@ import sys
 
 from torch import nn
 
-from vish.model.vit import ViTBasicForImageClassification
+from vish.model.vanilla.vit import ViTBasicForImageClassification
 from vish.trainer.custom import BroadClassTrainer, FineClassTrainer
 from vish.utils import *
 from vish.constants import *

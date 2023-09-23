@@ -1,6 +1,6 @@
 from einops.layers.torch import Rearrange
 
-from vish.model.vit_blocks import *
+from vish.model.common.vit_blocks import *
 from vish.utils import *
 
 
@@ -110,7 +110,7 @@ class ViTBasicForImageClassification(nn.Module):
             return op_seq.mean(dim=(1, 2))
 
         # Broad to fine
-        op_additional_tokens = op_seq[:, -self.num_extra_tokens :, :]
+        op_additional_tokens = op_seq[:, -self.num_extra_tokens:, :]
         return [
             self.mlp_heads[idx](op_additional_tokens[:, idx])
             for idx in range(self.num_classification_heads)

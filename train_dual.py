@@ -3,10 +3,8 @@ from datetime import datetime
 
 from torch import nn
 
-from vish.model.pretrained import (
-    VitDualModelBroadFine,
-    VitImageClassificationSingleClassToken,
-)
+from vish.model.dual.dual import VitDualModelBroadFine
+from vish.model.common.pretrained import VitImageClassificationSingleClassToken
 from vish.trainer.dual import VitDualModelTrainer
 from vish.utils import *
 from vish.constants import *

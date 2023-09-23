@@ -15,9 +15,9 @@ from torch import nn
 from torch.nn import functional as F
 
 from vish.model.decomposed.split import segregate_samples_within_batch
-from vish.model.lang import PreTrainedWordEmbeddings
-from vish.model.tree import LabelHierarchyTree
-from vish.model.vit_blocks import TransformerBlockGroup
+from vish.model.common.lang import PreTrainedWordEmbeddings
+from vish.model.common.tree import LabelHierarchyTree
+from vish.model.common.vit_blocks import TransformerBlockGroup
 
 LANG_MODEL_NAME = "distilbert-base-uncased"
 CIFAR_10_HIERARCHICAL_LABEL_PATH = "vish/data/cifar10.xml"
