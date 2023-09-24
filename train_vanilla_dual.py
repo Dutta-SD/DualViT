@@ -10,11 +10,11 @@ from vish.trainer.dual import TPDualTrainer
 from vish.utils import *
 
 # NOTE: Overwrite for every train file
-DESC = "tf-vit-dual-model-p-16-huggingface-pretrained-google-weights"
+DESC = "tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only"
 
 # Set this flag to True if you want to just test the thing.
 # For running complete experiments, set it to False
-TEST = True
+TEST = False
 
 DATE_TIME_FORMAT = "%Y_%m_%d_%H_%M_%S"
 CURR_TIME = datetime.now().strftime(DATE_TIME_FORMAT)
@@ -55,7 +55,7 @@ model_params = {
     "pwff_hidden_dim": 3072,
     "num_classification_heads": 1,
     "mlp_outputs_list": (10,),  # Cifar 10 default
-    "p_dropout": 0.0,
+    "p_dropout": 0.1,
     "qkv_bias": True,
     "pwff_bias": True,
     "clf_head_bias": True,
@@ -102,7 +102,7 @@ trainer_params = {
     "optimizer_list": [optimizer],
     "scheduler_list": [scheduler],
     "metrics_list": [("Acc@1", accuracy)],
-    "best_score_key": "Acc@1",  # Set it as per need
+    "best_score_key": "Acc@1_fine",  # Set it as per need - for dual specify broad or fine
     "model_checkpoint_dir": WEIGHT_FOLDER_PATH,
     "description": DESC,
     # "uniq_desc": False,  # Uncomment if loading checkpoint

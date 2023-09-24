@@ -25,6 +25,7 @@ class TPDualVit(nn.Module):
 
     def forward(self, x, start=None, stride=None):
         x_ext_list, broad_outputs = self.get_broad_outputs(x)
+        # If both None, use all from pretrained model
         if (start is not None) and (stride is not None):
             valid_indexes = list(range(start, self.num_layers, stride))
             x_ext_list = [
@@ -34,5 +35,5 @@ class TPDualVit(nn.Module):
 
         # Ensure Broad output and fine output are of appropriate dimensions
         # Not handled here
-        fine_outputs = self.fine_model(x, x_ext_list)
+        fine_outputs, *_ = self.fine_model(x, x_ext_list)
         return broad_outputs, fine_outputs
