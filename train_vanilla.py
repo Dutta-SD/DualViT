@@ -8,11 +8,11 @@ from vish.trainer.vanilla import VanillaVitTrainer
 from vish.utils import *
 
 # NOTE: Overwrite for every train file
-DESC="tf-vit-single-model-p-16"
+DESC="tf-vit-single-model-p-16-224-from-scratch"
 
 # Set this flag to True if you want to just test the thing.
 # For running complete experiments, set it to False
-TEST = True
+TEST = False
 
 DATE_TIME_FORMAT = "%Y_%m_%d_%H_%M_%S"
 CURR_TIME = datetime.now().strftime(DATE_TIME_FORMAT)
