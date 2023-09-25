@@ -3,6 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from transformers.models.vit.modeling_vit import ViTLayer
 
 
 class PositionalEmbedding1D(nn.Module):
@@ -215,6 +216,20 @@ class TransformerBlockGroup(nn.Module):
         super().__init__()
         self.blocks = nn.ModuleDict(
             {f"transformer_block_{i}": TransformerBlock() for i in range(num_blocks)}
+        )
+
+    def from_pretrained(self, blocks_list: list[ViTLayer]):
+        """
+        Extracts VitLayers and uses them as encoders
+        Args:
+            blocks_list: List of layers to use in this group
+
+        Returns:
+            None
+
+        """
+        self.blocks = nn.ModuleDict(
+            {f"transformer_block_{i}": block for i, block in enumerate(blocks_list)}
         )
 
     def forward(self, x):

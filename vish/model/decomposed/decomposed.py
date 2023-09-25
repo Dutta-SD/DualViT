@@ -3,11 +3,11 @@ import torch.nn as nn
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 
+from vish.model.common.tree import LabelHierarchyTree
+from vish.model.common.vit_blocks import PositionalEmbedding1D
 from vish.model.decomposed.aggregator import Aggregator
 from vish.model.decomposed.entity import TransformerData
 from vish.model.decomposed.segregator import Segregator
-from vish.model.common.tree import LabelHierarchyTree
-from vish.model.common.vit_blocks import PositionalEmbedding1D
 
 ROOT_KEY = "class"
 DATA_KEY = "pixel_values"
@@ -58,6 +58,7 @@ class VitClassificationDecomposed(nn.Module):
         self.segregator = Segregator(label_tree)
         self.output_leaves = self.label_tree.getall_leaves(ROOT_KEY)
         self.num_leaves = len(self.output_leaves)
+        self._pretrained: bool = False
 
         self.aggregators = nn.ModuleList(
             [
@@ -87,6 +88,11 @@ class VitClassificationDecomposed(nn.Module):
                 for name in self.output_leaves
             }
         )
+
+    def from_pretrained(
+        self
+    ):
+        self._pretrained = True
 
     def _init_transform(
         self,
