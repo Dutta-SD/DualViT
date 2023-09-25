@@ -61,6 +61,7 @@ model_params = {
 }
 
 # Experiment 3
+# FIXME: model now returns embedding as well as outputs
 model = TPVitImageClassification(**model_params)
 
 # model = ckpt["model"]

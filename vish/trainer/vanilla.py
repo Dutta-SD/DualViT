@@ -26,8 +26,8 @@ class VanillaVitTrainer(BaseTrainer):
         }
 
     def get_outputs(self, model_inputs, **kwargs) -> tuple[list, dict]:
-        # fine is last
-        logits, *_ = self.model(model_inputs["pixel_values"])
+        # fine is the last of the last element
+        *_, [*_, logits] = self.model(model_inputs["pixel_values"])
         criterion = kwargs[self.criterion_name]
         loss = criterion(logits, model_inputs["fine_labels"])
 
