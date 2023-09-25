@@ -57,7 +57,6 @@ class TPVitImageClassification(ViTBasicForImageClassification):
     def forward(self, x: torch.FloatTensor, x_ext_list: list[torch.FloatTensor] = None):
         if x_ext_list is None:
             x_ext_list = [None for _ in range(self.transformer_encoder.num_layers)]
-        # TODO: Broad embedding changes using gradients, do we keep this??
         op_seq: torch.FloatTensor = x
         op_seq = self.embedding_layer(op_seq)
         op_seq = self._append_additional_tokens(op_seq)
@@ -71,8 +70,9 @@ class TPVitImageClassification(ViTBasicForImageClassification):
             return op_seq.mean(dim=(1, 2))
 
         # Broad to fine
-        op_additional_tokens = op_seq[:, -self.num_extra_tokens :, :]
-        return [
-            self.mlp_heads[idx](op_additional_tokens[:, idx])
+        embeddings = op_seq[:, -self.num_extra_tokens :, :]
+        logits = [
+            self.mlp_heads[idx](embeddings[:, idx])
             for idx in range(self.num_classification_heads)
         ]
+        return embeddings, logits

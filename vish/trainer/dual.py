@@ -3,26 +3,8 @@ from collections import defaultdict
 import numpy as np
 import torch
 
+from vish.model.common.loss import empty_if_problem, broad_criterion, bnf_embedding_loss
 from vish.trainer.base import BaseTrainer
-
-
-def is_problem_tensor(tensor):
-    return torch.isnan(tensor).sum() > 0
-
-
-def get_filtered_tensor(tensor: torch.IntTensor):
-    _, *rest = tensor.shape
-    if is_problem_tensor(tensor):
-        return torch.empty((0, *rest), device=tensor.device, requires_grad=True)
-    return tensor
-
-
-def get_safe_zero(tensor: torch.Tensor):
-    return torch.tensor(0.0, device=tensor.device, requires_grad=True)
-
-
-def broad_criteria(x: torch.Tensor, y: torch.Tensor):
-    return torch.linalg.norm(x - y, 1)
 
 
 class VitDualModelTrainer(BaseTrainer):
@@ -54,19 +36,19 @@ class VitDualModelTrainer(BaseTrainer):
 
         for idx in range(2):
             broad_emb_seg.append(
-                get_filtered_tensor(emb_broad[model_inputs["broad_labels"] == idx])
+                empty_if_problem(emb_broad[model_inputs["broad_labels"] == idx])
             )
 
         for idx in range(10):
             fine_emb_seg.append(
-                get_filtered_tensor(fine_emb_clone[model_inputs["fine_labels"] == idx])
+                empty_if_problem(fine_emb_clone[model_inputs["fine_labels"] == idx])
             )
 
-        mean_broad_0 = get_filtered_tensor(torch.mean(broad_emb_seg[0], 0).unsqueeze(0))
-        mean_broad_1 = get_filtered_tensor(torch.mean(broad_emb_seg[1], 0).unsqueeze(0))
+        mean_broad_0 = empty_if_problem(torch.mean(broad_emb_seg[0], 0).unsqueeze(0))
+        mean_broad_1 = empty_if_problem(torch.mean(broad_emb_seg[1], 0).unsqueeze(0))
 
         fine_means = [
-            get_filtered_tensor(torch.mean(fine_emb_seg[i], 0).unsqueeze(0))
+            empty_if_problem(torch.mean(fine_emb_seg[i], 0).unsqueeze(0))
             for i in range(10)
         ]
 
@@ -95,8 +77,8 @@ class VitDualModelTrainer(BaseTrainer):
         )
         mean_fine_1 = torch.mean(fine_1_cat, 0).unsqueeze(0)
 
-        loss_0 = broad_criteria(mean_fine_0, mean_broad_0)
-        loss_1 = broad_criteria(mean_fine_1, mean_broad_1)
+        loss_0 = broad_criterion(mean_fine_0, mean_broad_0)
+        loss_1 = broad_criterion(mean_fine_1, mean_broad_1)
 
         loss_0 = torch.nan_to_num(loss_0)
 
@@ -214,7 +196,7 @@ class VitDualModelTrainer(BaseTrainer):
 
 class TPDualTrainer(VitDualModelTrainer):
     """
-    Dual Training for TP model
+    Dual Training for a TP model
     """
 
     def update_losses(self, loss_broad, loss_fine):
@@ -222,13 +204,19 @@ class TPDualTrainer(VitDualModelTrainer):
         loss_fine.backward()
 
     def get_outputs(self, model_inputs, **kwargs) -> tuple[list, dict]:
-        broad_logits, fine_logits = self.model(model_inputs["pixel_values"])
-
+        # [broad_embedding, broad_logits], [fine_embedding, fine_logits]
+        broad_output, fine_output = self.model(model_inputs["pixel_values"])
+        fine_labels = model_inputs["fine_labels"]
+        broad_labels = model_inputs["broad_labels"]
         criterion_fine = kwargs[self.criterion_name_fine]
-        criterion_broad = kwargs[self.criterion_name_fine]
 
-        loss_fine = criterion_fine(fine_logits, model_inputs["fine_labels"])
-        loss_broad = criterion_broad(broad_logits, model_inputs["broad_labels"])
+        broad_loss, fine_loss = bnf_embedding_loss(
+            broad_output,
+            fine_output,
+            broad_labels,
+            fine_labels,
+            criterion_fine,
+        )
 
         metrics = {}
 
@@ -236,12 +224,12 @@ class TPDualTrainer(VitDualModelTrainer):
             for metric_key, metric_fxn in self.metrics_list:
                 # Eg: Acc@1_broad, Acc@1_fine
                 metrics[f"{metric_key}_broad"] = metric_fxn(
-                    broad_logits.clone().detach().cpu(),
-                    model_inputs["broad_labels"].clone().detach().cpu(),
+                    broad_output[1].clone().detach().cpu(),
+                    broad_labels.clone().detach().cpu(),
                 )
                 metrics[f"{metric_key}_fine"] = metric_fxn(
-                    fine_logits.clone().detach().cpu(),
-                    model_inputs["fine_labels"].clone().detach().cpu(),
+                    fine_output[1].clone().detach().cpu(),
+                    fine_labels.clone().detach().cpu(),
                 )
 
-        return [loss_broad, loss_fine], metrics
+        return [broad_loss, fine_loss], metrics
