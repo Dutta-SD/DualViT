@@ -3,7 +3,12 @@ from collections import defaultdict
 import numpy as np
 import torch
 
-from vish.model.common.loss import empty_if_problem, broad_criterion, bnf_embedding_loss
+from vish.model.common.loss import (
+    empty_if_problem,
+    broad_criterion,
+    bnf_embedding_loss,
+    bnf_embedding_cluster_loss,
+)
 from vish.trainer.base import BaseTrainer
 
 
@@ -114,14 +119,7 @@ class VitDualModelTrainer(BaseTrainer):
         epoch_metrics, epoch_losses, results = self._init_params(self.mode.TRAIN, epoch)
 
         for batch_idx, batch in enumerate(self.train_dl):
-            loss_list, metrics = self._get_losses_and_metrics(batch, **kwargs)
-            loss_broad, loss_fine = loss_list
-
-            epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
-
-            self.update_losses(loss_broad, loss_fine)
-
-            epoch_losses.append([loss_broad.item(), loss_fine.item()])
+            epoch_metrics = self.evaluate_model(batch, epoch_losses, epoch_metrics, kwargs)
 
             for opt in self.optimizer_list:
                 opt.step()
@@ -137,6 +135,13 @@ class VitDualModelTrainer(BaseTrainer):
 
         return results
 
+    def evaluate_model(self, batch, epoch_losses, epoch_metrics, kwargs):
+        loss_broad, loss_fine, metrics = self.get_model_outputs(batch, kwargs)
+        epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
+        self.update_losses(loss_broad, loss_fine)
+        epoch_losses.append([loss_broad.item(), loss_fine.item()])
+        return epoch_metrics
+
     def update_losses(self, loss_broad, loss_fine):
         # Different model with no connections, so no need of retain_graph
         loss_broad.backward()
@@ -148,8 +153,7 @@ class VitDualModelTrainer(BaseTrainer):
         epoch_metrics, epoch_losses, results = self._init_params(self.mode.EVAL, epoch)
 
         for batch_idx, batch in enumerate(self.test_dl):
-            loss_list, metrics = self._get_losses_and_metrics(batch, **kwargs)
-            loss_broad, loss_fine = loss_list
+            loss_broad, loss_fine, metrics = self.get_model_outputs(batch, kwargs)
 
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
 
@@ -166,6 +170,11 @@ class VitDualModelTrainer(BaseTrainer):
             if save_chkpt:
                 self.save_model_checkpoint()
         return results
+
+    def get_model_outputs(self, batch, kwargs):
+        loss_list, metrics = self._get_losses_and_metrics(batch, **kwargs)
+        loss_broad, loss_fine = loss_list
+        return loss_broad, loss_fine, metrics
 
     def evaluate_metrics(self, epoch_metrics, metrics):
         for met_name in metrics.keys():
@@ -210,7 +219,15 @@ class TPDualTrainer(VitDualModelTrainer):
         broad_labels = model_inputs["broad_labels"]
         criterion_fine = kwargs[self.criterion_name_fine]
 
-        broad_loss, fine_loss = bnf_embedding_loss(
+        # broad_loss, fine_loss = bnf_embedding_loss(
+        #     broad_output,
+        #     fine_output,
+        #     broad_labels,
+        #     fine_labels,
+        #     criterion_fine,
+        # )
+
+        broad_loss, fine_loss = bnf_embedding_cluster_loss(
             broad_output,
             fine_output,
             broad_labels,
@@ -227,7 +244,7 @@ class TPDualTrainer(VitDualModelTrainer):
                     broad_output[1].clone().detach().cpu(),
                     broad_labels.clone().detach().cpu(),
                 )
-                # Fine outputs is list as adapted from multi token model
+                # Fine outputs are list as adapted from a multi token model
                 metrics[f"{metric_key}_fine"] = metric_fxn(
                     fine_output[1][0].clone().detach().cpu(),
                     fine_labels.clone().detach().cpu(),
