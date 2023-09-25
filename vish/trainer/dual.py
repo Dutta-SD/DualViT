@@ -227,8 +227,9 @@ class TPDualTrainer(VitDualModelTrainer):
                     broad_output[1].clone().detach().cpu(),
                     broad_labels.clone().detach().cpu(),
                 )
+                # Fine outputs is list as adapted from multi token model
                 metrics[f"{metric_key}_fine"] = metric_fxn(
-                    fine_output[1].clone().detach().cpu(),
+                    fine_output[1][0].clone().detach().cpu(),
                     fine_labels.clone().detach().cpu(),
                 )
 
