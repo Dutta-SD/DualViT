@@ -25,26 +25,32 @@ def bnf_embedding_loss(
         tuple(torch.float32, torch.float32): broad_loss, fine_loss
 
     """
-    fine_embedding, fine_logits = fine_outputs
+    # Fine logits is list as adapted from multiple token model
+    fine_embedding, [*_, fine_logits] = fine_outputs
     broad_embedding, broad_logits = broad_outputs
 
     fine_embedding_clone = make_tensor_clone(fine_embedding)
 
-    num_broad_classes = broad_logits.shape(-1)
+    num_broad_classes = broad_logits.shape[-1]
+    emb_dim = fine_embedding.shape[-1]
 
     emb_losses = []
 
     for broad_idx in range(num_broad_classes):
         fine_indexes = torch.unique(fine_labels[broad_labels == broad_idx])
 
-        broad_this_idx = empty_if_problem(broad_embedding[broad_labels == broad_idx])
+        broad_this_idx = _emz(broad_embedding[broad_labels == broad_idx])
         fine_this_idx = [
-            empty_if_problem(fine_embedding_clone[(fine_labels == fine_idx)])
+            _emuz(fine_embedding_clone[(fine_labels == fine_idx)])
             for fine_idx in fine_indexes
         ]
 
-        broad_mean = torch.mean(broad_this_idx, dim=0).unsqueeze(0)
-        fine_mean = torch.cat(fine_this_idx, dim=0)
+        broad_mean = broad_this_idx # only 1 index, D
+
+        if len(fine_this_idx) == 0:
+            fine_this_idx = [torch.zeros_like(broad_mean)]
+
+        fine_mean = torch.mean(torch.cat(fine_this_idx, dim=0), 0)
 
         emb_losses.append(torch.nan_to_num(broad_criterion(broad_mean, fine_mean, p)))
 
@@ -52,6 +58,16 @@ def bnf_embedding_loss(
     broad_loss = torch.mean(torch.stack(emb_losses))
 
     return broad_loss, fine_loss
+
+
+def _emuz(t: torch.FloatTensor):
+    # Z 1 D -> 1 D
+    return empty_if_problem(torch.mean(t, 0))
+
+
+def _emz(t: torch.FloatTensor):
+    # Z, 1, D -> D
+    return empty_if_problem(torch.mean(t, 0).squeeze(0))
 
 
 def make_tensor_clone(fine_embedding):
