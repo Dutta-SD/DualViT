@@ -115,7 +115,6 @@ trainer_params = {
 }
 
 
-
 if LOAD:
     load_kwargs = {
         "uniq_desc": False,  # Uncomment if loading checkpoint
