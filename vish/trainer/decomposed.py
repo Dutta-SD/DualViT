@@ -11,9 +11,7 @@ from vish.utils import DEVICE
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
 
-def rearrange_outputs(
-        class_wise_logits: dict[str, TransformerData], num_outputs
-):
+def rearrange_outputs(class_wise_logits: dict[str, TransformerData], num_outputs):
     # y_pred, y_true
     y_pred = torch.empty(0, num_outputs, device=DEVICE, requires_grad=True)
     y_true = torch.empty(0, 1, device=DEVICE, dtype=torch.int8)

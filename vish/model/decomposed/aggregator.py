@@ -44,7 +44,9 @@ class Aggregator(nn.Module):
         # TODO: Are they sharing weights or separate???
         self.all_models = nn.ModuleDict(
             {
-                self.labels_list[idx]: TransformerBlockGroup(self.n_blocks).from_pretrained(layers)
+                self.labels_list[idx]: TransformerBlockGroup(
+                    self.n_blocks
+                ).from_pretrained(layers)
                 for idx in range(self.n_inputs)
             }
         )

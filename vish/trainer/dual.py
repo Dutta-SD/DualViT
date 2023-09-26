@@ -119,7 +119,9 @@ class VitDualModelTrainer(BaseTrainer):
         epoch_metrics, epoch_losses, results = self._init_params(self.mode.TRAIN, epoch)
 
         for batch_idx, batch in enumerate(self.train_dl):
-            epoch_metrics = self.evaluate_model(batch, epoch_losses, epoch_metrics, kwargs)
+            epoch_metrics = self.evaluate_model(
+                batch, epoch_losses, epoch_metrics, kwargs
+            )
 
             for opt in self.optimizer_list:
                 opt.step()

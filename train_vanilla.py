@@ -8,7 +8,7 @@ from vish.trainer.vanilla import VanillaVitTrainer
 from vish.utils import *
 
 # NOTE: Overwrite for every train file
-DESC="tf-vit-single-model-p-16-224-from-scratch"
+DESC = "tf-vit-single-model-p-16-224-from-scratch"
 
 # Set this flag to True if you want to just test the thing.
 # For running complete experiments, set it to False
@@ -101,9 +101,7 @@ trainer_params = {
     # "best_test_score": ckpt["best_test_score"],
 }
 trainer = VanillaVitTrainer(**trainer_params)
-run_kwargs = {
-    "criterion": nn.CrossEntropyLoss()
-}
+run_kwargs = {"criterion": nn.CrossEntropyLoss()}
 
 trainer.run(**run_kwargs)
 
