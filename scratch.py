@@ -132,12 +132,79 @@
 
 import torch
 
-from vish.model.tp.blocks import TPMHA, TPTransformerBlock
+from vish.model.tp.dual import TPDualVit
+from vish.utils import (
+    DEVICE,
+    accuracy,
+    to_device,
+    test_dl,
+    train_dl,
+    get_broad_label_cifar10,
+)
 
-model = TPTransformerBlock()
-print(model)
+# from vish.model.tp.blocks import TPMHA, TPTransformerBlock
 
-hidden_tensor = torch.randn(32, 197, 768)
-repr_tensor = torch.randn(32, 197, 768)
+# model = TPTransformerBlock()
+# print(model)
 
-print("Output Shape: ", model(hidden_tensor, repr_tensor).shape)
+# hidden_tensor = torch.randn(32, 197, 768)
+# repr_tensor = torch.randn(32, 197, 768)
+
+# print("Output Shape: ", model(hidden_tensor, repr_tensor).shape)
+
+CKPTS = [
+    {
+        "name": "TP-Dual-BNF",
+        "ckpt": "./checkpoints/tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNF-loss_1695638053.pt",
+    },
+    {
+        "name": "TP-Dual-BNFC",
+        "ckpt": "./checkpoints/tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNFCluster-loss_1695667259.pt",
+    },
+]
+
+def accs(y_true, y_pred):
+    n = (y_true == y_pred).sum()
+    d = y_true.shape[0]
+    return n / d
+
+with torch.no_grad():
+    for info in CKPTS:
+        name = info["name"]
+        path = info["ckpt"]
+
+        model: TPDualVit = torch.load(path)["model"]
+        model = to_device(model, DEVICE)
+        model.eval()
+
+        acc = []
+
+        for batch in train_dl:
+            x, f_l, b_l = batch
+            [be, bl], _ = model(x)
+            b_op = torch.argmax(model.fine_model.mlp_heads[0](be), dim=1)
+
+            b_op = b_op.clone().detach().cpu()
+            b_l = b_l.clone().detach().cpu()
+
+            b_p = b_op.apply_(get_broad_label_cifar10)
+            acc.append(accs(b_p, b_l))
+            # break
+
+        print(f"Model: {name}, Broad Accuracy(Train) is: {torch.mean(torch.stack(acc))}")
+
+        acc = []
+
+        for batch in test_dl:
+            x, f_l, b_l = batch
+            [be, bl], _ = model(x)
+            b_op = torch.argmax(model.fine_model.mlp_heads[0](be), dim=1)
+
+            b_op = b_op.clone().detach().cpu()
+            b_l = b_l.clone().detach().cpu()
+
+            b_p = b_op.apply_(get_broad_label_cifar10)
+            acc.append(accs(b_p, b_l))
+            # break
+
+        print(f"Model: {name}, Broad Accuracy(Test) is: {torch.mean(torch.stack(acc))}")
