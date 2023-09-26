@@ -89,9 +89,7 @@ class VitClassificationDecomposed(nn.Module):
             }
         )
 
-    def from_pretrained(
-        self
-    ):
+    def from_pretrained(self):
         self._pretrained = True
 
     def _init_transform(

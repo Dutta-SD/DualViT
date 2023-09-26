@@ -37,13 +37,19 @@ def bnf_embedding_cluster_loss(
     for broad_idx in range(num_broad_classes):
         fine_indexes = torch.unique(fine_labels[broad_labels == broad_idx])
 
+        if len(fine_indexes) == 0:
+            continue
+
         broad_this_idx = mean_sqz_empty(broad_embedding[broad_labels == broad_idx])
-        fine_this_idx = torch.stack(
-            [
-                mean_sqz_empty(fine_embedding_clone[(fine_labels == fine_idx)])
-                for fine_idx in fine_indexes
-            ]
-        )
+        fine_e = [
+            mean_sqz_empty(fine_embedding_clone[(fine_labels == fine_idx)])
+            for fine_idx in fine_indexes
+        ]
+
+        if len(fine_e) == 0:
+            continue
+
+        fine_this_idx = torch.stack(fine_e if len(fine_e) > 0 else [torch.zeros])
 
         emb_losses.append(
             torch.nan_to_num(broad_criterion(broad_this_idx, fine_this_idx, p))

@@ -10,11 +10,13 @@ from vish.trainer.dual import TPDualTrainer
 from vish.utils import *
 
 # NOTE: Overwrite for every train file
-DESC = "tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNF-loss"
+DESC = "tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNFCluster-loss"
 
 # Set this flag to True if you want to just test the thing.
 # For running complete experiments, set it to False
-TEST = True
+# LOAD = True for loading roffrom checkpoint
+TEST = False
+LOAD = False
 
 DATE_TIME_FORMAT = "%Y_%m_%d_%H_%M_%S"
 CURR_TIME = datetime.now().strftime(DATE_TIME_FORMAT)
@@ -24,17 +26,16 @@ LOG_FILE_NAME = f"logs/EXP-{CURR_TIME}_{DESC}.txt"
 
 if TEST:
     LOG_FILE_NAME = f"logs/TEST-{DESC}.txt"
-    EPOCHS = 100
+    EPOCHS = 70
 
 
 log_file = open(LOG_FILE_NAME, "a")
 sys.stdout = log_file
 
-
-LOAD = True
+ckpt = None
 
 if LOAD:
-    DESC = "tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNF-loss_1695638053"
+    DESC = "tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNFCluster-loss_1695655847"
     ckpt = torch.load(f"./checkpoints/{DESC}.pt")
     print("Checkpoint Loaded...")
 
@@ -63,13 +64,15 @@ model_params = {
 }
 
 # MODEL CONFIGURATION
-# fine_model = TPVitImageClassification(**model_params)
-# broad_model = ViTForImageClassification.from_pretrained(VIT_PRETRAINED_MODEL_2)
-# broad_model.classifier = nn.Linear(broad_model.config.hidden_size, 2)
+fine_model = TPVitImageClassification(**model_params)
+broad_model = ViTForImageClassification.from_pretrained(VIT_PRETRAINED_MODEL_2)
+broad_model.classifier = nn.Linear(broad_model.config.hidden_size, 2)
 
-# model = TPDualVit(fine_model, broad_model)
+model = TPDualVit(fine_model, broad_model)
 
-model = ckpt["model"]
+if LOAD:
+    model = ckpt["model"]
+    print("Model Loaded from checkpoint")
 # print(model)
 
 model = to_device(model, DEVICE)
@@ -84,13 +87,17 @@ optimizer = torch.optim.SGD(
     weight_decay=WEIGHT_DECAY,
     momentum=0.9,
 )
-optimizer.load_state_dict(ckpt["opt"][0])
+
+if LOAD:
+    optimizer.load_state_dict(ckpt["opt"][0])
+    print("Optimizer loaded from checkpoint")
 
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer,
     mode="max",
     verbose=True,
     min_lr=MIN_LR,
+    patience=3,
 )
 
 # Training
@@ -105,12 +112,23 @@ trainer_params = {
     "best_score_key": "Acc@1_fine",  # Set it as per need - for dual specify broad or fine
     "model_checkpoint_dir": WEIGHT_FOLDER_PATH,
     "description": DESC,
-    "uniq_desc": False,  # Uncomment if loading checkpoint
-    "best_train_score": ckpt["best_train_score"],
-    "best_test_score": ckpt["best_test_score"],
 }
+
+
+
+if LOAD:
+    load_kwargs = {
+        "uniq_desc": False,  # Uncomment if loading checkpoint
+        "best_train_score": ckpt["best_train_score"],
+        "best_test_score": ckpt["best_test_score"],
+    }
+    trainer_params = {**trainer_params, **load_kwargs}
+
 trainer = TPDualTrainer(**trainer_params)
-run_kwargs = {"fine_class_CE": nn.CrossEntropyLoss(), "broad_class_CE": nn.CrossEntropyLoss()}
+run_kwargs = {
+    "fine_class_CE": nn.CrossEntropyLoss(),
+    "broad_class_CE": nn.CrossEntropyLoss(),
+}
 
 trainer.run(**run_kwargs)
 
