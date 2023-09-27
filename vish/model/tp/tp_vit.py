@@ -70,9 +70,13 @@ class TPVitImageClassification(ViTBasicForImageClassification):
             return op_seq.mean(dim=(1, 2))
 
         # Broad to fine
-        embeddings = op_seq[:, -self.num_extra_tokens :, :]
+        additional_embeddings = op_seq[:, -self.num_extra_tokens :, :]
+        logits = self.to_logits(additional_embeddings)
+        return additional_embeddings, logits
+
+    def to_logits(self, additional_embeddings):
         logits = [
-            self.mlp_heads[idx](embeddings[:, idx])
+            self.mlp_heads[idx](additional_embeddings[:, idx])
             for idx in range(self.num_classification_heads)
         ]
-        return embeddings, logits
+        return logits

@@ -40,7 +40,7 @@ optimizer = torch.optim.SGD(
         {"params": model.vit.embeddings.parameters(), "lr": 1e-3},
         {"params": model.vit.encoder.parameters(), "lr": 1e-5},
         {"params": model.vit.layernorm.parameters(), "lr": 1e-5},
-        {"params": model.classifier.parameters(), "lr": 1e-3},
+        {"params": model.clf_fxn.parameters(), "lr": 1e-3},
     ],
     weight_decay=WEIGHT_DECAY,
     momentum=0.9,

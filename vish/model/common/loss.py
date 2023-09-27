@@ -1,5 +1,5 @@
-from typing import Any, Callable
 import warnings
+from typing import Any, Callable
 
 import torch
 from torch import Tensor, nn
@@ -48,7 +48,7 @@ def bnf_alternate_loss(
     broad_labels: torch.IntTensor,
     fine_labels: torch.IntTensor,
     curr_epoch: int,
-    classifier: nn.Module,
+    classifier: Callable[[Tensor], Tensor],
     f2b_filter: Callable[[Tensor, Tensor, Tensor], Tensor] = f2b_filter_cifar_10,
     scale_factor: float = 100.0,
     alt_freq: int = 10,
@@ -59,7 +59,7 @@ def bnf_alternate_loss(
     Args:
         scale_factor:
         f2b_filter: Fine to broad Label filter
-        classifier: The Fine classifier
+        classifier: The Fine classifier, input is [B, 1, D]
         curr_epoch: Current epoch
         alt_freq: Alternating frequency
         fine_labels (torch.IntTensor): Fine Labels tensor
@@ -89,7 +89,9 @@ def bnf_alternate_loss(
             broad_embedding_clone, broad_labels, fine_embedding, fine_labels, p
         )
         broad_predictions = f2b_filter(
-            classifier(broad_embedding), broad_labels, fine_labels
+            classifier(broad_embedding)[-1],
+            broad_labels,
+            fine_labels,
         )
 
         loss_embedding = torch.mean(torch.stack(emb_losses))
