@@ -10,7 +10,9 @@ from vish.trainer.dual import TPDualTrainer
 from vish.utils import *
 
 # NOTE: Overwrite for every train file
-DESC = "tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNF-loss"
+DESC = (
+    "tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNF-loss"
+)
 
 # Set this flag to True if you want to just test the thing.
 # For running complete experiments, set it to False
@@ -66,7 +68,7 @@ model_params = {
 # MODEL CONFIGURATION
 fine_model = TPVitImageClassification(**model_params)
 # broad_model = ViTForImageClassification.from_pretrained(VIT_PRETRAINED_MODEL_2)
-broad_model.classifier = nn.Linear(broad_model.config.hidden_size, 2)
+broad_model.clf_fxn = nn.Linear(broad_model.config.hidden_size, 2)
 
 model = TPDualVit(fine_model, broad_model)
 
@@ -81,7 +83,7 @@ optimizer = torch.optim.SGD(
     [
         {"params": model.fine_model.parameters(), "lr": 1e-3},
         {"params": model.broad_model.vit.parameters(), "lr": 5e-6},
-        {"params": model.broad_model.classifier.parameters(), "lr": 1e-3},
+        {"params": model.broad_model.clf_fxn.parameters(), "lr": 1e-3},
     ],
     lr=LEARNING_RATE,
     weight_decay=WEIGHT_DECAY,

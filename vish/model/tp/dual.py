@@ -43,18 +43,3 @@ class TPDualVit(nn.Module):
                 for idx in range(len(x_ext_list))
             ]
         return x_ext_list
-
-
-class TPDualVitAlternate(nn.Module):
-    """
-    TP based dual model with alternate training
-    """
-    def __init__(
-        self,
-        fine_model: TPVitImageClassification,
-        broad_model: ViTForImageClassification,
-    ):
-        super().__init__()
-        self.fine_model = fine_model
-        self.broad_model = broad_model
-        self.num_layers = fine_model.transformer_encoder.num_layers

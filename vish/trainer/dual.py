@@ -8,6 +8,7 @@ from vish.model.common.loss import (
     broad_criterion,
     bnf_alternate_loss,
 )
+from vish.model.tp.dual import TPDualVit
 from vish.trainer.base import BaseTrainer
 
 
@@ -210,6 +211,8 @@ class TPDualTrainer(VitDualModelTrainer):
     Dual Training for a TP model
     """
 
+    model: TPDualVit
+
     def train_backward(self, loss_broad, loss_fine):
         loss_broad.backward(retain_graph=True)
         loss_fine.backward()
@@ -242,7 +245,7 @@ class TPDualTrainer(VitDualModelTrainer):
             broad_labels,
             fine_labels,
             kwargs["epoch"],
-            classifier=self.model.fine_model.mlp_heads[0],
+            classifier=self.model.fine_model.to_logits,
         )
 
         metrics = {}

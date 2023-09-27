@@ -53,8 +53,8 @@ optimizer = torch.optim.SGD(
     [
         {"params": model.model_fine.vit.parameters(), "lr": 1e-5},
         {"params": model.model_broad.vit.parameters(), "lr": 1e-5},
-        {"params": model.model_fine.classifier.parameters(), "lr": 1e-3},
-        {"params": model.model_broad.classifier.parameters(), "lr": 1e-3},
+        {"params": model.model_fine.clf_fxn.parameters(), "lr": 1e-3},
+        {"params": model.model_broad.clf_fxn.parameters(), "lr": 1e-3},
     ],
     weight_decay=WEIGHT_DECAY,
     momentum=0.9,

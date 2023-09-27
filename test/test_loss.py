@@ -18,7 +18,7 @@ class Test(TestCase):
         self.fine_labels = torch.randint(0, 10, (32,))
         self.fine_criterion = torch.nn.CrossEntropyLoss()
         self.p = 1.0
-        self.classifier = nn.Linear(768, 10, bias=True)
+        self.clf_fxn = lambda x: [nn.Linear(768, 10, bias=True)(x)]
 
     def test_bnf_embedding_loss(self):
         print(
@@ -55,7 +55,7 @@ class Test(TestCase):
                 self.broad_labels,
                 self.fine_labels,
                 0,
-                self.classifier,
+                self.clf_fxn,
             ),
         )
 
@@ -67,6 +67,6 @@ class Test(TestCase):
                 self.broad_labels,
                 self.fine_labels,
                 11,
-                self.classifier,
+                self.clf_fxn,
             ),
         )
