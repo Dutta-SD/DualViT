@@ -6,8 +6,7 @@ import torch
 from vish.model.common.loss import (
     empty_if_problem,
     broad_criterion,
-    bnf_embedding_loss,
-    bnf_embedding_cluster_loss,
+    bnf_alternate_loss,
 )
 from vish.trainer.base import BaseTrainer
 
@@ -119,6 +118,7 @@ class VitDualModelTrainer(BaseTrainer):
         epoch_metrics, epoch_losses, results = self._init_params(self.mode.TRAIN, epoch)
 
         for batch_idx, batch in enumerate(self.train_dl):
+            kwargs["epoch"] = epoch
             epoch_metrics = self.evaluate_model(
                 batch, epoch_losses, epoch_metrics, kwargs
             )
@@ -140,11 +140,11 @@ class VitDualModelTrainer(BaseTrainer):
     def evaluate_model(self, batch, epoch_losses, epoch_metrics, kwargs):
         loss_broad, loss_fine, metrics = self.get_model_outputs(batch, kwargs)
         epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
-        self.update_losses(loss_broad, loss_fine)
+        self.train_backward(loss_broad, loss_fine)
         epoch_losses.append([loss_broad.item(), loss_fine.item()])
         return epoch_metrics
 
-    def update_losses(self, loss_broad, loss_fine):
+    def train_backward(self, loss_broad, loss_fine):
         # Different model with no connections, so no need of retain_graph
         loss_broad.backward()
         loss_fine.backward()
@@ -155,8 +155,8 @@ class VitDualModelTrainer(BaseTrainer):
         epoch_metrics, epoch_losses, results = self._init_params(self.mode.EVAL, epoch)
 
         for batch_idx, batch in enumerate(self.test_dl):
+            kwargs["epoch"] = epoch
             loss_broad, loss_fine, metrics = self.get_model_outputs(batch, kwargs)
-
             epoch_metrics = self.evaluate_metrics(epoch_metrics, metrics)
 
             epoch_losses.append([loss_broad.item(), loss_fine.item()])
@@ -210,7 +210,7 @@ class TPDualTrainer(VitDualModelTrainer):
     Dual Training for a TP model
     """
 
-    def update_losses(self, loss_broad, loss_fine):
+    def train_backward(self, loss_broad, loss_fine):
         loss_broad.backward(retain_graph=True)
         loss_fine.backward()
 
@@ -219,7 +219,6 @@ class TPDualTrainer(VitDualModelTrainer):
         broad_output, fine_output = self.model(model_inputs["pixel_values"])
         fine_labels = model_inputs["fine_labels"]
         broad_labels = model_inputs["broad_labels"]
-        criterion_fine = kwargs[self.criterion_name_fine]
 
         # broad_loss, fine_loss = bnf_embedding_loss(
         #     broad_output,
@@ -229,12 +228,21 @@ class TPDualTrainer(VitDualModelTrainer):
         #     criterion_fine,
         # )
 
-        broad_loss, fine_loss = bnf_embedding_cluster_loss(
+        # broad_loss, fine_loss = bnf_embedding_cluster_loss(
+        #     broad_output,
+        #     fine_output,
+        #     broad_labels,
+        #     fine_labels,
+        #     criterion_fine,
+        # )
+
+        broad_loss, fine_loss = bnf_alternate_loss(
             broad_output,
             fine_output,
             broad_labels,
             fine_labels,
-            criterion_fine,
+            kwargs["epoch"],
+            classifier=self.model.fine_model.mlp_heads[0],
         )
 
         metrics = {}
