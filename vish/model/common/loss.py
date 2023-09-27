@@ -1,4 +1,5 @@
 from typing import Any, Callable
+import warnings
 
 import torch
 from torch import Tensor, nn
@@ -23,18 +24,18 @@ def f2b_filter_cifar_10(logits: Tensor, broad_labels: Tensor, fine_labels: Tenso
 
     """
 
-    num_broad_classes = torch.numel(torch.unique(broad_labels))
+    broad_indexes = torch.unique(broad_labels).tolist()
     logits = logits.squeeze(1)
 
     batch, *_ = logits.shape
     b_logits = torch.empty((batch, 0), device=logits.device)
 
-    for b_idx in range(num_broad_classes):
+    for b_idx in broad_indexes:
         fine_indexes = torch.unique(fine_labels[broad_labels == b_idx])
 
         # TODO: Is mean alright or should we go for max
-        # curr_idx_logits, _ = torch.max(logits[:, fine_indexes], dim=1)
-        curr_idx_logits = torch.mean(logits[:, fine_indexes], dim=1)
+        curr_idx_logits, _ = torch.max(logits[:, fine_indexes], dim=1)
+        # curr_idx_logits = torch.mean(logits[:, fine_indexes], dim=1)
         curr_idx_logits = curr_idx_logits.unsqueeze(1)
         b_logits = torch.cat([b_logits, curr_idx_logits], dim=1)
 
@@ -70,11 +71,15 @@ def bnf_alternate_loss(
     Returns:
         tuple(torch.float32, torch.float32): broad_loss, fine_loss
 
+    Todo:
+        1. Do not use dynamic number of broad class calculations. This gives error
+        If a batch has only 1 type of samples, num_unique_broad = 1 and empty is possible
+
     """
     # Fine logits is list as adapted from a multiple token model
     ce_loss_criterion = nn.CrossEntropyLoss()
     fine_embedding, [*_, fine_logits] = fine_outputs
-    broad_embedding, broad_logits = broad_outputs
+    broad_embedding, _ = broad_outputs
 
     mode = current_mode(curr_epoch, alt_freq)
 
@@ -125,15 +130,16 @@ def _loss_bnf(
         list[Tensor], a list of 0-D tensor of losses for each broad label
 
     """
-    num_broad_classes = torch.numel(torch.unique(broad_labels))
+    broad_indexes = torch.unique(broad_labels).tolist()
 
     emb_losses = []
-    for broad_idx in range(num_broad_classes):
+    for broad_idx in broad_indexes:
         fine_indexes = torch.unique(fine_labels[broad_labels == broad_idx])
 
         if len(fine_indexes) == 0:
             # No fine classes found results in NaN for the batch
             # This can arise during data loading and shuffling
+            warnings.warn(f"Found fine Indexes {fine_indexes} for label {broad_idx}")
             continue
 
         broad_mean = mean_sqz_empty(
