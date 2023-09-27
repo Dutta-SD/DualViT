@@ -10,7 +10,7 @@ from vish.trainer.dual import TPDualTrainer
 from vish.utils import *
 
 # NOTE: Overwrite for every train file
-DESC = "tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNF-loss"
+DESC = "tp-dual-alternate-broad-fine-scratch-BNF"
 
 # Set this flag to True if you want to just test the thing.
 # For running complete experiments, set it to False
@@ -35,7 +35,7 @@ sys.stdout = log_file
 ckpt = None
 
 if LOAD:
-    DESC = "tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNFCluster-loss_1695655847"
+    DESC = ""
     ckpt = torch.load(f"./checkpoints/{DESC}.pt")
     print("Checkpoint Loaded...")
 
@@ -65,8 +65,7 @@ model_params = {
 
 # MODEL CONFIGURATION
 fine_model = TPVitImageClassification(**model_params)
-# broad_model = ViTForImageClassification.from_pretrained(VIT_PRETRAINED_MODEL_2)
-broad_model.classifier = nn.Linear(broad_model.config.hidden_size, 2)
+broad_model = ViTForImageClassification(ViTConfig())
 
 model = TPDualVit(fine_model, broad_model)
 
