@@ -2,7 +2,9 @@
 <project version="4">
   <component name="Black">
     <option name="enabledOnReformat" value="true" />
-    <option name="sdkUUID" value="0326f100-259c-4dff-8cfb-dfd42991e912" />
+    <option name="enabledOnSave" value="true" />
+    <option name="pathToExecutable" value="C:\Users\sandi\AppData\Local\Programs\Python\Python310\Scripts\black.exe" />
+    <option name="sdkUUID" value="cd09538e-77ca-472b-ae0d-3c9dfa563e6f" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="sandip-env" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10" project-jdk-type="Python SDK" />
 </project>

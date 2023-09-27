@@ -1,6 +1,153 @@
-from typing import Any
+from typing import Any, Callable
 
 import torch
+from torch import Tensor, nn
+
+MODE_0 = 0
+
+
+def current_mode(curr_epoch, alt_freq, num_modes=2):
+    val, _ = divmod(curr_epoch, alt_freq)
+    return val % num_modes
+
+
+def f2b_filter_cifar_10(logits: Tensor, broad_labels: Tensor, fine_labels: Tensor):
+    """
+
+    Args:
+        logits: logits of shape [B, 1, C_fine]
+        broad_labels: Labels of shape [B, ]
+        fine_labels: Labels of shape [B, ]
+
+    Returns:
+
+    """
+
+    num_broad_classes = torch.numel(torch.unique(broad_labels))
+    logits = logits.squeeze(1)
+
+    batch, *_ = logits.shape
+    b_logits = torch.empty((batch, 0), device=logits.device)
+
+    for b_idx in range(num_broad_classes):
+        fine_indexes = torch.unique(fine_labels[broad_labels == b_idx])
+
+        # TODO: Is mean alright or should we go for max
+        # curr_idx_logits, _ = torch.max(logits[:, fine_indexes], dim=1)
+        curr_idx_logits = torch.mean(logits[:, fine_indexes], dim=1)
+        curr_idx_logits = curr_idx_logits.unsqueeze(1)
+        b_logits = torch.cat([b_logits, curr_idx_logits], dim=1)
+
+    return b_logits
+
+
+def bnf_alternate_loss(
+    broad_outputs: list[torch.FloatTensor],
+    fine_outputs: list[torch.FloatTensor],
+    broad_labels: torch.IntTensor,
+    fine_labels: torch.IntTensor,
+    curr_epoch: int,
+    classifier: nn.Module,
+    f2b_filter: Callable[[Tensor, Tensor, Tensor], Tensor] = f2b_filter_cifar_10,
+    scale_factor: float = 100.0,
+    alt_freq: int = 10,
+    p: int = 1,
+):
+    """
+    Computes Broad and Fine Embedding Loss of Dual Models
+    Args:
+        scale_factor:
+        f2b_filter: Fine to broad Label filter
+        classifier: The Fine classifier
+        curr_epoch: Current epoch
+        alt_freq: Alternating frequency
+        fine_labels (torch.IntTensor): Fine Labels tensor
+        broad_labels (torch.IntTensor): Broad Labels Tensor
+        fine_outputs (list[torch.FloatTensor]): [fine_embedding, fine_logits],
+        broad_outputs (torch.FloatTensor): [broad_embedding, broad_logits]
+        p (int): [>= 1], the value of the norm to be used
+
+    Returns:
+        tuple(torch.float32, torch.float32): broad_loss, fine_loss
+
+    """
+    # Fine logits is list as adapted from a multiple token model
+    ce_loss_criterion = nn.CrossEntropyLoss()
+    fine_embedding, [*_, fine_logits] = fine_outputs
+    broad_embedding, broad_logits = broad_outputs
+
+    mode = current_mode(curr_epoch, alt_freq)
+
+    if mode == MODE_0:
+        broad_embedding_clone = make_frozen_clone(broad_embedding)
+        emb_losses = _loss_bnf(
+            broad_embedding_clone, broad_labels, fine_embedding, fine_labels, p
+        )
+        broad_predictions = f2b_filter(
+            classifier(broad_embedding), broad_labels, fine_labels
+        )
+
+        loss_embedding = torch.mean(torch.stack(emb_losses))
+        loss_ce = ce_loss_criterion(broad_predictions, broad_labels)
+
+    else:
+        fine_embedding_clone = make_frozen_clone(fine_embedding)
+        emb_losses = _loss_bnf(
+            broad_embedding, broad_labels, fine_embedding_clone, fine_labels, p
+        )
+
+        loss_embedding = torch.mean(torch.stack(emb_losses))
+        loss_ce = ce_loss_criterion(fine_logits, fine_labels)
+
+    if scale_factor:
+        loss_embedding = loss_embedding / scale_factor
+
+    return loss_embedding, loss_ce
+
+
+def _loss_bnf(
+    broad_embedding,
+    broad_labels,
+    fine_embedding,
+    fine_labels,
+    p=1,
+) -> list[Tensor]:
+    """
+    Computes L1 distance based Broad Fine loss for the minibatch
+    Args:
+        broad_embedding: Broad Embeddings of shape [B, N, D]
+        broad_labels: Broad Labels of shape [B, C_Broad]
+        fine_embedding: Fine Embeddings of shape [B, N, D]
+        fine_labels: Fine Labels of shape [B, C_Fine]
+        p: The Norm value, default = 1
+
+    Returns:
+        list[Tensor], a list of 0-D tensor of losses for each broad label
+
+    """
+    num_broad_classes = torch.numel(torch.unique(broad_labels))
+
+    emb_losses = []
+    for broad_idx in range(num_broad_classes):
+        fine_indexes = torch.unique(fine_labels[broad_labels == broad_idx])
+
+        if len(fine_indexes) == 0:
+            # No fine classes found results in NaN for the batch
+            # This can arise during data loading and shuffling
+            continue
+
+        broad_mean = mean_sqz_empty(
+            broad_embedding[broad_labels == broad_idx]
+        )  # only one index, dim: [D]
+        fine_this_idx = [
+            mean_sqz_empty(fine_embedding[(fine_labels == fine_idx)])
+            for fine_idx in fine_indexes
+        ]
+
+        fine_mean = torch.mean(torch.cat(fine_this_idx, dim=0), 0)
+
+        emb_losses.append(torch.nan_to_num(broad_criterion(broad_mean, fine_mean, p)))
+    return emb_losses
 
 
 def bnf_embedding_cluster_loss(
@@ -29,7 +176,7 @@ def bnf_embedding_cluster_loss(
     fine_embedding, [*_, fine_logits] = fine_outputs
     broad_embedding, broad_logits = broad_outputs
 
-    fine_embedding_clone = make_tensor_clone(fine_embedding)
+    fine_embedding_clone = make_frozen_clone(fine_embedding)
 
     num_broad_classes = broad_logits.shape[-1]
     emb_losses = []
@@ -87,7 +234,7 @@ def bnf_embedding_loss(
     fine_embedding, [*_, fine_logits] = fine_outputs
     broad_embedding, broad_logits = broad_outputs
 
-    fine_embedding_clone = make_tensor_clone(fine_embedding)
+    fine_embedding_clone = make_frozen_clone(fine_embedding)
 
     num_broad_classes = broad_logits.shape[-1]
 
@@ -127,7 +274,7 @@ def mean_sqz_empty(t: torch.FloatTensor):
     return empty_if_problem(torch.mean(t, 0).squeeze(0))
 
 
-def make_tensor_clone(fine_embedding):
+def make_frozen_clone(fine_embedding):
     fine_embedding_clone = fine_embedding.detach().clone()
     fine_embedding_clone.requires_grad = False
     return fine_embedding_clone

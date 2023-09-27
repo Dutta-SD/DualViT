@@ -1,8 +1,13 @@
 from unittest import TestCase
 
 import torch
+from torch import nn
 
-from vish.model.common.loss import bnf_embedding_cluster_loss, bnf_embedding_loss
+from vish.model.common.loss import (
+    bnf_embedding_cluster_loss,
+    bnf_embedding_loss,
+    bnf_alternate_loss,
+)
 
 
 class Test(TestCase):
@@ -13,6 +18,7 @@ class Test(TestCase):
         self.fine_labels = torch.randint(0, 10, (32,))
         self.fine_criterion = torch.nn.CrossEntropyLoss()
         self.p = 1.0
+        self.classifier = nn.Linear(768, 10, bias=True)
 
     def test_bnf_embedding_loss(self):
         print(
@@ -37,5 +43,30 @@ class Test(TestCase):
                 self.fine_labels,
                 self.fine_criterion,
                 self.p,
+            ),
+        )
+
+    def test_bnf_alternate_loss(self):
+        print(
+            "Broad Alternate Loss is case 1",
+            bnf_alternate_loss(
+                self.broad_outputs,
+                self.fine_outputs,
+                self.broad_labels,
+                self.fine_labels,
+                0,
+                self.classifier,
+            ),
+        )
+
+        print(
+            "Broad Alternate Loss is case 2",
+            bnf_alternate_loss(
+                self.broad_outputs,
+                self.fine_outputs,
+                self.broad_labels,
+                self.fine_labels,
+                11,
+                self.classifier,
             ),
         )

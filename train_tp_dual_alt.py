@@ -10,12 +10,12 @@ from vish.trainer.dual import TPDualTrainer
 from vish.utils import *
 
 # NOTE: Overwrite for every train file
-DESC = "tp-dual-alternate-broad-fine-scratch-BNF"
+DESC = "tp-dual-broad-fine-scratch-BNF-alternate"
 
 # Set this flag to True if you want to just test the thing.
 # For running complete experiments, set it to False
-# LOAD = True for loading roffrom checkpoint
-TEST = False
+# LOAD = True for loading from checkpoint
+TEST = True
 LOAD = False
 
 DATE_TIME_FORMAT = "%Y_%m_%d_%H_%M_%S"
@@ -77,11 +77,7 @@ if LOAD:
 model = to_device(model, DEVICE)
 
 optimizer = torch.optim.SGD(
-    [
-        {"params": model.fine_model.parameters(), "lr": 1e-3},
-        {"params": model.broad_model.vit.parameters(), "lr": 5e-6},
-        {"params": model.broad_model.classifier.parameters(), "lr": 1e-3},
-    ],
+    model.parameters(),
     lr=LEARNING_RATE,
     weight_decay=WEIGHT_DECAY,
     momentum=0.9,
