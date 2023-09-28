@@ -31,10 +31,10 @@ def set_seed(seed: int = 42) -> None:
 
 def get_default_device():
     """Pick GPU if available, else CPU"""
-    if torch.cuda.is_available():
-        return torch.device("cuda")
-    else:
-        return torch.device("cpu")
+    # if torch.cuda.is_available():
+    #     return torch.device("cuda")
+    # else:
+    return torch.device("cpu")
 
 
 def to_device(data, device):
@@ -71,7 +71,7 @@ class CIFAR10MultiLabelDataset(CIFAR10):
         super().__init__(*args, **kwargs)
 
     def __len__(self):
-        return 10000 if self.train else 8000
+        return 10 if self.train else 8
         # return super().__len__()
 
     def __getitem__(self, index: int) -> tuple[Any, Any, int | list[int]]:
@@ -116,16 +116,16 @@ train_dl = DataLoader(
     train_dataset,
     BATCH_SIZE,
     shuffle=True,
-    num_workers=2,
-    pin_memory=True,
+    # num_workers=1,
+    # pin_memory=True,
 )
 
 test_dl = DataLoader(
     test_dataset,
     BATCH_SIZE,
     shuffle=True,
-    num_workers=2,
-    pin_memory=True,
+    # num_workers=1,
+    # pin_memory=True,
 )
 
 train_dl, test_dl = (

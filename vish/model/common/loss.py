@@ -5,6 +5,8 @@ from typing import Any, Callable
 import torch
 from torch import Tensor, nn
 
+from vish.constants import CIFAR10_NUM_BROAD
+
 MODE_0 = 0
 
 
@@ -13,11 +15,12 @@ def current_mode(curr_epoch, alt_freq, num_modes=2):
     return val % num_modes
 
 
-def f2b_filter_cifar_10(logits: Tensor, broad_labels: Tensor, fine_labels: Tensor):
+def fine2broad_cifar10(logits: Tensor, broad_labels: Tensor, fine_labels: Tensor):
     """
+    Converts fine logits to broad logits for CIFAR 10
 
     Args:
-        logits: logits of shape [B, 1, C_fine]
+        logits: logits of shape [B, 1, C_fine] or [B, C_fine]
         broad_labels: Labels of shape [B, ]
         fine_labels: Labels of shape [B, ]
 
@@ -25,19 +28,24 @@ def f2b_filter_cifar_10(logits: Tensor, broad_labels: Tensor, fine_labels: Tenso
 
     """
 
-    broad_indexes = torch.unique(broad_labels).tolist()
-    logits = logits.squeeze(1)
+    if len(logits.shape) == 3 and logits.shape[1] == 1:
+        logits = logits.squeeze(1)
 
     batch, *_ = logits.shape
     b_logits = torch.empty((batch, 0), device=logits.device)
 
-    for b_idx in broad_indexes:
+    for b_idx in range(CIFAR10_NUM_BROAD):
         fine_indexes = torch.unique(fine_labels[broad_labels == b_idx])
 
-        # TODO: Is mean alright or should we go for max
-        curr_idx_logits, _ = torch.max(logits[:, fine_indexes], dim=1)
-        # curr_idx_logits = torch.mean(logits[:, fine_indexes], dim=1)
+        if torch.numel(fine_indexes) == 0:
+            curr_idx_logits = torch.zeros(
+                (batch,), device=logits.device, requires_grad=True
+            )
+        else:
+            curr_idx_logits, _ = torch.max(logits[:, fine_indexes], dim=1)
+            # curr_idx_logits = torch.mean(logits[:, fine_indexes], dim=1)
         curr_idx_logits = curr_idx_logits.unsqueeze(1)
+
         b_logits = torch.cat([b_logits, curr_idx_logits], dim=1)
 
     return b_logits
@@ -50,7 +58,7 @@ def bnf_alternate_loss(
     fine_labels: torch.IntTensor,
     curr_epoch: int,
     classifier: Callable[[Tensor], Tensor],
-    f2b_filter: Callable[[Tensor, Tensor, Tensor], Tensor] = f2b_filter_cifar_10,
+    f2b_filter: Callable[[Tensor, Tensor, Tensor], Tensor] = fine2broad_cifar10,
     scale_factor: float = 100.0,
     alt_freq: int = 10,
     p: int = 1,
