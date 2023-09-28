@@ -73,6 +73,10 @@ class TPVitImageClassification(ViTBasicForImageClassification):
         additional_embeddings = op_seq[:, -self.num_extra_tokens :, :]
         logits = self.to_logits(additional_embeddings)
         return additional_embeddings, logits
+    
+    def just_classify(self, x):
+        pass
+
 
     def to_logits(self, additional_embeddings):
         logits = [
