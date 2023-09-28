@@ -12,3 +12,5 @@ DESC = "vit-decomposed-cifar10"
 ALT_FREQ = 50
 VIT_PRETRAINED_MODEL_1 = "aaraki/vit-base-patch16-224-in21k-finetuned-cifar10"
 VIT_PRETRAINED_MODEL_2 = "google/vit-base-patch16-224"
+CIFAR10_NUM_BROAD = 2
+CIFAR10_NUM_FINE = 10

@@ -26,7 +26,7 @@ LOG_FILE_NAME = f"logs/EXP-{CURR_TIME}_{DESC}.txt"
 
 if TEST:
     LOG_FILE_NAME = f"logs/TEST-{DESC}.txt"
-    EPOCHS = 70
+    EPOCHS = 30
 
 
 log_file = open(LOG_FILE_NAME, "a")

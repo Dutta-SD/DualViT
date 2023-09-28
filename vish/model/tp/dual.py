@@ -28,7 +28,7 @@ class TPDualVit(nn.Module):
 
     def forward(self, x, start=None, stride=None):
         x_ext_list, broad_logits = self.get_broad_outputs(x)
-        broad_embedding = x_ext_list[-1][:, 0, :]
+        broad_embedding = x_ext_list[-1][:, :1, :]
         x_ext_list = self.filter_external_inputs(start, stride, x_ext_list)
 
         fine_embedding, fine_logits = self.fine_model(x, x_ext_list)
