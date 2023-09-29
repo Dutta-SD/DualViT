@@ -45,3 +45,148 @@ Model CKPT saved at: ./checkpoints/tp-dual-broad-fine-scratch-BNF-alternate_1695
 Epoch took 2387.76 s
 
 CURR EPOCH:  2
+
+Epoch: 2 Summary
+Mode: MODE.TRAIN
+Losses: [3.91978009 0.29781059]
+Metrics: {'Acc@1_broad': 0.63202, 'Acc@1_fine': 0.10572}
+Best Acc@1_fine till now: 0.11116000264883041
+
+
+Epoch: 2 Summary
+Mode: MODE.EVAL
+Losses: [3.83573587 0.29424684]
+Metrics: {'Acc@1_broad': 0.6742, 'Acc@1_fine': 0.0985}
+Best Acc@1_fine till now: 0.1265999972820282
+
+Epoch took 2377.84 s
+
+CURR EPOCH:  3
+
+Epoch: 3 Summary
+Mode: MODE.TRAIN
+Losses: [3.80668007 0.2839254 ]
+Metrics: {'Acc@1_broad': 0.62766, 'Acc@1_fine': 0.10324}
+Best Acc@1_fine till now: 0.11116000264883041
+
+
+Epoch: 3 Summary
+Mode: MODE.EVAL
+Losses: [3.61531267 0.27388031]
+Metrics: {'Acc@1_broad': 0.6728, 'Acc@1_fine': 0.1294}
+Best Acc@1_fine till now: 0.1265999972820282
+
+Eval Metrics increased from: 0.1265999972820282 -> 0.12939999997615814
+Model CKPT saved at: ./checkpoints/tp-dual-broad-fine-scratch-BNF-alternate_1695971580.pt
+Epoch took 2388.30 s
+
+CURR EPOCH:  4
+
+Epoch: 4 Summary
+Mode: MODE.TRAIN
+Losses: [3.71436533 0.2725803 ]
+Metrics: {'Acc@1_broad': 0.66412, 'Acc@1_fine': 0.11826}
+Best Acc@1_fine till now: 0.11116000264883041
+
+Train Metrics increased from: 0.11116000264883041 -> 0.11826000362634659
+
+Epoch: 4 Summary
+Mode: MODE.EVAL
+Losses: [3.75844384 0.32593699]
+Metrics: {'Acc@1_broad': 0.7315, 'Acc@1_fine': 0.1311}
+Best Acc@1_fine till now: 0.12939999997615814
+
+Eval Metrics increased from: 0.12939999997615814 -> 0.13109999895095825
+Model CKPT saved at: ./checkpoints/tp-dual-broad-fine-scratch-BNF-alternate_1695971580.pt
+Epoch took 2387.80 s
+
+CURR EPOCH:  5
+
+Epoch: 5 Summary
+Mode: MODE.TRAIN
+Losses: [3.73046782 0.26369627]
+Metrics: {'Acc@1_broad': 0.69388, 'Acc@1_fine': 0.1165}
+Best Acc@1_fine till now: 0.11826000362634659
+
+
+Epoch: 5 Summary
+Mode: MODE.EVAL
+Losses: [3.28166074 0.26468568]
+Metrics: {'Acc@1_broad': 0.7596, 'Acc@1_fine': 0.1303}
+Best Acc@1_fine till now: 0.13109999895095825
+
+Epoch took 2377.66 s
+
+CURR EPOCH:  6
+
+Epoch: 6 Summary
+Mode: MODE.TRAIN
+Losses: [3.65258833 0.25549441]
+Metrics: {'Acc@1_broad': 0.65734, 'Acc@1_fine': 0.12108}
+Best Acc@1_fine till now: 0.11826000362634659
+
+Train Metrics increased from: 0.11826000362634659 -> 0.12108000367879868
+
+Epoch: 6 Summary
+Mode: MODE.EVAL
+Losses: [3.58331983 0.25114445]
+Metrics: {'Acc@1_broad': 0.5246, 'Acc@1_fine': 0.1287}
+Best Acc@1_fine till now: 0.13109999895095825
+
+Epoch took 2377.53 s
+
+CURR EPOCH:  7
+
+Epoch: 7 Summary
+Mode: MODE.TRAIN
+Losses: [3.65339014 0.25020173]
+Metrics: {'Acc@1_broad': 0.63094, 'Acc@1_fine': 0.11664}
+Best Acc@1_fine till now: 0.12108000367879868
+
+
+Epoch: 7 Summary
+Mode: MODE.EVAL
+Losses: [3.29719971 0.24915453]
+Metrics: {'Acc@1_broad': 0.4834, 'Acc@1_fine': 0.1425}
+Best Acc@1_fine till now: 0.13109999895095825
+
+Eval Metrics increased from: 0.13109999895095825 -> 0.14249999821186066
+Model CKPT saved at: ./checkpoints/tp-dual-broad-fine-scratch-BNF-alternate_1695971580.pt
+Epoch took 2387.71 s
+
+CURR EPOCH:  8
+
+Epoch: 8 Summary
+Mode: MODE.TRAIN
+Losses: [3.65092915 0.24451742]
+Metrics: {'Acc@1_broad': 0.66958, 'Acc@1_fine': 0.12332}
+Best Acc@1_fine till now: 0.12108000367879868
+
+Train Metrics increased from: 0.12108000367879868 -> 0.12331999838352203
+
+Epoch: 8 Summary
+Mode: MODE.EVAL
+Losses: [3.59520298 0.25224596]
+Metrics: {'Acc@1_broad': 0.7505, 'Acc@1_fine': 0.1188}
+Best Acc@1_fine till now: 0.14249999821186066
+
+Epoch took 2377.28 s
+
+CURR EPOCH:  9
+
+Epoch: 9 Summary
+Mode: MODE.TRAIN
+Losses: [3.62653119 0.23589035]
+Metrics: {'Acc@1_broad': 0.64966, 'Acc@1_fine': 0.1148}
+Best Acc@1_fine till now: 0.12331999838352203
+
+
+Epoch: 9 Summary
+Mode: MODE.EVAL
+Losses: [3.4635204  0.25981026]
+Metrics: {'Acc@1_broad': 0.6183, 'Acc@1_fine': 0.1395}
+Best Acc@1_fine till now: 0.14249999821186066
+
+Epoch took 2377.66 s
+
+CURR EPOCH:  10

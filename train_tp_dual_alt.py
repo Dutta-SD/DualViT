@@ -16,7 +16,7 @@ DESC = "tp-dual-broad-fine-scratch-BNF-alternate"
 # For running complete experiments, set it to False
 # LOAD = True for loading from checkpoint
 TEST = True
-LOAD = False
+LOAD = True
 
 DATE_TIME_FORMAT = "%Y_%m_%d_%H_%M_%S"
 CURR_TIME = datetime.now().strftime(DATE_TIME_FORMAT)
@@ -35,7 +35,7 @@ log_file = open(LOG_FILE_NAME, "a")
 ckpt = None
 
 if LOAD:
-    DESC = ""
+    DESC = "tp-dual-broad-fine-scratch-BNF-alternate_1695971580"
     ckpt = torch.load(f"./checkpoints/{DESC}.pt")
     print("Checkpoint Loaded...")
 
