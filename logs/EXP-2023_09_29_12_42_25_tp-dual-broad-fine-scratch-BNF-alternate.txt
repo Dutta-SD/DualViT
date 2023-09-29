@@ -1,0 +1,7 @@
+************************************************************************************************************************
+Started at:  2023_09_29_12_42_25
+Experiment:  tp-dual-broad-fine-scratch-BNF-alternate_1695971549
+Starting Dual Model Training Training with Modified Loss ...
+Starting Train/Eval...
+
+CURR EPOCH:  0
