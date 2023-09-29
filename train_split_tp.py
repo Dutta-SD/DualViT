@@ -1,16 +1,14 @@
-import sys
 from datetime import datetime
 
 from torch import nn
-from transformers.models.vit import ViTForImageClassification, ViTConfig
+from transformers.models.vit import ViTConfig
 
-from vish.model.tp.dual import TPDualVit
-from vish.model.tp.tp_vit import TPVitImageClassification
-from vish.trainer.dual import TPDualTrainer
+from vish.model.tp.single_split import SplitHierarchicalTPViT
+from vish.trainer.dual import SplitHierarchicalTPVitTrainer
 from vish.utils import *
 
 # NOTE: Overwrite for every train file
-DESC = "tp-dual-broad-fine-scratch-BNF-alternate"
+DESC = "split-tp-broad-fine-scratch-BNF-alternate"
 
 # Set this flag to True if you want to just test the thing.
 # For running complete experiments, set it to False
@@ -64,20 +62,36 @@ model_params = {
 }
 
 # MODEL CONFIGURATION
-fine_model = TPVitImageClassification(**model_params)
-broad_model = ViTForImageClassification(ViTConfig())
-
-model = TPDualVit(fine_model, broad_model)
+# Ignore classifier not initialised warnings
+# model = SplitHierarchicalTPViT.from_pretrained(VIT_PRETRAINED_MODEL_2) # Google ImageNet21k weights
+model: SplitHierarchicalTPViT = SplitHierarchicalTPViT(ViTConfig())
 
 if LOAD:
     model = ckpt["model"]
     print("Model Loaded from checkpoint")
-# print(model)
 
 model = to_device(model, DEVICE)
 
+# For Pretrained FineTuning
+# opt_group = [
+#     {
+#         "params": model.encoder.parameters(),
+#         "lr": 1e-5,
+#     },
+#     {
+#         "params": model.embeddings.parameters(),
+#         "lr": 1e-5,
+#     },
+#     {
+#         "params": model.classifier.parameters(),
+#         "lr": 1e-3,
+#     },
+# ]
+
+opt_group = model.parameters()
+
 optimizer = torch.optim.SGD(
-    model.parameters(),
+    opt_group,
     lr=LEARNING_RATE,
     weight_decay=WEIGHT_DECAY,
     momentum=0.9,
@@ -118,7 +132,7 @@ if LOAD:
     }
     trainer_params = {**trainer_params, **load_kwargs}
 
-trainer = TPDualTrainer(**trainer_params)
+trainer = SplitHierarchicalTPVitTrainer(**trainer_params)
 run_kwargs = {
     "fine_class_CE": nn.CrossEntropyLoss(),
     "broad_class_CE": nn.CrossEntropyLoss(),
