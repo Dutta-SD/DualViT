@@ -131,6 +131,7 @@
 #         break
 
 import torch
+from vish.model.common.loss import fine2broad_cifar10
 
 from vish.model.tp.dual import TPDualVit
 from vish.utils import (
@@ -153,20 +154,19 @@ from vish.utils import (
 # print("Output Shape: ", model(hidden_tensor, repr_tensor).shape)
 
 CKPTS = [
+    # {
+    #     "name": "TP-Dual-BNF",
+    #     "ckpt": "./checkpoints/tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNF-loss_1695638053.pt",
+    # },
+    # {
+    #     "name": "TP-Dual-BNFC",
+    #     "ckpt": "./checkpoints/tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNFCluster-loss_1695667259.pt",
+    # },
     {
-        "name": "TP-Dual-BNF",
-        "ckpt": "./checkpoints/tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNF-loss_1695638053.pt",
-    },
-    {
-        "name": "TP-Dual-BNFC",
-        "ckpt": "./checkpoints/tf-vit-dual-model-p-16-huggingface-pretrained-google-weights-broad-only-BNFCluster-loss_1695667259.pt",
-    },
+        "name": "TP-Dual-Alternate-18k-30epochs",
+        "ckpt": "./checkpoints/tp-dual-broad-fine-scratch-BNF-alternate_1695909447.pt"
+    }
 ]
-
-def accs(y_true, y_pred):
-    n = (y_true == y_pred).sum()
-    d = y_true.shape[0]
-    return n / d
 
 with torch.no_grad():
     for info in CKPTS:
@@ -180,15 +180,15 @@ with torch.no_grad():
         acc = []
 
         for batch in train_dl:
-            x, f_l, b_l = batch
-            [be, bl], _ = model(x)
-            b_op = torch.argmax(model.fine_model.mlp_heads[0](be), dim=1)
+            x, fine_labels, broad_labels = batch
+            [b_embs, _], _ = model(x)
+            f_logits_b = model.fine_model.mlp_heads[0](b_embs)
+            b_logits = fine2broad_cifar10(f_logits_b, broad_labels, fine_labels)
 
-            b_op = b_op.clone().detach().cpu()
-            b_l = b_l.clone().detach().cpu()
+            b_logits = b_logits.cpu()
+            broad_labels = broad_labels.cpu()
 
-            b_p = b_op.apply_(get_broad_label_cifar10)
-            acc.append(accs(b_p, b_l))
+            acc.append(accuracy(y_true=broad_labels, y_pred=b_logits))
             # break
 
         print(f"Model: {name}, Broad Accuracy(Train) is: {torch.mean(torch.stack(acc))}")
@@ -196,15 +196,15 @@ with torch.no_grad():
         acc = []
 
         for batch in test_dl:
-            x, f_l, b_l = batch
-            [be, bl], _ = model(x)
-            b_op = torch.argmax(model.fine_model.mlp_heads[0](be), dim=1)
+            x, fine_labels, broad_labels = batch
+            [b_embs, _], _ = model(x)
+            f_logits_b = model.fine_model.mlp_heads[0](b_embs)
+            b_logits = fine2broad_cifar10(f_logits_b, broad_labels, fine_labels)
 
-            b_op = b_op.clone().detach().cpu()
-            b_l = b_l.clone().detach().cpu()
+            b_logits = b_logits.cpu()
+            broad_labels = broad_labels.cpu()
 
-            b_p = b_op.apply_(get_broad_label_cifar10)
-            acc.append(accs(b_p, b_l))
+            acc.append(accuracy(y_true=broad_labels, y_pred=b_logits))
             # break
 
         print(f"Model: {name}, Broad Accuracy(Test) is: {torch.mean(torch.stack(acc))}")

@@ -10,6 +10,8 @@ from torchvision.datasets import CIFAR10
 
 from vish.constants import *
 
+NUM_WORKERS = 4 #4*num_gpu
+
 
 def accuracy(y_pred: torch.FloatTensor, y_true: torch.IntTensor):
     _, preds = torch.max(y_pred, dim=1)
@@ -31,10 +33,10 @@ def set_seed(seed: int = 42) -> None:
 
 def get_default_device():
     """Pick GPU if available, else CPU"""
-    # if torch.cuda.is_available():
-    #     return torch.device("cuda")
-    # else:
-    return torch.device("cpu")
+    if torch.cuda.is_available():
+        return torch.device("cuda")
+    else:
+        return torch.device("cpu")
 
 
 def to_device(data, device):
@@ -71,8 +73,8 @@ class CIFAR10MultiLabelDataset(CIFAR10):
         super().__init__(*args, **kwargs)
 
     def __len__(self):
-        return 10 if self.train else 8
-        # return super().__len__()
+        # return 10000 if self.train else 8000
+        return super().__len__()
 
     def __getitem__(self, index: int) -> tuple[Any, Any, int | list[int]]:
         img_tensor, fine_label = super().__getitem__(index)
@@ -116,16 +118,16 @@ train_dl = DataLoader(
     train_dataset,
     BATCH_SIZE,
     shuffle=True,
-    # num_workers=1,
-    # pin_memory=True,
+    num_workers=NUM_WORKERS,
+    pin_memory=True,
 )
 
 test_dl = DataLoader(
     test_dataset,
     BATCH_SIZE,
     shuffle=True,
-    # num_workers=1,
-    # pin_memory=True,
+    num_workers=NUM_WORKERS,
+    pin_memory=True,
 )
 
 train_dl, test_dl = (

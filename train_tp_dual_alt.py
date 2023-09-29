@@ -15,7 +15,7 @@ DESC = "tp-dual-broad-fine-scratch-BNF-alternate"
 # Set this flag to True if you want to just test the thing.
 # For running complete experiments, set it to False
 # LOAD = True for loading from checkpoint
-TEST = True
+TEST = False
 LOAD = False
 
 DATE_TIME_FORMAT = "%Y_%m_%d_%H_%M_%S"

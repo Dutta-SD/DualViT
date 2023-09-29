@@ -1,0 +1,47 @@
+************************************************************************************************************************
+Started at:  2023_09_29_12_42_56
+Experiment:  tp-dual-broad-fine-scratch-BNF-alternate_1695971580
+Starting Dual Model Training Training with Modified Loss ...
+Starting Train/Eval...
+
+CURR EPOCH:  0
+
+Epoch: 0 Summary
+Mode: MODE.TRAIN
+Losses: [5.07573489 0.48026074]
+Metrics: {'Acc@1_broad': 0.48188, 'Acc@1_fine': 0.10964}
+Best Acc@1_fine till now: -1
+
+Train Metrics increased from: -1 -> 0.10964000225067139
+
+Epoch: 0 Summary
+Mode: MODE.EVAL
+Losses: [3.92469168 0.35101024]
+Metrics: {'Acc@1_broad': 0.6267, 'Acc@1_fine': 0.1179}
+Best Acc@1_fine till now: -1
+
+Eval Metrics increased from: -1 -> 0.11789999902248383
+Model CKPT saved at: ./checkpoints/tp-dual-broad-fine-scratch-BNF-alternate_1695971580.pt
+Epoch took 2377.33 s
+
+CURR EPOCH:  1
+
+Epoch: 1 Summary
+Mode: MODE.TRAIN
+Losses: [4.025655   0.32245611]
+Metrics: {'Acc@1_broad': 0.56758, 'Acc@1_fine': 0.11116}
+Best Acc@1_fine till now: 0.10964000225067139
+
+Train Metrics increased from: 0.10964000225067139 -> 0.11116000264883041
+
+Epoch: 1 Summary
+Mode: MODE.EVAL
+Losses: [3.58906806 0.30968967]
+Metrics: {'Acc@1_broad': 0.6934, 'Acc@1_fine': 0.1266}
+Best Acc@1_fine till now: 0.11789999902248383
+
+Eval Metrics increased from: 0.11789999902248383 -> 0.1265999972820282
+Model CKPT saved at: ./checkpoints/tp-dual-broad-fine-scratch-BNF-alternate_1695971580.pt
+Epoch took 2387.76 s
+
+CURR EPOCH:  2

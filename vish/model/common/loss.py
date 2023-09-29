@@ -97,7 +97,6 @@ def bnf_alternate_loss(
         emb_losses = _loss_bnf(
             broad_embedding_clone, broad_labels, fine_embedding, fine_labels, p
         )
-        print("Broad shape: ", broad_embedding.shape, file=sys.stderr)
         broad_predictions = f2b_filter(
             classifier(broad_embedding)[-1],
             broad_labels,
