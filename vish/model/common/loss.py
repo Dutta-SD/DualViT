@@ -88,7 +88,7 @@ def bnf_alternate_loss(
     # Fine logits is list as adapted from a multiple token model
     ce_loss_criterion = nn.CrossEntropyLoss()
     fine_embedding, [*_, fine_logits] = fine_outputs
-    broad_embedding, _ = broad_outputs
+    broad_embedding, *_ = broad_outputs
 
     mode = current_mode(curr_epoch, alt_freq)
 
@@ -97,8 +97,13 @@ def bnf_alternate_loss(
         emb_losses = _loss_bnf(
             broad_embedding_clone, broad_labels, fine_embedding, fine_labels, p
         )
+        broad_emb_from_fine = classifier(broad_embedding)
+
+        if isinstance(broad_emb_from_fine, (list, tuple)):
+            broad_emb_from_fine = broad_emb_from_fine[-1]
+
         broad_predictions = f2b_filter(
-            classifier(broad_embedding)[-1],
+            broad_emb_from_fine,
             broad_labels,
             fine_labels,
         )

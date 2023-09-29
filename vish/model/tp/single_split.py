@@ -28,7 +28,7 @@ class SplitHierarchicalTPViT(ViTModel):
         broad_embedding = b_tensors[-1][:, :1, :]
         fine_embedding = ip_fine[:, :1, :]
 
-        fine_logits = self.classify(fine_embedding)
+        fine_logits = self.classify(fine_embedding.squeeze(1))
 
         return broad_embedding, fine_embedding, fine_logits
 

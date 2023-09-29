@@ -7,8 +7,10 @@ from vish.model.common.loss import (
     empty_if_problem,
     broad_criterion,
     bnf_alternate_loss,
+    fine2broad_cifar10,
 )
 from vish.model.tp.dual import TPDualVit
+from vish.model.tp.single_split import SplitHierarchicalTPViT
 from vish.trainer.base import BaseTrainer
 
 
@@ -248,18 +250,75 @@ class TPDualTrainer(VitDualModelTrainer):
             classifier=self.model.fine_model.to_logits,
         )
 
+        with torch.no_grad():
+            # Multi-duh!
+            broad_as_fine = self.model.fine_model.to_logits(broad_output[0])[0]
+            broad_logits = fine2broad_cifar10(broad_as_fine, broad_labels, fine_labels)
+
         metrics = {}
 
         with torch.no_grad():
             for metric_key, metric_fxn in self.metrics_list:
                 # Eg: Acc@1_broad, Acc@1_fine
                 metrics[f"{metric_key}_broad"] = metric_fxn(
-                    broad_output[1].clone().detach().cpu(),
+                    broad_logits.clone().detach().cpu(),
                     broad_labels.clone().detach().cpu(),
                 )
                 # Fine outputs are list as adapted from a multi token model
                 metrics[f"{metric_key}_fine"] = metric_fxn(
                     fine_output[1][0].clone().detach().cpu(),
+                    fine_labels.clone().detach().cpu(),
+                )
+
+        return [broad_loss, fine_loss], metrics
+
+
+class SplitHierarchicalTPVitTrainer(VitDualModelTrainer):
+    model: SplitHierarchicalTPViT
+
+    def train_backward(self, loss_broad, loss_fine):
+        # Different model with no connections, so no need of retain_graph
+        loss_broad.backward(retain_graph=True)
+        loss_fine.backward()
+
+    def get_outputs(self, model_inputs, **kwargs) -> tuple[list, dict]:
+        broad_embedding, fine_embedding, fine_logits = self.model(
+            model_inputs["pixel_values"]
+        )
+
+        fine_labels, broad_labels = (
+            model_inputs["fine_labels"],
+            model_inputs["broad_labels"],
+        )
+
+        broad_output = [broad_embedding, None]
+        fine_output = [fine_embedding, [fine_logits]]
+
+        broad_loss, fine_loss = bnf_alternate_loss(
+            broad_output,
+            fine_output,
+            broad_labels,
+            fine_labels,
+            kwargs["epoch"],
+            classifier=self.model.classify,
+        )
+
+        with torch.no_grad():
+            broad_as_fine = self.model.classify(broad_embedding)
+            broad_logits = fine2broad_cifar10(broad_as_fine, broad_labels, fine_labels)
+
+        metrics = {}
+
+        with torch.no_grad():
+            for metric_key, metric_fxn in self.metrics_list:
+                # Eg: Acc@1_broad, Acc@1_fine
+                metrics[f"{metric_key}_broad"] = metric_fxn(
+                    broad_logits.clone().detach().cpu(),
+                    broad_labels.clone().detach().cpu(),
+                )
+                # Fine outputs are list as adapted from a multi token model
+                metrics[f"{metric_key}_fine"] = metric_fxn(
+                    fine_logits.clone().detach().cpu(),
                     fine_labels.clone().detach().cpu(),
                 )
 
