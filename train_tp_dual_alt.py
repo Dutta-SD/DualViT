@@ -15,8 +15,8 @@ DESC = "tp-dual-broad-fine-scratch-BNF-alternate"
 # Set this flag to True if you want to just test the thing.
 # For running complete experiments, set it to False
 # LOAD = True for loading from checkpoint
-TEST = True
-LOAD = True
+TEST = False
+LOAD = False
 
 DATE_TIME_FORMAT = "%Y_%m_%d_%H_%M_%S"
 CURR_TIME = datetime.now().strftime(DATE_TIME_FORMAT)
@@ -25,12 +25,14 @@ LOG_FILE_NAME = f"logs/EXP-{CURR_TIME}_{DESC}.txt"
 
 
 if TEST:
-    LOG_FILE_NAME = f"logs/TEST-{DESC}.txt"
+    DESC = f"TEST-{DESC}"
+    LOG_FILE_NAME = f"logs/{DESC}.txt"
     EPOCHS = 30
 
 
 log_file = open(LOG_FILE_NAME, "a")
-# sys.stdout = log_file
+print("Logging @:", LOG_FILE_NAME)
+sys.stdout = log_file
 
 ckpt = None
 
@@ -92,7 +94,7 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     mode="max",
     verbose=True,
     min_lr=MIN_LR,
-    patience=3,
+    patience=5,
 )
 
 # Training
