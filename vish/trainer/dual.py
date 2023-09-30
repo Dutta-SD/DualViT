@@ -246,7 +246,7 @@ class TPDualTrainer(VitDualModelTrainer):
             fine_output,
             broad_labels,
             fine_labels,
-            kwargs["epoch"],
+            kwargs["epoch"]+10,
             classifier=self.model.fine_model.to_logits,
         )
 
