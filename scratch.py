@@ -131,8 +131,8 @@
 #         break
 
 import torch
-from vish.model.common.loss import fine2broad_cifar10
 
+from vish.model.common.loss import fine2broad_cifar10
 from vish.model.tp.dual import TPDualVit
 from vish.utils import (
     DEVICE,
@@ -140,7 +140,6 @@ from vish.utils import (
     to_device,
     test_dl,
     train_dl,
-    get_broad_label_cifar10,
 )
 
 # from vish.model.tp.blocks import TPMHA, TPTransformerBlock
@@ -164,7 +163,7 @@ CKPTS = [
     # },
     {
         "name": "TP-Dual-Alternate-18k-30epochs",
-        "ckpt": "./checkpoints/tp-dual-broad-fine-scratch-BNF-alternate_1695909447.pt"
+        "ckpt": "./checkpoints/tp-dual-broad-fine-scratch-BNF-alternate_1695909447.pt",
     }
 ]
 
@@ -191,7 +190,9 @@ with torch.no_grad():
             acc.append(accuracy(y_true=broad_labels, y_pred=b_logits))
             # break
 
-        print(f"Model: {name}, Broad Accuracy(Train) is: {torch.mean(torch.stack(acc))}")
+        print(
+            f"Model: {name}, Broad Accuracy(Train) is: {torch.mean(torch.stack(acc))}"
+        )
 
         acc = []
 
