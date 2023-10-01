@@ -8,7 +8,7 @@ import torchvision.transforms as tf
 from torch.utils.data import DataLoader
 from torchvision.datasets import CIFAR10
 
-from vish.constants import *
+from vish.constants import IMG_SIZE, BATCH_SIZE, IS_TEST_RUN
 
 NUM_WORKERS = 4  # 4*num_gpu
 
@@ -63,23 +63,23 @@ class DeviceDataLoader:
         return len(self.dl)
 
 
-def get_broad_label_cifar10(idx):
-    fine_to_broad = [0, 0, 1, 1, 1, 1, 1, 1, 0, 0]
-    return fine_to_broad[idx]
-
-
 class CIFAR10MultiLabelDataset(CIFAR10):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, is_test: bool, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fine_to_broad = [0, 0, 1, 1, 1, 1, 1, 1, 0, 0]
+        self.is_test = is_test
+
+    def _broad(self, idx):
+        return self.fine_to_broad[idx]
 
     def __len__(self):
-        # return 1024 if self.train else 4096
-        # return 10000 if self.train else 8000
+        if self.is_test:
+            return 8192 if self.train else 4096
         return super().__len__()
 
     def __getitem__(self, index: int) -> tuple[Any, Any, int | list[int]]:
         img_tensor, fine_label = super().__getitem__(index)
-        return img_tensor, fine_label, get_broad_label_cifar10(fine_label)
+        return img_tensor, fine_label, self._broad(fine_label)
 
 
 DEVICE = get_default_device()
@@ -107,10 +107,10 @@ test_transform = tf.Compose(
 )
 
 train_dataset = CIFAR10MultiLabelDataset(
-    "./data", download=True, transform=train_transform
+    IS_TEST_RUN, "./data", download=True, transform=train_transform
 )
 test_dataset = CIFAR10MultiLabelDataset(
-    "./data", download=True, transform=test_transform, train=False
+    IS_TEST_RUN, "./data", download=True, transform=test_transform, train=False
 )
 
 set_seed(42)
@@ -119,16 +119,16 @@ train_dl = DataLoader(
     train_dataset,
     BATCH_SIZE,
     shuffle=True,
-    num_workers=NUM_WORKERS,
-    pin_memory=True,
+    num_workers=NUM_WORKERS if torch.cuda.is_available() else 0,
+    pin_memory=True if torch.cuda.is_available() else False,
 )
 
 test_dl = DataLoader(
     test_dataset,
     BATCH_SIZE,
     shuffle=True,
-    num_workers=NUM_WORKERS,
-    pin_memory=True,
+    num_workers=NUM_WORKERS if torch.cuda.is_available() else 0,
+    pin_memory=True if torch.cuda.is_available() else False,
 )
 
 train_dl, test_dl = (
