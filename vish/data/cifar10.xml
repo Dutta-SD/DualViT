@@ -20,9 +20,9 @@
             <deer label="0"/>
             <horse label="1"/>
         </herbivore>
-        <other_animal label="2">
+        <medium label="2">
             <bird label="0"/>
             <frog label="1"/>
-        </other_animal>
+        </medium>
     </animal>
 </class>
