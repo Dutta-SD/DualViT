@@ -32,6 +32,37 @@ class SplitHierarchicalTPViT(ViTModel):
 
         return broad_embedding, fine_embedding, fine_logits
 
+    def forward2(self, pixel_values: torch.Tensor):
+        ip_fine = ip_broad = self.embeddings(pixel_values)
+
+        # Last ones are Layers, not list of layers
+        broad_modules, last_broad_module = (
+            self.encoder.layer[: self.n_broad - 1],
+            self.encoder.layer[self.n_broad],
+        )
+        fine_modules, last_fine_module = (
+            self.encoder.layer[self.n_broad : -1],
+            self.encoder.layer[-1],
+        )
+
+        for broad_module, fine_module in zip(broad_modules, fine_modules):
+            # self.n_broad - 1 and last(-1) not used in TP
+            output_broad = broad_module(ip_broad)[0]
+            output_fine = fine_module(ip_fine)[0]
+            ip_fine = output_fine * output_broad
+            ip_broad = output_broad
+
+        # output from last encoder layer without TP
+        ip_broad = last_broad_module(ip_broad)[0]
+        ip_fine = last_fine_module(ip_fine)[0]
+
+        broad_embedding = ip_broad[:, :1, :]
+        fine_embedding = ip_fine[:, :1, :]
+
+        fine_logits = self.classify(fine_embedding.squeeze(1))
+
+        return broad_embedding, fine_embedding, fine_logits
+
     def classify(self, embeddings):
         return self.classifier(embeddings)
 
