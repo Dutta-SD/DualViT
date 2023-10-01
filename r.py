@@ -1,16 +1,25 @@
-# import torch
+import torch
 
-# ckpt_full_path="./checkpoints/vit-b-16-modified-loss-updated-google-weights_1694713704.pt"
+from vish.model.common.tools import debug_dict
+from vish.model.common.tree import LabelHierarchyTree
+from vish.model.decomposed import VitClassificationDecomposed
 
-# ckpt = torch.load(ckpt_full_path)
+lt = LabelHierarchyTree("vish/data/cifar10.xml")
 
-# torch.save(
-#     {
-#         "model": ckpt["model"],
-#         "opt": ckpt["opt"],
-#         "tags": ckpt["tags"],
-#         "best_train_score": 0.3763749897480011,
-#         "best_test_score": 0.3055555522441864,
-#     },
-#     ckpt_full_path,
-# )
+model = VitClassificationDecomposed(
+    img_height=224,
+    img_width=224,
+    img_in_channels=3,
+    label_tree=lt,
+    max_depth_before_clf=2,
+    num_blocks_per_group=2,
+)
+
+ip = {
+    "pixel_values": torch.randn(4, 3, 224, 224),
+    "labels": torch.randint(0, 10, (4,)),
+}
+
+
+op = model(ip)
+debug_dict(op)

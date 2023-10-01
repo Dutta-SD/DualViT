@@ -1,34 +1,38 @@
 import sys
 from datetime import datetime
 
+import torch
 from torch import nn
 from transformers.models.vit import ViTForImageClassification, ViTConfig
 
+from vish.constants import (
+    DATE_TIME_FORMAT,
+    IS_TEST_RUN,
+    LOAD_CKPT,
+    LEARNING_RATE,
+    WEIGHT_DECAY,
+    MIN_LR,
+    WEIGHT_FOLDER_PATH,
+    EPOCHS,
+    MOMENTUM,
+)
 from vish.model.tp.dual import TPDualVit
 from vish.model.tp.tp_vit import TPVitImageClassification
 from vish.trainer.dual import TPDualTrainer
-from vish.utils import *
+from vish.utils import to_device, DEVICE, train_dl, test_dl, accuracy
 
-# NOTE: Overwrite for every train file
+# TODO: Overwrite for every train file
 DESC = "tp-dual-broad-fine-scratch-BNF-alternate"
+CKPT_DESC = "tp-dual-broad-fine-scratch-BNF-alternate_1695971580"
 
-# Set this flag to True if you want to just test the thing.
-# For running complete experiments, set it to False
-# LOAD = True for loading from checkpoint
-TEST = False
-LOAD = False
-
-DATE_TIME_FORMAT = "%Y_%m_%d_%H_%M_%S"
 CURR_TIME = datetime.now().strftime(DATE_TIME_FORMAT)
 
 LOG_FILE_NAME = f"logs/EXP-{CURR_TIME}_{DESC}.txt"
 
-
-if TEST:
+if IS_TEST_RUN:
     DESC = f"TEST-{DESC}"
     LOG_FILE_NAME = f"logs/{DESC}.txt"
     EPOCHS = 30
-
 
 log_file = open(LOG_FILE_NAME, "a")
 print("Logging @:", LOG_FILE_NAME)
@@ -36,8 +40,8 @@ sys.stdout = log_file
 
 ckpt = None
 
-if LOAD:
-    DESC = "tp-dual-broad-fine-scratch-BNF-alternate_1695971580"
+if LOAD_CKPT:
+    DESC = CKPT_DESC
     ckpt = torch.load(f"./checkpoints/{DESC}.pt")
     print("Checkpoint Loaded...")
 
@@ -71,7 +75,7 @@ broad_model = ViTForImageClassification(ViTConfig())
 
 model = TPDualVit(fine_model, broad_model)
 
-if LOAD:
+if LOAD_CKPT:
     model = ckpt["model"]
     print("Model Loaded from checkpoint")
 # print(model)
@@ -82,10 +86,10 @@ optimizer = torch.optim.SGD(
     model.parameters(),
     lr=LEARNING_RATE,
     weight_decay=WEIGHT_DECAY,
-    momentum=0.9,
+    momentum=MOMENTUM,
 )
 
-if LOAD:
+if LOAD_CKPT:
     optimizer.load_state_dict(ckpt["opt"][0])
     print("Optimizer loaded from checkpoint")
 
@@ -112,7 +116,7 @@ trainer_params = {
 }
 
 
-if LOAD:
+if LOAD_CKPT:
     load_kwargs = {
         "uniq_desc": False,  # Uncomment if loading checkpoint
         "best_train_score": ckpt["best_train_score"],

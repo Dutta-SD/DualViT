@@ -14,32 +14,15 @@ DATA_KEY = "pixel_values"
 LABEL_KEY = "labels"
 
 
-def debug_dict(d: dict[str, TransformerData]):
-    for key, value in d.items():
-        print("\tKey:", key)
-        print(
-            "\t\tValue -> Data Shape: ",
-            value.data.shape,
-            "DType:",
-            value.data.dtype,
-        )
-        print(
-            "\t\tValue -> Label Shape: ",
-            value.labels.shape,
-            "DType:",
-            value.labels.dtype,
-        )
-
-
 class VitClassificationDecomposed(nn.Module):
     def __init__(
         self,
         img_height: int,
         img_width: int,
+        label_tree: LabelHierarchyTree = None,
         img_in_channels: int = 3,
         patch_dim: int = 16,
         emb_dim: int = 768,
-        label_tree: LabelHierarchyTree = None,
         num_blocks_per_group: int = 4,
         max_depth_before_clf: int = 2,  # this is count not index, depth will be [0, max_depth_before_clf)
     ) -> None:
@@ -84,8 +67,8 @@ class VitClassificationDecomposed(nn.Module):
 
         self.classifiers = nn.ModuleDict(
             {
-                name: nn.Linear(self.emb_dim, self.num_leaves)
-                for name in self.output_leaves
+                name: nn.Linear(self.emb_dim, len(label_tree.getall_leaves(name)))
+                for name in label_tree.get_elements_at_depth(max_depth_before_clf)
             }
         )
 
@@ -116,40 +99,40 @@ class VitClassificationDecomposed(nn.Module):
         return {ROOT_KEY: TransformerData(data=final_data, labels=final_labels)}
 
     def forward(self, raw: dict[str, torch.FloatTensor]):
-        ip = self._init_transform(raw)
+        inputs = self._init_transform(raw)
 
         for curr_depth in range(self.max_depth):
             # print(f"Pre Aggregator @ Depth:  {curr_depth}")
-            # self.debug_dict(ip)
+            # self.debug_dict(inputs)
 
-            ip = self.aggregators[curr_depth](ip)
+            inputs = self.aggregators[curr_depth](inputs)
 
             # print(f"Post Aggregator @ Depth:  {curr_depth}")
-            # self.debug_dict(ip)
+            # self.debug_dict(inputs)
 
-            ip = self.segregator.segregate(ip)
+            inputs = self.segregator.segregate(inputs)
 
             # print(f"Post Segregator @ Depth:  {curr_depth}")
-            # self.debug_dict(ip)
+            # self.debug_dict(inputs)
 
-        # Final Segregation to leaves
-        ip = self.segregator.segregate(ip, bypass_to_leaf=True)
+        # # Final Segregation to leaves -- DO NOT DO
+        # inputs = self.segregator.segregate(inputs, bypass_to_leaf=True)
 
         # print("Final Segregation to Leaves")
-        # self.debug_dict(ip)
+        # self.debug_dict(inputs)
 
-        op: dict[str, TransformerData] = {}
+        outputs: dict[str, TransformerData] = {}
 
-        for leaf_key in ip.keys():
-            data = ip[leaf_key].data.squeeze(0)  # 1 Z D -> Z D
-            labels = ip[leaf_key].labels.T  # Z C
+        for classifier_key in inputs.keys():
+            data = inputs[classifier_key].data.squeeze(0)  # 1 Z D -> Z D
+            labels = inputs[classifier_key].labels.T  # Z 1
 
-            op[leaf_key] = TransformerData(
-                data=self.classifiers[leaf_key](data),  # Z D -> Z C
-                labels=labels,  # Z C
+            outputs[classifier_key] = TransformerData(
+                data=self.classifiers[classifier_key](data),  # Z D -> Z C
+                labels=labels.squeeze(1),  # Z
             )
 
         # print("Final Output: ")
-        # self.debug_dict(op)
+        # self.debug_dict(outputs)
 
-        return op
+        return outputs

@@ -14,3 +14,7 @@ VIT_PRETRAINED_MODEL_1 = "aaraki/vit-base-patch16-224-in21k-finetuned-cifar10"
 VIT_PRETRAINED_MODEL_2 = "google/vit-base-patch16-224"
 CIFAR10_NUM_BROAD = 2
 CIFAR10_NUM_FINE = 10
+IS_TEST_RUN = False
+LOAD_CKPT = False
+DATE_TIME_FORMAT = "%Y_%m_%d_%H_%M_%S"
+MOMENTUM = 0.9
