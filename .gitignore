@@ -285,3 +285,4 @@ data/
 */TEST-*
 
 logs/2023-09-01*
+logs/lightning**
