@@ -65,6 +65,9 @@ class SplitViTHierarchicalTPVitHalfPretrained(SplitHierarchicalTPViT):
     def get_broad_params(self):
         return self.get_broad_layers().parameters()
 
+    def get_fine_params(self):
+        return self.get_fine_layers().parameters()
+
     @staticmethod
     def random_init(m):
         if isinstance(m, nn.Linear):
@@ -80,6 +83,9 @@ class SplitViTHierarchicalTPVitHalfPretrained(SplitHierarchicalTPViT):
     def get_broad_layers(self):
         broad_modules = self.encoder.layer[: self.n_broad]
         return broad_modules
+
+    def get_fine_layers(self):
+        return self.encoder.layer[self.n_broad :].parameters()
 
     def forward(
         self,

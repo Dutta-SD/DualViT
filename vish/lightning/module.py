@@ -140,6 +140,7 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
             num_fine_outputs,
             bias=True,
         )
+        self.model.init_broad()
         self.ce_loss = nn.CrossEntropyLoss()
         self.emb_loss = BroadFineEmbeddingLoss(num_broad_classes=num_broad_outputs)
 
@@ -180,3 +181,28 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
             self.log(f"{stage}_loss_fine", loss_fine_ce, prog_bar=True)
             self.log(f"{stage}_acc_fine", acc_fine, prog_bar=True)
             self.log(f"{stage}_loss_emb", loss_emb, prog_bar=True)
+
+    def configure_optimizers(self):
+        optimizer = torch.optim.SGD(
+            [
+                {
+                    "params": self.model.classifier_fine.parameters(),
+                    "lr": self.hparams.lr,
+                },
+                {"params": self.model.get_broad_params(), "lr": self.hparams.lr},
+                {"params": self.model.get_fine_params(), "lr": 1e-6},
+                {"params": self.model.embeddings.parameters(), "lr": 1e-6},
+            ],
+            momentum=0.9,
+            weight_decay=WEIGHT_DECAY,
+        )
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            mode="max",
+            verbose=True,
+        )
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": lr_scheduler,
+            "monitor": "val_acc_fine",  # Monitor the 'train_loss' metric
+        }
