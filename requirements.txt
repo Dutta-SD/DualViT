@@ -3,3 +3,4 @@ transformers~=4.31.0
 einops~=0.6.1
 numpy~=1.25.2
 torchvision~=0.15.2
+torchmetrics~=1.2.0
