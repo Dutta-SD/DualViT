@@ -3,9 +3,7 @@ from xml.etree.ElementTree import Element
 
 
 def format_list_elements(elements: list[Element], names=False):
-    return [
-        (e.tag, e.attrib.get("label", None)) if not names else e.tag for e in elements
-    ]
+    return [(e.tag, e.attrib) if not names else e.tag for e in elements]
 
 
 class LabelHierarchyTree:

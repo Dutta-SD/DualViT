@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import torch.nn as nn
 from einops import rearrange, repeat
@@ -67,13 +68,44 @@ class VitClassificationDecomposed(nn.Module):
 
         self.classifiers = nn.ModuleDict(
             {
-                name: nn.Linear(self.emb_dim, len(label_tree.getall_leaves(name)))
+                # +1 for not of that group
+                name: nn.Linear(self.emb_dim, 1 + len(label_tree.getall_leaves(name)))
                 for name in label_tree.get_elements_at_depth(max_depth_before_clf)
             }
         )
 
     def from_pretrained(self):
         self._pretrained = True
+
+    @torch.no_grad()
+    def get_predicted_outputs(self, outputs: dict[str, TransformerData]):
+        # Predict is not like other models
+        for key, data in outputs.items():
+            label_map = self.make_label_map(key)
+
+            logits = data.data
+            labels = data.labels
+
+            converted_labels = self.convert_labels(data, label_map, labels)
+
+            converted_labels
+    #         TODO finish
+
+    def convert_labels(self, data, label_map, labels):
+        node_labels = torch.tensor(np.fromiter(label_map.keys(), dtype=np.int8), dtype=labels.device)
+        labels_mask = labels.isin(node_labels)
+        labels = labels_mask * data.labels
+        converted_labels = torch.tensor([label_map[i] for i in labels], device=labels.device)
+        return converted_labels
+
+    def make_label_map(self, key):
+        label_map = {
+            int(e[1]["fine_label"]): int(e[1]["group_label"])
+            for e in self.label_tree.getall_leaves(key, names=False)
+        }
+        # For not this group classes
+        label_map = {**label_map, 0: 0}
+        return label_map
 
     def _init_transform(
         self,
