@@ -32,7 +32,9 @@ class SplitVitModule(LightningModule):
         pixel_values, fine_labels, broad_labels = batch
         broad_embedding, fine_embedding, broad_logits, fine_logits = self(pixel_values)
 
-        loss_emb = self.get_embedding_loss(broad_embedding, broad_labels, fine_embedding, fine_labels)
+        loss_emb = self.get_embedding_loss(
+            broad_embedding, broad_labels, fine_embedding, fine_labels
+        )
         loss_broad_ce = self.ce_loss(broad_logits, broad_labels)
         loss_fine_ce = self.ce_loss(fine_logits, fine_labels)
 
@@ -42,21 +44,29 @@ class SplitVitModule(LightningModule):
 
         return loss_emb + loss_broad_ce + loss_fine_ce
 
-    def get_embedding_loss(self, broad_embedding, broad_labels, fine_embedding, fine_labels):
+    def get_embedding_loss(
+        self, broad_embedding, broad_labels, fine_embedding, fine_labels
+    ):
         if (self.current_epoch + 1) % 2 == 0:
             # Broad Train
             fine_embedding = fine_embedding.detach().clone()
-            loss_emb = self._compute_emb_loss(broad_embedding, broad_labels, fine_embedding, fine_labels)
+            loss_emb = self._compute_emb_loss(
+                broad_embedding, broad_labels, fine_embedding, fine_labels
+            )
             scale = 100
         else:
             # Fine Train With Scaling
             broad_embedding = broad_embedding.detach().clone()
-            loss_emb = self._compute_emb_loss(broad_embedding, broad_labels, fine_embedding, fine_labels)
+            loss_emb = self._compute_emb_loss(
+                broad_embedding, broad_labels, fine_embedding, fine_labels
+            )
             scale = 10
         loss_emb = loss_emb / scale
         return loss_emb
 
-    def _compute_emb_loss(self, broad_embedding, broad_labels, fine_embedding, fine_labels):
+    def _compute_emb_loss(
+        self, broad_embedding, broad_labels, fine_embedding, fine_labels
+    ):
         loss_emb = torch.mean(
             torch.stack(
                 self.emb_loss(
@@ -71,7 +81,9 @@ class SplitVitModule(LightningModule):
         pixel_values, fine_labels, broad_labels = batch
         broad_embedding, fine_embedding, broad_logits, fine_logits = self(pixel_values)
 
-        loss_emb = self._compute_emb_loss(broad_embedding, broad_labels, fine_embedding, fine_labels)
+        loss_emb = self._compute_emb_loss(
+            broad_embedding, broad_labels, fine_embedding, fine_labels
+        )
         loss_broad_ce = self.ce_loss(broad_logits, broad_labels)
         loss_fine_ce = self.ce_loss(fine_logits, fine_labels)
 
@@ -124,7 +136,9 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
         self.save_hyperparameters()
         self.model = SplitViTHierarchicalTPVitHalfPretrained.from_pretrained(wt_name)
         self.model.classifier_fine = nn.Linear(
-            self.model.config.hidden_size, num_fine_outputs, bias=True,
+            self.model.config.hidden_size,
+            num_fine_outputs,
+            bias=True,
         )
         self.ce_loss = nn.CrossEntropyLoss()
         self.emb_loss = BroadFineEmbeddingLoss(num_broad_classes=num_broad_outputs)
@@ -138,7 +152,9 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
         pixel_values, fine_labels, broad_labels = batch
         broad_embedding, fine_embedding, broad_logits, fine_logits = self(pixel_values)
 
-        loss_emb = self.get_embedding_loss(broad_embedding, broad_labels, fine_embedding, fine_labels)
+        loss_emb = self.get_embedding_loss(
+            broad_embedding, broad_labels, fine_embedding, fine_labels
+        )
         loss_fine_ce = self.ce_loss(fine_logits, fine_labels)
 
         self.log("train_loss_emb", loss_emb)
@@ -151,7 +167,9 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
         pixel_values, fine_labels, broad_labels = batch
         broad_embedding, fine_embedding, broad_logits, fine_logits = self(pixel_values)
 
-        loss_emb = self._compute_emb_loss(broad_embedding, broad_labels, fine_embedding, fine_labels)
+        loss_emb = self._compute_emb_loss(
+            broad_embedding, broad_labels, fine_embedding, fine_labels
+        )
         loss_fine_ce = self.ce_loss(fine_logits, fine_labels)
 
         # Fine Class
