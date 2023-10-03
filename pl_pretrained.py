@@ -8,13 +8,13 @@ from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning.callbacks.progress import TQDMProgressBar
 from pytorch_lightning.loggers import CSVLogger
 
-from vish.constants import LOAD_CKPT, EPOCHS, LEARNING_RATE
+from vish.constants import LOAD_CKPT, EPOCHS, LEARNING_RATE, VIT_PRETRAINED_MODEL_2
 from vish.lightning.data import (
     CIFAR10MultiLabelDataModule,
     train_transform,
     test_transform,
 )
-from vish.lightning.module import SplitVitModule
+from vish.lightning.module import SplitVitModule, PreTrainedSplitHierarchicalViTModule
 from vish.lightning.utils import checkpoint_callback, early_stopping_callback
 
 warnings.filterwarnings("ignore")
@@ -30,13 +30,17 @@ datamodule.prepare_data()
 datamodule.setup()
 
 # Model Define
-model = SplitVitModule(lr=LEARNING_RATE)
+# Fine output ok
+model = PreTrainedSplitHierarchicalViTModule(
+    wt_name=VIT_PRETRAINED_MODEL_2,
+    num_fine_outputs=10,
+    num_broad_outputs=2,
+    lr=LEARNING_RATE,
+)
 
 if LOAD_CKPT:
     # Load from checkpoint
-    checkpoint_path = (
-        "logs/lightning_logs/version_9/checkpoints/epoch=52-step=66250.ckpt"
-    )
+    checkpoint_path = "NAN"
     checkpoint = torch.load(checkpoint_path)
     model = SplitVitModule.load_from_checkpoint(checkpoint_path)
 
