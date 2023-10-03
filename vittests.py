@@ -23,13 +23,13 @@ from pytorch_lightning import (
 from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning.callbacks.progress import TQDMProgressBar
 from pytorch_lightning.loggers import CSVLogger
-from torch.optim.lr_scheduler import OneCycleLR
 from torchmetrics.functional import accuracy
 import warnings
+from torch.utils.data import random_split
 
 warnings.filterwarnings("ignore")
 
-seed_everything(7)
+seed_everything(42)
 
 PATH_DATASETS = os.environ.get("PATH_DATASETS", "./data")
 BATCH_SIZE = 32 if torch.cuda.is_available() else 4
@@ -110,13 +110,25 @@ class CIFAR10MultiLabelDataModule(LightningDataModule):
 
     def setup(self, stage=None):
         if stage == "fit" or stage is None:
-            self.train_dset = CIFAR10MultiLabelDataset(
+            cifar_full = CIFAR10MultiLabelDataset(
                 self.is_test,
                 root=self.data_dir,
                 train=True,
                 transform=self.train_transform,
             )
-            self.val_dset = CIFAR10MultiLabelDataset(
+
+            # use 20% of training data for validation
+            train_set_size = int(len(cifar_full) * 0.8)
+            valid_set_size = len(cifar_full) - train_set_size
+
+            seed_everything(42)
+
+            self.cifar_train, self.cifar_val = random_split(
+                cifar_full, [train_set_size, valid_set_size]
+            )
+
+        if stage == "test" or stage is None:
+            self.cifar_test = CIFAR10MultiLabelDataset(
                 self.is_test,
                 root=self.data_dir,
                 train=False,
@@ -125,7 +137,7 @@ class CIFAR10MultiLabelDataModule(LightningDataModule):
 
     def train_dataloader(self):
         return torch.utils.data.DataLoader(
-            self.train_dset,
+            self.cifar_train,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=True,
@@ -133,7 +145,15 @@ class CIFAR10MultiLabelDataModule(LightningDataModule):
 
     def val_dataloader(self):
         return torch.utils.data.DataLoader(
-            self.val_dset,
+            self.cifar_val,
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
+            pin_memory=True,
+        )
+
+    def test_dataloader(self):
+        return torch.utils.data.DataLoader(
+            self.cifar_test,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=True,
@@ -251,23 +271,6 @@ class BroadFineEmbeddingLoss(nn.Module):
         return embedding_losses
 
 
-# broad_class_token = torch.rand(32, 768)
-# broad_labels = torch.randint(0, 2, (32,))
-
-# fine_class_token = torch.rand(32, 768)
-# fine_labels = torch.randint(0, 10, (32,))
-
-# loss = BroadFineEmbeddingLoss(num_broad_classes=2)
-
-# # Sanity test
-# loss(
-#     broad_class_token,
-#     broad_labels,
-#     fine_class_token,
-#     fine_labels,
-#     mode=BELMode.CLUSTER
-# )
-
 import torch
 from torch import nn
 from transformers import ViTModel, ViTConfig
@@ -342,12 +345,6 @@ class SplitVitModule(LightningModule):
     def forward(self, x):
         return self.model(x)
 
-    # def backward(self, loss):
-    #     loss_emb, loss_broad_ce, loss_fine_ce = loss
-    #     loss_broad_ce.backward(retain_graph=True)
-    #     loss_fine_ce.backward(retain_graph=True)
-    #     loss_emb.backward()
-
     def training_step(self, batch, batch_idx):
         # [B, 1, D], [B, 1, D], [B, C_broad], [B, C_fine]
         pixel_values, fine_labels, broad_labels = batch
@@ -355,19 +352,19 @@ class SplitVitModule(LightningModule):
 
         if (self.current_epoch + 1) % 2 == 0:
             # Broad Train
-            fine_embedding = fine_embedding.clone().detach()
-            loss_emb = torch.sum(
+            fine_embedding = fine_embedding.detach().clone()
+            loss_emb = torch.mean(
                 torch.stack(
                     self.emb_loss(
                         broad_embedding, broad_labels, fine_embedding, fine_labels
                     )
                 )
             )
-            scale = 500
+            scale = 100
         else:
             # Fine Train With Scaling
-            broad_embedding = broad_embedding.clone().detach()
-            loss_emb = torch.sum(
+            broad_embedding = broad_embedding.detach().clone()
+            loss_emb = torch.mean(
                 torch.stack(
                     self.emb_loss(
                         broad_embedding, broad_labels, fine_embedding, fine_labels
@@ -392,7 +389,7 @@ class SplitVitModule(LightningModule):
         pixel_values, fine_labels, broad_labels = batch
         broad_embedding, fine_embedding, broad_logits, fine_logits = self(pixel_values)
 
-        loss_emb = torch.sum(
+        loss_emb = torch.mean(
             torch.stack(
                 self.emb_loss(
                     broad_embedding, broad_labels, fine_embedding, fine_labels
@@ -425,38 +422,61 @@ class SplitVitModule(LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.SGD(
-            self.parameters(),
-            lr=self.hparams.lr,
-            momentum=0.9,
-            weight_decay=1e-5,
+            self.parameters(), lr=self.hparams.lr, momentum=0.9, weight_decay=1e-5
         )
-        steps_per_epoch = 45000 // BATCH_SIZE
-        scheduler_dict = {
-            "scheduler": OneCycleLR(
-                optimizer,
-                0.01,
-                epochs=self.trainer.max_epochs,
-                steps_per_epoch=steps_per_epoch,
-            ),
-            "interval": "step",
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer, mode="max", factor=0.1, patience=3, verbose=True
+        )
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": lr_scheduler,
+            "monitor": "val_acc_fine",  # Monitor the 'train_loss' metric
         }
-        return {"optimizer": optimizer, "lr_scheduler": scheduler_dict}
 
 
-model = SplitVitModule(lr=1e-3)
+LEARNING_RATE = 3e-4
+# model = SplitVitModule(lr=LEARNING_RATE)
+from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
+
+# Define ModelCheckpoint callback to save the best model
+checkpoint_callback = ModelCheckpoint(
+    monitor="val_acc_fine",  # Monitor the validation loss
+    dirpath="./checkpoints/lightning",  # Directory to save checkpoints
+    filename="split-vit-{epoch:02d}-{val_loss:.3f}",  # Checkpoint filename format
+    save_top_k=1,  # Save only the best model checkpoint
+    mode="max",  # 'min' mode means we want to minimize the monitored metric
+)
+
+# Define EarlyStopping callback to stop training early based on validation loss
+early_stopping_callback = EarlyStopping(
+    monitor="val_acc_fine",  # Monitor the validation loss
+    patience=5,  # Number of epochs with no improvement after which training will be stopped
+    mode="max",  # 'min' mode means we want to minimize the monitored metric
+)
 
 trainer = Trainer(
-    max_epochs=30,
+    max_epochs=200,
     accelerator="auto",
-    devices=1,  # limiting got iPython runs
+    devices=1,
     logger=CSVLogger(save_dir="logs/"),
     callbacks=[
         LearningRateMonitor(logging_interval="step"),
         TQDMProgressBar(refresh_rate=10),
+        checkpoint_callback,
+        early_stopping_callback,
     ],
-    num_sanity_val_steps=1,
-    gradient_clip_val=0.5,
+    num_sanity_val_steps=2,
+    gradient_clip_val=1,
 )
+
+import torch
+
+# Load the checkpoint
+checkpoint_path = "logs/lightning_logs/version_9/checkpoints/epoch=52-step=66250.ckpt"  # Specify the path to your checkpoint file
+checkpoint = torch.load(checkpoint_path)
+
+# Instantiate the LightningModule and load the state from the checkpoint
+model = SplitVitModule.load_from_checkpoint(checkpoint_path)
 
 trainer.fit(model, cifar10_dm)
 
