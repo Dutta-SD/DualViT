@@ -1,6 +1,8 @@
+from copy import deepcopy
 import torch
 from torch import nn
 from transformers import ViTModel, ViTConfig
+from itertools import chain
 
 
 class SplitHierarchicalTPViT(ViTModel):
@@ -62,30 +64,63 @@ class SplitHierarchicalTPViT(ViTModel):
 
 
 class SplitViTHierarchicalTPVitHalfPretrained(SplitHierarchicalTPViT):
-    def get_broad_params(self):
-        return self.get_broad_layers().parameters()
+    def __init__(
+        self,
+        config: ViTConfig,
+        num_broad_outputs: int = 2,
+        num_fine_outputs: int = 10,
+    ):
+        super().__init__(config, num_broad_outputs, num_fine_outputs)
+        del self.classifier_broad
 
-    def get_fine_params(self):
-        return self.get_fine_layers().parameters()
+        self.classifier_fine = None
+        self.fine_encoder = None
+        self.broad_encoder = None
+
+    def get_large_lr_params(self, lr):
+        return [
+            {"params": m.parameters(), "lr": lr}
+            for m in [
+                self.get_broad_layers(),
+                self.broad_embeddings,
+                self.classifier_fine,
+            ]
+        ]
+
+    def get_small_lr_parameters(self, lr):
+        return [
+            {"params": m.parameters(), "lr": lr}
+            for m in [self.get_fine_layers(), self.fine_embeddings]
+        ]
 
     @staticmethod
+    @torch.no_grad()
     def random_init(m):
         if isinstance(m, nn.Linear):
             torch.nn.init.xavier_normal_(m.weight)
             m.bias.data.fill_(0.01)
 
-    def init_broad(self):
-        broad_modules = self.get_broad_layer()
+        elif isinstance(m, nn.Conv2d):
+            torch.nn.init.kaiming_uniform_(m.weight)
+            m.bias.fill_(0.01)
 
-        for layer in broad_modules:
-            self.random_init(layer)
+    def init_broad_fine(self, num_fine_outputs):
+        self.classifier_fine = nn.Linear(
+            self.config.hidden_size, num_fine_outputs, True
+        )
+        self.fine_encoder = self.encoder.layer
+        self.broad_encoder = deepcopy(self.encoder.layer)
+        self.fine_embeddings = self.embeddings
+        self.broad_embeddings = deepcopy(self.embeddings)
+
+        self.broad_embeddings = self.broad_embeddings.apply(self.random_init)
+        self.broad_encoder = self.broad_encoder.apply(self.random_init)
 
     def get_broad_layers(self):
-        broad_modules = self.encoder.layer[: self.n_broad]
-        return broad_modules
+        return self.broad_encoder
 
     def get_fine_layers(self):
-        return self.encoder.layer[self.n_broad :].parameters()
+        return self.fine_encoder
 
     def forward(
         self,
@@ -103,17 +138,26 @@ class SplitViTHierarchicalTPVitHalfPretrained(SplitHierarchicalTPViT):
         Returns:
 
         """
-        ip_fine = ip_broad = self.embeddings(pixel_values)
+        broad_embedding, fine_embedding = self.get_embeddings(pixel_values)
+
+        fine_logits, broad_logits = None, None
+
+        if clf_fine:
+            fine_logits = self.classify_fine(fine_embedding.squeeze(1))
+
+        if clf_broad:
+            broad_logits = self.classify_broad(broad_embedding.squeeze(1))
+
+        # [B, 1, D], [B, 1, D], [B, C_broad], [B, C_fine]
+        return broad_embedding, fine_embedding, broad_logits, fine_logits
+
+    def get_embeddings(self, pixel_values):
+        ip_fine = self.fine_embeddings(pixel_values)
+        ip_broad = self.broad_embeddings(pixel_values)
 
         # Last ones are Layers, not list of layers
-        broad_modules, last_broad_module = (
-            self.encoder.layer[: self.n_broad - 1],
-            self.encoder.layer[self.n_broad - 1],
-        )
-        fine_modules, last_fine_module = (
-            self.encoder.layer[self.n_broad : -1],
-            self.encoder.layer[-1],
-        )
+        *broad_modules, last_broad_module = self.get_broad_layers()
+        *fine_modules, last_fine_module = self.get_fine_layers()
 
         for broad_module, fine_module in zip(broad_modules, fine_modules):
             # self.n_broad - 1 and last(-1) not used in TP
@@ -129,14 +173,4 @@ class SplitViTHierarchicalTPVitHalfPretrained(SplitHierarchicalTPViT):
 
         broad_embedding = ip_broad[:, :1, :]
         fine_embedding = ip_fine[:, :1, :]
-
-        fine_logits, broad_logits = None, None
-
-        if clf_fine:
-            fine_logits = self.classify_fine(fine_embedding.squeeze(1))
-
-        if broad_logits:
-            broad_logits = self.classify_broad(broad_embedding.squeeze(1))
-
-        # [B, 1, D], [B, 1, D], [B, C_broad], [B, C_fine]
-        return broad_embedding, fine_embedding, broad_logits, fine_logits
+        return broad_embedding, fine_embedding

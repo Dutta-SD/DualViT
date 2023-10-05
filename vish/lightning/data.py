@@ -11,7 +11,7 @@ from torchvision.transforms import transforms as tf
 from vish.constants import IMG_SIZE
 
 PATH_DATASETS = os.environ.get("PATH_DATASETS", "./data")
-BATCH_SIZE = 32 if torch.cuda.is_available() else 4
+BATCH_SIZE = 16 if torch.cuda.is_available() else 4
 NUM_WORKERS = int(os.cpu_count() / 2)
 
 
@@ -68,7 +68,7 @@ class CIFAR10MultiLabelDataModule(LightningDataModule):
             )
 
             # use 20% of training data for validation
-            train_set_size = int(len(cifar_full) * 0.8)
+            train_set_size = int(len(cifar_full) * 0.99)
             valid_set_size = len(cifar_full) - train_set_size
 
             seed_everything(42)
@@ -76,6 +76,7 @@ class CIFAR10MultiLabelDataModule(LightningDataModule):
             self.cifar_train, self.cifar_val = random_split(
                 cifar_full, [train_set_size, valid_set_size]
             )
+            # self.cifar_train = cifar_full
 
         if stage == "test" or stage is None:
             self.cifar_test = CIFAR10MultiLabelDataset(
