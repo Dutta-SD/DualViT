@@ -10,6 +10,8 @@ from vish.lightning.model import (
     SplitHierarchicalTPViT,
     SplitViTHierarchicalTPVitHalfPretrained,
 )
+from vish.model.common.loss import fine2broad_cifar10
+from itertools import chain
 
 
 class SplitVitModule(LightningModule):
@@ -53,15 +55,15 @@ class SplitVitModule(LightningModule):
             loss_emb = self._compute_emb_loss(
                 broad_embedding, broad_labels, fine_embedding, fine_labels
             )
-            scale = 100
+            # scale = 1e5
         else:
             # Fine Train With Scaling
             broad_embedding = broad_embedding.detach().clone()
             loss_emb = self._compute_emb_loss(
                 broad_embedding, broad_labels, fine_embedding, fine_labels
             )
-            scale = 10
-        loss_emb = loss_emb / scale
+            # scale = 1e5
+        loss_emb = torch.log10(loss_emb + 1)
         return loss_emb
 
     def _compute_emb_loss(
@@ -81,7 +83,7 @@ class SplitVitModule(LightningModule):
         pixel_values, fine_labels, broad_labels = batch
         broad_embedding, fine_embedding, broad_logits, fine_logits = self(pixel_values)
 
-        loss_emb = self._compute_emb_loss(
+        loss_emb = self.get_embedding_loss(
             broad_embedding, broad_labels, fine_embedding, fine_labels
         )
         loss_broad_ce = self.ce_loss(broad_logits, broad_labels)
@@ -135,12 +137,8 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
         self.wt_name = wt_name
         self.save_hyperparameters()
         self.model = SplitViTHierarchicalTPVitHalfPretrained.from_pretrained(wt_name)
-        self.model.classifier_fine = nn.Linear(
-            self.model.config.hidden_size,
-            num_fine_outputs,
-            bias=True,
-        )
-        self.model.init_broad()
+        self.model.init_broad_fine(num_fine_outputs)
+
         self.ce_loss = nn.CrossEntropyLoss()
         self.emb_loss = BroadFineEmbeddingLoss(num_broad_classes=num_broad_outputs)
 
@@ -166,7 +164,7 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
     def evaluate(self, batch, stage=None):
         # [B, 1, D], [B, 1, D], [B, C_broad], [B, C_fine]
         pixel_values, fine_labels, broad_labels = batch
-        broad_embedding, fine_embedding, broad_logits, fine_logits = self(pixel_values)
+        broad_embedding, fine_embedding, _, fine_logits = self(pixel_values)
 
         loss_emb = self._compute_emb_loss(
             broad_embedding, broad_labels, fine_embedding, fine_labels
@@ -177,29 +175,32 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
         preds = torch.argmax(fine_logits, dim=1)
         acc_fine = accuracy(preds, fine_labels, task="multiclass", num_classes=10)
 
+        # Broad Class
+        f_logits_b = self.model.classify_fine(broad_embedding)
+        b_logits = fine2broad_cifar10(f_logits_b, broad_labels, fine_labels)
+        preds = torch.argmax(b_logits, dim=1)
+        acc_broad = accuracy(preds, broad_labels, task="binary")
+        loss_broad_ce = self.ce_loss(b_logits, broad_labels)
+
         if stage:
+            # Fine
             self.log(f"{stage}_loss_fine", loss_fine_ce, prog_bar=True)
             self.log(f"{stage}_acc_fine", acc_fine, prog_bar=True)
+            # Embedding
             self.log(f"{stage}_loss_emb", loss_emb, prog_bar=True)
+            # Broad
+            self.log(f"{stage}_loss_broad", loss_broad_ce, prog_bar=True)
+            self.log(f"{stage}_acc_broad", acc_broad, prog_bar=True)
 
     def configure_optimizers(self):
         optimizer = torch.optim.SGD(
-            [
-                {
-                    "params": self.model.classifier_fine.parameters(),
-                    "lr": self.hparams.lr,
-                },
-                {"params": self.model.get_broad_params(), "lr": self.hparams.lr},
-                {"params": self.model.get_fine_params(), "lr": 1e-6},
-                {"params": self.model.embeddings.parameters(), "lr": 1e-6},
-            ],
+            self.model.get_large_lr_params(self.hparams.lr)
+            + self.model.get_small_lr_parameters(5e-6),
             momentum=0.9,
             weight_decay=WEIGHT_DECAY,
         )
         lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer,
-            mode="max",
-            verbose=True,
+            optimizer, mode="max", verbose=True, patience=4
         )
         return {
             "optimizer": optimizer,

@@ -1,21 +1,22 @@
 import warnings
 
 import torch
-from pytorch_lightning import (
-    Trainer,
-)
+from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning.callbacks.progress import TQDMProgressBar
 from pytorch_lightning.loggers import CSVLogger
+from transformers import logging
 
-from vish.constants import LOAD_CKPT, EPOCHS, LEARNING_RATE, VIT_PRETRAINED_MODEL_2
+from vish.constants import EPOCHS, LEARNING_RATE, LOAD_CKPT, VIT_PRETRAINED_MODEL_2
 from vish.lightning.data import (
     CIFAR10MultiLabelDataModule,
-    train_transform,
     test_transform,
+    train_transform,
 )
-from vish.lightning.module import SplitVitModule, PreTrainedSplitHierarchicalViTModule
-from vish.lightning.utils import checkpoint_callback, early_stopping_callback
+from vish.lightning.utils import early_stopping_callback
+from vish.lightning.module import PreTrainedSplitHierarchicalViTModule
+
+logging.set_verbosity_warning()
 
 warnings.filterwarnings("ignore")
 
@@ -38,27 +39,33 @@ model = PreTrainedSplitHierarchicalViTModule(
     lr=LEARNING_RATE,
 )
 
+LOAD_CKPT = False
+
+checkpoint_path = "logs/pretrained_split_vit/lightning_logs/version_8/checkpoints/epoch=16-step=52598.ckpt"
+
 if LOAD_CKPT:
     # Load from checkpoint
-    checkpoint_path = "NAN"
     checkpoint = torch.load(checkpoint_path)
-    model = SplitVitModule.load_from_checkpoint(checkpoint_path)
+    model = PreTrainedSplitHierarchicalViTModule.load_from_checkpoint(checkpoint_path)
+    model.lr = 1e-4
+    model.save_hyperparameters()
 
 
 # Trainer
 trainer = Trainer(
-    max_epochs=EPOCHS,
+    max_epochs=200,
     accelerator="auto",
     devices=1,
-    logger=CSVLogger(save_dir="logs/"),
+    logger=CSVLogger(save_dir="logs/pretrained_split_vit"),
     callbacks=[
         LearningRateMonitor(logging_interval="step"),
         TQDMProgressBar(refresh_rate=10),
-        checkpoint_callback,
-        early_stopping_callback,
+        # checkpoint_callback,
+        # early_stopping_callback,
     ],
     num_sanity_val_steps=2,
     gradient_clip_val=1,
+    # resume_from_checkpoint=checkpoint_path,
 )
 
 
