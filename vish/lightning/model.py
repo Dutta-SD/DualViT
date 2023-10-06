@@ -1,8 +1,8 @@
 from copy import deepcopy
+
 import torch
 from torch import nn
 from transformers import ViTModel, ViTConfig
-from itertools import chain
 
 
 class SplitHierarchicalTPViT(ViTModel):
@@ -71,6 +71,8 @@ class SplitViTHierarchicalTPVitHalfPretrained(SplitHierarchicalTPViT):
         num_fine_outputs: int = 10,
     ):
         super().__init__(config, num_broad_outputs, num_fine_outputs)
+        self.broad_embeddings = None
+        self.fine_embeddings = None
         del self.classifier_broad
 
         self.classifier_fine = None
@@ -159,6 +161,28 @@ class SplitViTHierarchicalTPVitHalfPretrained(SplitHierarchicalTPViT):
         *broad_modules, last_broad_module = self.get_broad_layers()
         *fine_modules, last_fine_module = self.get_fine_layers()
 
+        ip_broad, ip_fine = self.pass_through_encoders(
+            broad_modules,
+            fine_modules,
+            ip_broad,
+            ip_fine,
+            last_broad_module,
+            last_fine_module,
+        )
+
+        broad_embedding = ip_broad[:, :1, :]
+        fine_embedding = ip_fine[:, :1, :]
+        return broad_embedding, fine_embedding
+
+    def pass_through_encoders(
+        self,
+        broad_modules,
+        fine_modules,
+        ip_broad,
+        ip_fine,
+        last_broad_module,
+        last_fine_module,
+    ):
         for broad_module, fine_module in zip(broad_modules, fine_modules):
             # self.n_broad - 1 and last(-1) not used in TP
             output_broad = broad_module(ip_broad)[0]
@@ -166,14 +190,78 @@ class SplitViTHierarchicalTPVitHalfPretrained(SplitHierarchicalTPViT):
             # Fine to broad Hadamard so that fine BP twice
             ip_broad = output_fine * output_broad
             ip_fine = output_fine
-
         # output from last encoder layer without TP
         ip_broad = last_broad_module(ip_broad)[0]
         ip_fine = last_fine_module(ip_fine)[0]
+        return ip_broad, ip_fine
 
-        broad_embedding = ip_broad[:, :1, :]
-        fine_embedding = ip_fine[:, :1, :]
-        return broad_embedding, fine_embedding
-    
 
-# class SplitHVit
+class DualVitSemiPretrained(SplitViTHierarchicalTPVitHalfPretrained):
+    def __init__(self, config: ViTConfig, num_broad_outputs=2, num_fine_outputs=10):
+        super().__init__(config, num_broad_outputs, num_fine_outputs)
+        self.broad_embeddings = None
+        self.fine_embeddings = None
+
+    def get_large_lr_params(self, lr):
+        return [
+            {"params": m.parameters(), "lr": lr}
+            for m in [
+                self.get_fine_layers(),
+                self.fine_embeddings,
+                self.classifier_fine,
+            ]
+        ]
+
+    def get_small_lr_parameters(self, lr):
+        return [
+            {"params": m.parameters(), "lr": lr}
+            for m in [
+                self.get_broad_layers(),
+                self.broad_embeddings,
+            ]
+        ]
+
+    @staticmethod
+    @torch.no_grad()
+    def random_init(m):
+        if isinstance(m, nn.Linear):
+            torch.nn.init.xavier_normal_(m.weight)
+            m.bias.data.fill_(0.01)
+
+        elif isinstance(m, nn.Conv2d):
+            torch.nn.init.kaiming_uniform_(m.weight)
+            m.bias.fill_(0.01)
+
+    def init_broad_fine(self, num_fine_outputs):
+        self.classifier_fine = nn.Linear(
+            self.config.hidden_size, num_fine_outputs, True
+        )
+        self.fine_encoder = self.encoder.layer
+        self.broad_encoder = deepcopy(self.encoder.layer)
+
+        self.fine_embeddings = self.embeddings
+        self.broad_embeddings = deepcopy(self.embeddings)
+
+        self.fine_embeddings = self.fine_embeddings.apply(self.random_init)
+        self.fine_encoder = self.fine_encoder.apply(self.random_init)
+
+    def pass_through_encoders(
+        self,
+        broad_modules,
+        fine_modules,
+        ip_broad,
+        ip_fine,
+        last_broad_module,
+        last_fine_module,
+    ):
+        for broad_module, fine_module in zip(broad_modules, fine_modules):
+            # self.n_broad - 1 and last(-1) not used in TP
+            output_broad = broad_module(ip_broad)[0]
+            output_fine = fine_module(ip_fine)[0]
+            # Fine to broad Hadamard so that fine BP twice
+            ip_fine = output_fine * output_broad
+            ip_broad = output_broad
+        # output from last encoder layer without TP
+        ip_broad = last_broad_module(ip_broad)[0]
+        ip_fine = last_fine_module(ip_fine)[0]
+        return ip_broad, ip_fine

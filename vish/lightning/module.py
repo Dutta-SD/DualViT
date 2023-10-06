@@ -9,9 +9,9 @@ from vish.lightning.loss import BroadFineEmbeddingLoss
 from vish.lightning.model import (
     SplitHierarchicalTPViT,
     SplitViTHierarchicalTPVitHalfPretrained,
+    DualVitSemiPretrained,
 )
 from vish.model.common.loss import fine2broad_cifar10
-from itertools import chain
 
 
 class SplitVitModule(LightningModule):
@@ -207,3 +207,16 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
             "lr_scheduler": lr_scheduler,
             "monitor": "val_acc_fine",  # Monitor the 'train_loss' metric
         }
+
+
+class DualVitSemiPretrainedLightningModule(PreTrainedSplitHierarchicalViTModule):
+    """
+    Broad Pretrained, Trained using Embedding Loss
+    Fine from scratch, Trained using Cross Entropy and Embedding Loss
+    HP from Broad to Fine
+    """
+
+    def __init__(self, wt_name: str, num_fine_outputs, num_broad_outputs, lr=0.05):
+        super().__init__(wt_name, num_fine_outputs, num_broad_outputs, lr)
+        self.model = DualVitSemiPretrained.from_pretrained(wt_name)
+        self.model.init_broad_fine(num_fine_outputs)
