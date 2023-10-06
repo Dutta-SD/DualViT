@@ -41,7 +41,7 @@ model = PreTrainedSplitHierarchicalViTModule(
 
 LOAD_CKPT = False
 
-checkpoint_path = "logs/pretrained_split_vit/lightning_logs/version_8/checkpoints/epoch=16-step=52598.ckpt"
+checkpoint_path = "logs/pretrained_split_vit/lightning_logs/version_14/checkpoints/epoch=51-step=160888.ckpt"
 
 if LOAD_CKPT:
     # Load from checkpoint
@@ -65,7 +65,7 @@ trainer = Trainer(
     ],
     num_sanity_val_steps=2,
     gradient_clip_val=1,
-    # resume_from_checkpoint=checkpoint_path,
+    resume_from_checkpoint=checkpoint_path,
 )
 
 

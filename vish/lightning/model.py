@@ -174,3 +174,6 @@ class SplitViTHierarchicalTPVitHalfPretrained(SplitHierarchicalTPViT):
         broad_embedding = ip_broad[:, :1, :]
         fine_embedding = ip_fine[:, :1, :]
         return broad_embedding, fine_embedding
+    
+
+# class SplitHVit
