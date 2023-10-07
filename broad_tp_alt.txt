@@ -1,5 +1,0 @@
-Files already downloaded and verified
-Files already downloaded and verified
-Random seed set as 42
-Model: TP-Dual-Alternate-18k-30epochs, Broad Accuracy(Train) is: 0.5991549491882324
-Model: TP-Dual-Alternate-18k-30epochs, Broad Accuracy(Test) is: 0.593066394329071
