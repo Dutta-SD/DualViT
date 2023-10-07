@@ -1,8 +1,0 @@
-Files already downloaded and verified
-Files already downloaded and verified
-Random seed set as 42
-
-Model: TP-Dual-BNF, Broad Accuracy(Train) is: 0.9552016854286194
-Model: TP-Dual-BNF, Broad Accuracy(Test) is: 0.959765613079071
-Model: TP-Dual-BNFC, Broad Accuracy(Train) is: 0.9107979536056519
-Model: TP-Dual-BNFC, Broad Accuracy(Test) is: 0.913769543170929
