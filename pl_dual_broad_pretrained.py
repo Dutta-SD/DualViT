@@ -14,7 +14,7 @@ from vish.lightning.data import (
     train_transform,
 )
 from vish.lightning.module import (
-    DualVitSemiPretrainedLightningModule,
+    TPDualVitLightningModule,
 )
 
 logging.set_verbosity_warning()
@@ -33,27 +33,27 @@ datamodule.setup()
 
 # Model Define
 # Fine output ok
-model = DualVitSemiPretrainedLightningModule(
+model = TPDualVitLightningModule(
     wt_name=VIT_PRETRAINED_MODEL_2,
     num_fine_outputs=10,
     num_broad_outputs=2,
     lr=LEARNING_RATE,
 )
 
-LOAD_CKPT = False
+LOAD_CKPT = True
 
-CKPT_PATH = ""
+CKPT_PATH = "logs/dual_broad_pretrained/lightning_logs/version_5/checkpoints/epoch=7-step=24752.ckpt"
 
-if LOAD_CKPT:
-    # Load from checkpoint
-    checkpoint = torch.load(CKPT_PATH)
-    model = DualVitSemiPretrainedLightningModule.load_from_checkpoint(CKPT_PATH)
-    model.lr = 1e-4
-    model.save_hyperparameters()
+# if LOAD_CKPT:
+#     # Load from checkpoint
+#     checkpoint = torch.load(CKPT_PATH)
+#     model = TPDualVitLightningModule.load_from_checkpoint(CKPT_PATH)
+#     model.lr = 1e-4
+#     model.save_hyperparameters()
 
 
 kwargs = {
-    "max_epochs": 200,
+    "max_epochs": 300,
     "accelerator": "auto",
     "devices": 1,
     "logger": CSVLogger(save_dir="logs/dual_broad_pretrained"),

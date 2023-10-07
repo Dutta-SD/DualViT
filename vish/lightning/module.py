@@ -3,8 +3,9 @@ from pytorch_lightning import LightningModule
 from torch import nn
 from torchmetrics.functional import accuracy
 from transformers import ViTConfig
+from tp_model import TP_MODEL
 
-from vish.constants import WEIGHT_DECAY
+from vish.constants import LEARNING_RATE, WEIGHT_DECAY
 from vish.lightning.loss import BroadFineEmbeddingLoss
 from vish.lightning.model import (
     SplitHierarchicalTPViT,
@@ -12,6 +13,7 @@ from vish.lightning.model import (
     DualVitSemiPretrained,
 )
 from vish.model.common.loss import fine2broad_cifar10
+from vish.model.tp.dual import TPDualVit
 
 
 class SplitVitModule(LightningModule):
@@ -149,7 +151,7 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
     def training_step(self, batch, batch_idx):
         # [B, 1, D], [B, 1, D], [B, C_broad], [B, C_fine]
         pixel_values, fine_labels, broad_labels = batch
-        broad_embedding, fine_embedding, broad_logits, fine_logits = self(pixel_values)
+        broad_embedding, fine_embedding, fine_logits = self._mdl_outputs(pixel_values)
 
         loss_emb = self.get_embedding_loss(
             broad_embedding, broad_labels, fine_embedding, fine_labels
@@ -161,11 +163,14 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
 
         return loss_emb + loss_fine_ce
 
+    def _mdl_outputs(self, pixel_values):
+        broad_embedding, fine_embedding, _, fine_logits = self(pixel_values)
+        return broad_embedding, fine_embedding, fine_logits
+
     def evaluate(self, batch, stage=None):
         # [B, 1, D], [B, 1, D], [B, C_broad], [B, C_fine]
         pixel_values, fine_labels, broad_labels = batch
-        broad_embedding, fine_embedding, _, fine_logits = self(pixel_values)
-
+        broad_embedding, fine_embedding, fine_logits = self._mdl_outputs(pixel_values)
         loss_emb = self._compute_emb_loss(
             broad_embedding, broad_labels, fine_embedding, fine_labels
         )
@@ -220,3 +225,91 @@ class DualVitSemiPretrainedLightningModule(PreTrainedSplitHierarchicalViTModule)
         super().__init__(wt_name, num_fine_outputs, num_broad_outputs, lr)
         self.model = DualVitSemiPretrained.from_pretrained(wt_name)
         self.model.init_broad_fine(num_fine_outputs)
+
+
+class TPDualVitLightningModule(PreTrainedSplitHierarchicalViTModule):
+    """
+    Broad Pretrained, Trained using Embedding Loss
+    Fine from scratch, Trained using Cross Entropy and Embedding Loss
+    HP from Broad to Fine
+    """
+
+    def __init__(self, wt_name: str, num_fine_outputs, num_broad_outputs, lr=0.05):
+        super().__init__(wt_name, num_fine_outputs, num_broad_outputs, lr)
+        self.model: TPDualVit = TP_MODEL
+
+    def _mdl_outputs(self, pixel_values):
+        [broad_embedding, _], [fine_embedding, fine_logits] = self(pixel_values)
+        fine_logits = fine_logits[0]
+        return broad_embedding, fine_embedding, fine_logits
+
+    def forward(self, x):
+        return self.model(x)
+    
+    def training_step(self, batch, batch_idx):
+        # [B, 1, D], [B, 1, D], [B, C_broad], [B, C_fine]
+        pixel_values, fine_labels, broad_labels = batch
+        broad_embedding, fine_embedding, fine_logits = self._mdl_outputs(pixel_values)
+
+        loss_emb = self.get_embedding_loss(
+            broad_embedding, broad_labels, fine_embedding, fine_labels
+        )
+        loss_fine_ce = self.ce_loss(fine_logits, fine_labels)
+
+        self.log("train_loss_emb", loss_emb)
+        self.log("train_loss_fine_ce", loss_fine_ce)
+
+        return loss_emb + loss_fine_ce
+
+    def evaluate(self, batch, stage=None):
+        # [B, 1, D], [B, 1, D], [B, C_broad], [B, C_fine]
+        pixel_values, fine_labels, broad_labels = batch
+        broad_embedding, fine_embedding, fine_logits = self._mdl_outputs(pixel_values)
+        loss_emb = self._compute_emb_loss(
+            broad_embedding, broad_labels, fine_embedding, fine_labels
+        )
+        loss_fine_ce = self.ce_loss(fine_logits, fine_labels)
+
+        # Fine Class
+        preds = torch.argmax(fine_logits, dim=1)
+        acc_fine = accuracy(preds, fine_labels, task="multiclass", num_classes=10)
+
+        # Broad Class
+        f_logits_b = self.model.fine_model.to_logits(broad_embedding)[0]
+        b_logits = fine2broad_cifar10(f_logits_b, broad_labels, fine_labels)
+        preds = torch.argmax(b_logits, dim=1)
+        acc_broad = accuracy(preds, broad_labels, task="binary")
+        loss_broad_ce = self.ce_loss(b_logits, broad_labels)
+
+        if stage:
+            # Fine
+            self.log(f"{stage}_loss_fine", loss_fine_ce, prog_bar=True)
+            self.log(f"{stage}_acc_fine", acc_fine, prog_bar=True)
+            # Embedding
+            self.log(f"{stage}_loss_emb", loss_emb, prog_bar=True)
+            # Broad
+            self.log(f"{stage}_loss_broad", loss_broad_ce, prog_bar=True)
+            self.log(f"{stage}_acc_broad", acc_broad, prog_bar=True)
+
+    def configure_optimizers(self):
+        optimizer = torch.optim.SGD(
+            [
+                {"params": self.model.fine_model.parameters(), "lr": 1e-3},
+                {"params": self.model.broad_model.parameters(), "lr": 5e-6},
+            ],
+            lr=LEARNING_RATE,
+            weight_decay=WEIGHT_DECAY,
+            momentum=0.99,
+            nesterov=True,
+        )
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            mode="max",
+            verbose=True,
+            patience=5,
+        )
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": lr_scheduler,
+            "monitor": "val_acc_fine",  # Monitor the 'train_loss' metric
+        }

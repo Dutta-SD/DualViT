@@ -75,7 +75,7 @@ class TPVitImageClassification(ViTBasicForImageClassification):
         return additional_embeddings, logits
     
     def just_classify(self, x):
-        pass
+        return self.to_logits(x)
 
 
     def to_logits(self, additional_embeddings):
