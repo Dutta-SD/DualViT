@@ -287,3 +287,4 @@ data/
 logs/2023-09-01*
 logs/lightning**
 logs/pretrained*
+logs/dual_broad*

@@ -67,7 +67,7 @@ model_params = {
 
 # MODEL CONFIGURATION
 fine_model = TPVitImageClassification(**model_params)
-# broad_model = ViTForImageClassification.from_pretrained(VIT_PRETRAINED_MODEL_2)
+broad_model = ViTForImageClassification.from_pretrained(VIT_PRETRAINED_MODEL_2)
 broad_model.clf_fxn = nn.Linear(broad_model.config.hidden_size, 2)
 
 model = TPDualVit(fine_model, broad_model)
