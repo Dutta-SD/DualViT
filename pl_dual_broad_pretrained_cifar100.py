@@ -22,7 +22,7 @@ logging.set_verbosity_warning()
 warnings.filterwarnings("ignore")
 
 # Data Module
-datamodule = CIFAR10MultiLabelDataModule(
+datamodule = CIFAR100MultiLabel(
     is_test=False,
     train_transform=train_transform,
     val_transform=test_transform,
