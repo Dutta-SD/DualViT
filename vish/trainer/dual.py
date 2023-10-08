@@ -7,7 +7,7 @@ from vish.model.common.loss import (
     empty_if_problem,
     broad_criterion,
     bnf_alternate_loss,
-    fine2broad_cifar10,
+    convert_fine_to_broad_logits,
 )
 from vish.model.tp.dual import TPDualVit
 from vish.model.tp.single_split import SplitHierarchicalTPViT
@@ -253,7 +253,7 @@ class TPDualTrainer(VitDualModelTrainer):
         with torch.no_grad():
             # Multi-duh!
             broad_as_fine = self.model.fine_model.to_logits(broad_output[0])[0]
-            broad_logits = fine2broad_cifar10(broad_as_fine, broad_labels, fine_labels)
+            broad_logits = convert_fine_to_broad_logits(broad_as_fine, broad_labels, fine_labels)
 
         metrics = {}
 
@@ -305,7 +305,7 @@ class SplitHierarchicalTPVitTrainer(VitDualModelTrainer):
 
         with torch.no_grad():
             broad_as_fine = self.model.classify(broad_embedding)
-            broad_logits = fine2broad_cifar10(broad_as_fine, broad_labels, fine_labels)
+            broad_logits = convert_fine_to_broad_logits(broad_as_fine, broad_labels, fine_labels)
 
         metrics = {}
 

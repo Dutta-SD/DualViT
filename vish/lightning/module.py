@@ -1,9 +1,10 @@
+from typing import Any
 import torch
 from pytorch_lightning import LightningModule
 from torch import nn
 from torchmetrics.functional import accuracy
 from transformers import ViTConfig
-from tp_model import TP_MODEL
+from tp_model import TP_MODEL, TP_MODEL_CIFAR100
 
 from vish.constants import LEARNING_RATE, WEIGHT_DECAY
 from vish.lightning.loss import BroadFineEmbeddingLoss
@@ -12,7 +13,7 @@ from vish.lightning.model import (
     SplitViTHierarchicalTPVitHalfPretrained,
     DualVitSemiPretrained,
 )
-from vish.model.common.loss import fine2broad_cifar10
+from vish.model.common.loss import convert_fine_to_broad_logits
 from vish.model.tp.dual import TPDualVit
 
 
@@ -182,7 +183,7 @@ class PreTrainedSplitHierarchicalViTModule(SplitVitModule):
 
         # Broad Class
         f_logits_b = self.model.classify_fine(broad_embedding)
-        b_logits = fine2broad_cifar10(f_logits_b, broad_labels, fine_labels)
+        b_logits = convert_fine_to_broad_logits(f_logits_b, broad_labels, fine_labels)
         preds = torch.argmax(b_logits, dim=1)
         acc_broad = accuracy(preds, broad_labels, task="binary")
         loss_broad_ce = self.ce_loss(b_logits, broad_labels)
@@ -237,6 +238,8 @@ class TPDualVitLightningModule(PreTrainedSplitHierarchicalViTModule):
     def __init__(self, wt_name: str, num_fine_outputs, num_broad_outputs, lr=0.05):
         super().__init__(wt_name, num_fine_outputs, num_broad_outputs, lr)
         self.model: TPDualVit = TP_MODEL
+        self.num_fine_outputs = num_fine_outputs
+        self.num_broad_outputs = num_broad_outputs
 
     def _mdl_outputs(self, pixel_values):
         [broad_embedding, _], [fine_embedding, fine_logits] = self(pixel_values)
@@ -272,13 +275,13 @@ class TPDualVitLightningModule(PreTrainedSplitHierarchicalViTModule):
 
         # Fine Class
         preds = torch.argmax(fine_logits, dim=1)
-        acc_fine = accuracy(preds, fine_labels, task="multiclass", num_classes=10)
+        acc_fine = accuracy(preds, fine_labels, task="multiclass", num_classes=self.num_fine_outputs)
 
         # Broad Class
         f_logits_b = self.model.fine_model.to_logits(broad_embedding)[0]
-        b_logits = fine2broad_cifar10(f_logits_b, broad_labels, fine_labels)
+        b_logits = convert_fine_to_broad_logits(f_logits_b, broad_labels, fine_labels, self.num_broad_outputs)
         preds = torch.argmax(b_logits, dim=1)
-        acc_broad = accuracy(preds, broad_labels, task="binary")
+        acc_broad = accuracy(preds, broad_labels, task="multiclass", num_classes=self.num_broad_outputs)
         loss_broad_ce = self.ce_loss(b_logits, broad_labels)
 
         if stage:
@@ -313,3 +316,43 @@ class TPDualVitLightningModule(PreTrainedSplitHierarchicalViTModule):
             "lr_scheduler": lr_scheduler,
             "monitor": "val_acc_fine",  # Monitor the 'train_loss' metric
         }
+    
+class TPDualVitLightningModuleCifar100(TPDualVitLightningModule):
+
+
+    def __init__(self, wt_name: str, num_fine_outputs, num_broad_outputs, lr=0.05):
+        super().__init__(wt_name, num_fine_outputs, num_broad_outputs, lr)
+        self.model: TPDualVit = TP_MODEL_CIFAR100
+        self.num_fine_outputs = num_fine_outputs
+        self.num_broad_outputs = num_broad_outputs
+
+
+    # def on_validation_batch_start(self, batch: Any, batch_idx: int, dataloader_idx: int) -> None:
+    #     _, fine_labels, broad_labels = batch
+    #     print(torch.unique(fine_labels))
+    #     print(torch.unique(broad_labels))
+    #     return super().on_validation_batch_start(batch, batch_idx, dataloader_idx)
+
+    def configure_optimizers(self):
+        optimizer = torch.optim.SGD(
+            [
+                {"params": self.model.fine_model.parameters(), "lr": 1e-2},
+                {"params": self.model.broad_model.parameters(), "lr": 1e-5},
+            ],
+            lr=LEARNING_RATE,
+            weight_decay=WEIGHT_DECAY,
+            momentum=0.99,
+            nesterov=True,
+        )
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            mode="max",
+            verbose=True,
+            patience=5,
+        )
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": lr_scheduler,
+            "monitor": "val_acc_fine",  # Monitor the 'train_loss' metric
+        }
+

@@ -171,7 +171,7 @@ class CIFAR100MultiLabelDataModule(CIFAR10MultiLabelDataModule):
         train_transform,
         val_transform,
     ):
-        super().__init__()
+        super().__init__(is_test, train_transform, val_transform)
         self.cifar_val = None
         self.cifar_train = None
         self.is_test = is_test

@@ -132,7 +132,7 @@
 
 import torch
 
-from vish.model.common.loss import fine2broad_cifar10
+from vish.model.common.loss import convert_fine_to_broad_logits
 from vish.model.tp.dual import TPDualVit
 from vish.utils import (
     DEVICE,
@@ -182,7 +182,7 @@ with torch.no_grad():
             x, fine_labels, broad_labels = batch
             [b_embs, _], _ = model(x)
             f_logits_b = model.fine_model.mlp_heads[0](b_embs)
-            b_logits = fine2broad_cifar10(f_logits_b, broad_labels, fine_labels)
+            b_logits = convert_fine_to_broad_logits(f_logits_b, broad_labels, fine_labels)
 
             b_logits = b_logits.cpu()
             broad_labels = broad_labels.cpu()
@@ -200,7 +200,7 @@ with torch.no_grad():
             x, fine_labels, broad_labels = batch
             [b_embs, _], _ = model(x)
             f_logits_b = model.fine_model.mlp_heads[0](b_embs)
-            b_logits = fine2broad_cifar10(f_logits_b, broad_labels, fine_labels)
+            b_logits = convert_fine_to_broad_logits(f_logits_b, broad_labels, fine_labels)
 
             b_logits = b_logits.cpu()
             broad_labels = broad_labels.cpu()
