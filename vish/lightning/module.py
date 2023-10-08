@@ -1,11 +1,10 @@
-from typing import Any
 import torch
 from pytorch_lightning import LightningModule
 from torch import nn
 from torchmetrics.functional import accuracy
 from transformers import ViTConfig
-from tp_model import TP_MODEL, TP_MODEL_CIFAR100
 
+from tp_model import TP_MODEL, TP_MODEL_CIFAR100
 from vish.constants import LEARNING_RATE, WEIGHT_DECAY
 from vish.lightning.loss import BroadFineEmbeddingLoss
 from vish.lightning.model import (
@@ -248,7 +247,7 @@ class TPDualVitLightningModule(PreTrainedSplitHierarchicalViTModule):
 
     def forward(self, x):
         return self.model(x)
-    
+
     def training_step(self, batch, batch_idx):
         # [B, 1, D], [B, 1, D], [B, C_broad], [B, C_fine]
         pixel_values, fine_labels, broad_labels = batch
@@ -275,13 +274,19 @@ class TPDualVitLightningModule(PreTrainedSplitHierarchicalViTModule):
 
         # Fine Class
         preds = torch.argmax(fine_logits, dim=1)
-        acc_fine = accuracy(preds, fine_labels, task="multiclass", num_classes=self.num_fine_outputs)
+        acc_fine = accuracy(
+            preds, fine_labels, task="multiclass", num_classes=self.num_fine_outputs
+        )
 
         # Broad Class
         f_logits_b = self.model.fine_model.to_logits(broad_embedding)[0]
-        b_logits = convert_fine_to_broad_logits(f_logits_b, broad_labels, fine_labels, self.num_broad_outputs)
+        b_logits = convert_fine_to_broad_logits(
+            f_logits_b, broad_labels, fine_labels, self.num_broad_outputs
+        )
         preds = torch.argmax(b_logits, dim=1)
-        acc_broad = accuracy(preds, broad_labels, task="multiclass", num_classes=self.num_broad_outputs)
+        acc_broad = accuracy(
+            preds, broad_labels, task="multiclass", num_classes=self.num_broad_outputs
+        )
         loss_broad_ce = self.ce_loss(b_logits, broad_labels)
 
         if stage:
@@ -316,16 +321,14 @@ class TPDualVitLightningModule(PreTrainedSplitHierarchicalViTModule):
             "lr_scheduler": lr_scheduler,
             "monitor": "val_acc_fine",  # Monitor the 'train_loss' metric
         }
-    
+
+
 class TPDualVitLightningModuleCifar100(TPDualVitLightningModule):
-
-
     def __init__(self, wt_name: str, num_fine_outputs, num_broad_outputs, lr=0.05):
         super().__init__(wt_name, num_fine_outputs, num_broad_outputs, lr)
         self.model: TPDualVit = TP_MODEL_CIFAR100
         self.num_fine_outputs = num_fine_outputs
         self.num_broad_outputs = num_broad_outputs
-
 
     # def on_validation_batch_start(self, batch: Any, batch_idx: int, dataloader_idx: int) -> None:
     #     _, fine_labels, broad_labels = batch
@@ -355,4 +358,3 @@ class TPDualVitLightningModuleCifar100(TPDualVitLightningModule):
             "lr_scheduler": lr_scheduler,
             "monitor": "val_acc_fine",  # Monitor the 'train_loss' metric
         }
-

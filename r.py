@@ -1,11 +1,13 @@
-from torch.utils.tensorboard import SummaryWriter
+from tp_model import TP_MODEL_MODIFIED_CIFAR10
+from vish.utils import test_dl
 
-from vish.model.tp.dual import TPDualVit
 
-net =
+if __name__ == "__main__":
+    net = TP_MODEL_MODIFIED_CIFAR10
 
-# default `log_dir` is "runs" - we'll be more specific here
-writer = SummaryWriter("runs/tpdualvit")
+    i = iter(test_dl)
+    images, fine_labels, broad_labels = next(i)
 
-writer.add_graph(net, images)
-writer.close()
+    print(net)
+
+    net(images)
