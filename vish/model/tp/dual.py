@@ -1,3 +1,4 @@
+import torch
 from torch import nn
 from transformers.models.vit import ViTForImageClassification
 
@@ -24,10 +25,17 @@ class TPDualVit(nn.Module):
     def get_broad_outputs(self, x):
         broad_outputs = self.broad_model(x, output_hidden_states=True)
         # From HuggingFace documentation
-        return broad_outputs["hidden_states"], broad_outputs["logits"]
+        bo, bl = broad_outputs["hidden_states"], broad_outputs["logits"]
+        be = bo[-1][:, :1, :]
+        print("be shape", be.shape)
+        print("bl shape", bl.shape)
+        print(torch.cosine_similarity(be.squeeze(0), bl.squeeze(0, 1)))
+        return bo, bl
 
     def forward(self, x, start=None, stride=None):
         x_ext_list, broad_logits = self.get_broad_outputs(x)
+        print("Number of external inputs: ", len(x_ext_list))
+        # If Identity, same as logits
         broad_embedding = x_ext_list[-1][:, :1, :]
         x_ext_list = self.filter_external_inputs(start, stride, x_ext_list)
 

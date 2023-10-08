@@ -138,6 +138,7 @@ class TPTransformerEncoder(TransformerEncoder):
             Tensor
 
         """
-        for block, x_ext in zip(self.tf_blocks, x_ext_list):
+        for idx, (block, x_ext) in enumerate(zip(self.tf_blocks, x_ext_list)):
+            print("In Block ", idx)
             x = block(x, x_ext, mask)
         return x

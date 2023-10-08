@@ -1,9 +1,11 @@
+from torch import nn
+from transformers import ViTModel
+from transformers.models.vit import ViTForImageClassification
+
 from vish.constants import IMG_SIZE, VIT_PRETRAINED_MODEL_2
 from vish.model.tp.dual import TPDualVit
+from vish.model.tp.modified import TPDualModifiedVit
 from vish.model.tp.tp_vit import TPVitImageClassification
-from transformers.models.vit import ViTForImageClassification
-from torch import nn
-
 
 model_params = {
     "img_height": 224,
@@ -51,3 +53,13 @@ cifar100_model_params = {
 
 fine_model_cifar100 = TPVitImageClassification(**cifar100_model_params)
 TP_MODEL_CIFAR100 = TPDualVit(fine_model_cifar100, broad_model)
+
+
+BROAD_VITMODEL = ViTModel.from_pretrained(VIT_PRETRAINED_MODEL_2)
+TP_MODEL_MODIFIED_CIFAR10 = TPDualModifiedVit(
+    fine_model=fine_model, broad_model=BROAD_VITMODEL
+)
+
+TP_MODEL_MODIFIED_CIFAR100 = TPDualModifiedVit(
+    fine_model=fine_model_cifar100, broad_model=BROAD_VITMODEL
+)
