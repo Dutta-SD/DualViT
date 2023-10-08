@@ -42,7 +42,7 @@ model = TPDualVitLightningModule(
 
 LOAD_CKPT = True
 
-CKPT_PATH = "logs/dual_broad_pretrained/lightning_logs/version_12/checkpoints/epoch=49-step=154700.ckpt"
+CKPT_PATH = "logs/dual_broad_pretrained/lightning_logs/version_13/checkpoints/epoch=50-step=157794.ckpt"
 
 if LOAD_CKPT:
     # Load from checkpoint
@@ -72,6 +72,7 @@ if LOAD_CKPT:
 trainer = Trainer(**kwargs)
 
 if __name__ == "__main__":
+    model.eval()
     trainer.test(model, datamodule=datamodule)
-    trainer.fit(model, datamodule)
-    trainer.test(model, datamodule=datamodule)
+    # trainer.fit(model, datamodule)
+    # trainer.test(model, datamodule=datamodule)
