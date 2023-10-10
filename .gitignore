@@ -289,3 +289,4 @@ logs/lightning**
 logs/pretrained*
 logs/dual_broad*
 logs/cifar100
+logs/cifar10
