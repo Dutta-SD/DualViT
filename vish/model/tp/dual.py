@@ -33,6 +33,7 @@ class TPDualVit(nn.Module):
         return bo, bl
 
     def forward(self, x, start=None, stride=None):
+        return
         x_ext_list, broad_logits = self.get_broad_outputs(x)
         print("Number of external inputs: ", len(x_ext_list))
         # If Identity, same as logits

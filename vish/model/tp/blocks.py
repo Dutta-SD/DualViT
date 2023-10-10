@@ -57,7 +57,7 @@ class TPMHA(MultiHeadAttention):
 
     def tpr_out(self, repr_mh, fillers_mh):
         # Dimension expected (batch, num_heads, seq_len, d_head)
-        tp = torch.multiply(repr_mh, fillers_mh)
+        tp = torch.multiply(repr_mh, fillers_mh) + fillers_mh
         tp = einops.rearrange(tp, "b nh s dh -> b s (nh dh)")
         return self.out_proj(tp)
 

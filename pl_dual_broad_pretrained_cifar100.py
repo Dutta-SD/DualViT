@@ -1,10 +1,10 @@
 import warnings
 
-import torch
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning.callbacks.progress import TQDMProgressBar
 from pytorch_lightning.loggers import CSVLogger
+import torch
 from transformers import logging
 
 from tp_model import TP_MODEL_MODIFIED_CIFAR100
@@ -24,7 +24,7 @@ warnings.filterwarnings("ignore")
 
 # Data Module
 datamodule = CIFAR100MultiLabelDataModule(
-    is_test=True,
+    is_test=False,
     train_transform=train_transform,
     val_transform=test_transform,
 )
@@ -32,30 +32,25 @@ datamodule = CIFAR100MultiLabelDataModule(
 datamodule.prepare_data()
 datamodule.setup()
 
-# Model Define
-# Fine output ok
-model = BroadFineModelLM(
+
+LOAD_CKPT = True
+
+CKPT_PATH = "logs/cifar100/modified_dual_tpvit_fulldataset/lightning_logs/version_1/checkpoints/tpdualvitcifar100-epoch=71-val_acc_fine=0.864.ckpt"
+
+l_module = BroadFineModelLM(
     model=TP_MODEL_MODIFIED_CIFAR100,
     num_fine_outputs=100,
     num_broad_outputs=20,
     lr=LEARNING_RATE,
-    loss_mode=BELMode.M3M,
+    loss_mode=BELMode.CLUSTER,
 )
-LOAD_CKPT = False
-
-CKPT_PATH = ""
-
-if LOAD_CKPT:
-    # Load from checkpoint
-    checkpoint = torch.load(CKPT_PATH)
-    model = BroadFineModelLM.load_from_checkpoint(CKPT_PATH)
 
 
 kwargs = {
     "max_epochs": 300,
-    "accelerator": "auto",
-    "devices": 1,
-    "logger": CSVLogger(save_dir="logs/cifar100/modified_dual_tpvit"),
+    "accelerator": "gpu",
+    "gpus": 1,
+    "logger": CSVLogger(save_dir="logs/cifar100/modified_dual_tpvit_fulldataset"),
     "callbacks": [
         LearningRateMonitor(logging_interval="step"),
         TQDMProgressBar(refresh_rate=10),
@@ -65,17 +60,11 @@ kwargs = {
     "gradient_clip_val": 1,
 }
 
-if LOAD_CKPT:
-    kwargs = {
-        **kwargs,
-        "resume_from_checkpoint": CKPT_PATH,
-    }
-
 trainer = Trainer(**kwargs)
 
 if __name__ == "__main__":
     if LOAD_CKPT:
-        trainer.test(model, datamodule=datamodule)
+        trainer.test(l_module, datamodule=datamodule, ckpt_path=CKPT_PATH)
 
-    trainer.fit(model, datamodule)
-    trainer.test(model, datamodule=datamodule)
+    trainer.fit(l_module, datamodule, ckpt_path=CKPT_PATH)
+    trainer.test(l_module, datamodule=datamodule)
