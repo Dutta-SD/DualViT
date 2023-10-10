@@ -32,7 +32,7 @@ class TPDualModifiedVit(nn.Module):
         return logits
 
     def log(self, f_string):
-        if self.debug:
+        if False:
             print(f_string)
 
     def get_encoded_inputs(self, pixel_values, interpolate_pos_encoding):

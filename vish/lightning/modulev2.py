@@ -6,12 +6,14 @@ from torchmetrics.functional import accuracy
 from vish.constants import WEIGHT_DECAY, LEARNING_RATE
 from vish.lightning.loss import BroadFineEmbeddingLoss, BELMode
 from vish.model.common.loss import convert_fine_to_broad_logits
+from vish.model.tp.modified import TPDualModifiedVit
 
 
 class BroadFineModelLM(LightningModule):
+    model: TPDualModifiedVit
     def __init__(
         self,
-        model,
+        model: TPDualModifiedVit,
         num_fine_outputs,
         num_broad_outputs,
         lr,
@@ -50,6 +52,10 @@ class BroadFineModelLM(LightningModule):
         self.log("train_loss_fine_ce", loss_fine_ce)
 
         return loss_emb + loss_fine_ce
+    
+    def _mdl_outputs(self, pixel_values):
+        broad_embedding, fine_embedding, fine_logits = self(pixel_values)
+        return broad_embedding, fine_embedding, fine_logits
 
     def get_embedding_loss(
         self,
@@ -120,7 +126,10 @@ class BroadFineModelLM(LightningModule):
     def get_broad_statistics_via_fine(self, broad_embedding, broad_labels, fine_labels):
         # Broad Class
         f_logits_b = self.model.to_logits(broad_embedding)
-        b_logits = convert_fine_to_broad_logits(f_logits_b, broad_labels, fine_labels)
+        if isinstance(f_logits_b, (list, tuple)):
+            f_logits_b = f_logits_b[-1]
+
+        b_logits = convert_fine_to_broad_logits(f_logits_b, broad_labels, fine_labels, num_broad=self.num_broad_outputs)
         preds = torch.argmax(b_logits, dim=1)
         acc_broad = accuracy(
             preds, broad_labels, task="multiclass", num_classes=self.num_broad_outputs
