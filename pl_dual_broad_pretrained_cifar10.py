@@ -6,10 +6,10 @@ from pytorch_lightning.callbacks.progress import TQDMProgressBar
 from pytorch_lightning.loggers import CSVLogger
 from transformers import logging
 
-from tp_model import TP_MODEL_MODIFIED_CIFAR100
+from tp_model import TP_MODEL_MODIFIED_CIFAR10
 from vish.constants import LEARNING_RATE
 from vish.lightning.data import (
-    CIFAR100MultiLabelDataModule,
+    CIFAR10MultiLabelDataModule,
     test_transform,
     train_transform,
 )
@@ -22,7 +22,7 @@ logging.set_verbosity_warning()
 warnings.filterwarnings("ignore")
 
 # Data Module
-datamodule = CIFAR100MultiLabelDataModule(
+datamodule = CIFAR10MultiLabelDataModule(
     is_test=False,
     train_transform=train_transform,
     val_transform=test_transform,
@@ -32,14 +32,14 @@ datamodule.prepare_data()
 datamodule.setup()
 
 
-LOAD_CKPT = True
+LOAD_CKPT = False
 
-CKPT_PATH = "logs/cifar100/modified_dual_tpvit_fulldataset/lightning_logs/version_2/checkpoints/tpdualvitcifar100-epoch=75-val_acc_fine=0.864.ckpt"
+CKPT_PATH = ""
 
 l_module = BroadFineModelLM(
-    model=TP_MODEL_MODIFIED_CIFAR100,
-    num_fine_outputs=100,
-    num_broad_outputs=20,
+    model=TP_MODEL_MODIFIED_CIFAR10,
+    num_fine_outputs=10,
+    num_broad_outputs=2,
     lr=LEARNING_RATE,
     loss_mode=BELMode.CLUSTER,
 )
@@ -49,7 +49,7 @@ kwargs = {
     "max_epochs": 300,
     "accelerator": "gpu",
     "gpus": 1,
-    "logger": CSVLogger(save_dir="logs/cifar100/modified_dual_tpvit_fulldataset"),
+    "logger": CSVLogger(save_dir="logs/cifar10/modified_dual_tpvit_fulldataset"),
     "callbacks": [
         LearningRateMonitor(logging_interval="step"),
         TQDMProgressBar(refresh_rate=10),
@@ -68,8 +68,8 @@ if LOAD_CKPT:
 trainer = Trainer(**kwargs)
 
 if __name__ == "__main__":
-    # if LOAD_CKPT:
-    #     trainer.test(l_module, datamodule=datamodule, ckpt_path=CKPT_PATH)
+    if LOAD_CKPT:
+        trainer.test(l_module, datamodule=datamodule, ckpt_path=CKPT_PATH)
 
     trainer.fit(l_module, datamodule=datamodule)
     trainer.test(l_module, datamodule=datamodule)

@@ -24,7 +24,7 @@ warnings.filterwarnings("ignore")
 
 # Data Module
 datamodule = CIFAR100MultiLabelDataModule(
-    is_test=True,
+    is_test=False,
     train_transform=train_transform,
     val_transform=test_transform,
 )
@@ -75,7 +75,7 @@ trainer = Trainer(**kwargs)
 
 if __name__ == "__main__":
     if LOAD_CKPT:
-        trainer.test(model, datamodule=datamodule)
+        trainer.test(model, datamodule=datamodule, ckpt_path=CKPT_PATH)
         
-    trainer.fit(model, datamodule)
+    # trainer.fit(model, datamodule)
     trainer.test(model, datamodule=datamodule)

@@ -26,16 +26,10 @@ class TPDualVit(nn.Module):
         broad_outputs = self.broad_model(x, output_hidden_states=True)
         # From HuggingFace documentation
         bo, bl = broad_outputs["hidden_states"], broad_outputs["logits"]
-        be = bo[-1][:, :1, :]
-        print("be shape", be.shape)
-        print("bl shape", bl.shape)
-        print(torch.cosine_similarity(be.squeeze(0), bl.squeeze(0, 1)))
         return bo, bl
 
     def forward(self, x, start=None, stride=None):
-        return
         x_ext_list, broad_logits = self.get_broad_outputs(x)
-        print("Number of external inputs: ", len(x_ext_list))
         # If Identity, same as logits
         broad_embedding = x_ext_list[-1][:, :1, :]
         x_ext_list = self.filter_external_inputs(start, stride, x_ext_list)
@@ -52,3 +46,7 @@ class TPDualVit(nn.Module):
                 for idx in range(len(x_ext_list))
             ]
         return x_ext_list
+    
+    def to_logits(self, emb):
+        return self.fine_model.to_logits(emb)
+
