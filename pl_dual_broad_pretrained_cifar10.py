@@ -15,7 +15,8 @@ from vish.lightning.data import (
 )
 from vish.lightning.loss import BELMode
 from vish.lightning.modulev2 import BroadFineModelLM
-from vish.lightning.utils import checkpoint_callback
+from pytorch_lightning.callbacks import ModelCheckpoint
+
 
 logging.set_verbosity_warning()
 
@@ -36,20 +37,32 @@ LOAD_CKPT = False
 
 CKPT_PATH = ""
 
+NUM_FINE_CLASSES = 10
+NUM_BROAD_CLASSES = 2
+
+
 l_module = BroadFineModelLM(
     model=TP_MODEL_MODIFIED_CIFAR10,
-    num_fine_outputs=10,
-    num_broad_outputs=2,
+    num_fine_outputs=NUM_FINE_CLASSES,
+    num_broad_outputs=NUM_BROAD_CLASSES,
     lr=LEARNING_RATE,
     loss_mode=BELMode.CLUSTER,
 )
 
+checkpoint_callback = ModelCheckpoint(
+    monitor="val_acc_fine",  # Monitor the validation loss
+    filename="tpdualvitcifar10-{epoch:02d}-{val_acc_fine:.3f}",  # Checkpoint filename format
+    save_top_k=2,  # Save only the best model checkpoint
+    mode="max",  # 'min' mode means we want to minimize the monitored metric
+)
+
 
 kwargs = {
-    "max_epochs": 300,
+    "max_epochs": 100,
     "accelerator": "gpu",
     "gpus": 1,
     "logger": CSVLogger(save_dir="logs/cifar10/modified_dual_tpvit_fulldataset"),
+    "deterministic": True,
     "callbacks": [
         LearningRateMonitor(logging_interval="step"),
         TQDMProgressBar(refresh_rate=10),
