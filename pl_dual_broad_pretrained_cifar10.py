@@ -33,9 +33,9 @@ datamodule.prepare_data()
 datamodule.setup()
 
 
-LOAD_CKPT = False
+LOAD_CKPT = True
 
-CKPT_PATH = ""
+CKPT_PATH = "logs/cifar10/modified_dual_tpvit_fulldataset/lightning_logs/version_1/checkpoints/tpdualvitcifar10-epoch=18-val_acc_fine=0.972.ckpt"
 
 NUM_FINE_CLASSES = 10
 NUM_BROAD_CLASSES = 2
@@ -84,5 +84,5 @@ if __name__ == "__main__":
     if LOAD_CKPT:
         trainer.test(l_module, datamodule=datamodule, ckpt_path=CKPT_PATH)
 
-    trainer.fit(l_module, datamodule=datamodule)
-    trainer.test(l_module, datamodule=datamodule)
+    # trainer.fit(l_module, datamodule=datamodule)
+    # trainer.test(l_module, datamodule=datamodule)
