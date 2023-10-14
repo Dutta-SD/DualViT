@@ -10,9 +10,8 @@ from transformers import logging
 from vish.constants import LEARNING_RATE, VIT_PRETRAINED_MODEL_2
 from vish.lightning.data import (
     CIFAR100MultiLabelDataModule,
-    test_transform,
-    train_transform,
 )
+from vish.lightning.data.common import train_transform, test_transform
 from vish.lightning.module import (
     TPDualVitLightningModuleCifar100,
 )

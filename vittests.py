@@ -11,9 +11,8 @@ from pytorch_lightning.loggers import CSVLogger
 from vish.constants import LOAD_CKPT, EPOCHS, LEARNING_RATE
 from vish.lightning.data import (
     CIFAR10MultiLabelDataModule,
-    train_transform,
-    test_transform,
 )
+from vish.lightning.data.common import train_transform, test_transform
 from vish.lightning.module import SplitVitModule
 from vish.lightning.utils import checkpoint_callback, early_stopping_callback
 
