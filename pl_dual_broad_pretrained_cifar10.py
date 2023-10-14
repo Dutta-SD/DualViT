@@ -10,9 +10,8 @@ from tp_model import TP_MODEL_MODIFIED_CIFAR10
 from vish.constants import LEARNING_RATE
 from vish.lightning.data import (
     CIFAR10MultiLabelDataModule,
-    test_transform,
-    train_transform,
 )
+from vish.lightning.data.common import train_transform, test_transform
 from vish.lightning.loss import BELMode
 from vish.lightning.modulev2 import BroadFineModelLM
 from pytorch_lightning.callbacks import ModelCheckpoint

@@ -10,9 +10,8 @@ from transformers import logging
 from vish.constants import EPOCHS, LEARNING_RATE, LOAD_CKPT, VIT_PRETRAINED_MODEL_2
 from vish.lightning.data import (
     CIFAR10MultiLabelDataModule,
-    test_transform,
-    train_transform,
 )
+from vish.lightning.data.common import train_transform, test_transform
 from vish.lightning.utils import early_stopping_callback
 from vish.lightning.module import PreTrainedSplitHierarchicalViTModule
 

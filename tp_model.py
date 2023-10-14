@@ -43,6 +43,24 @@ cifar100_model_params = {
     "conv_bias": True,
 }
 
+imagenet1k_model_params = {
+    "img_height": IMG_SIZE,
+    "img_width": IMG_SIZE,
+    "img_in_channels": 3,
+    "patch_dim": 16,
+    "emb_dim": 768,
+    "num_layers": 12,
+    "num_attention_heads": 12,
+    "pwff_hidden_dim": 3072,
+    "num_classification_heads": 1,
+    "mlp_outputs_list": (1000,),
+    "p_dropout": 0.0,
+    "qkv_bias": True,
+    "pwff_bias": True,
+    "clf_head_bias": True,
+    "conv_bias": True,
+}
+
 # Common
 broad_vitForImageClassification = ViTForImageClassification.from_pretrained(
     VIT_PRETRAINED_MODEL_2
@@ -52,6 +70,7 @@ broad_vitmodel = ViTModel.from_pretrained(VIT_PRETRAINED_MODEL_2)
 
 cifar10_fine_model = TPVitImageClassification(**cifar10_model_params)
 cifar100_fine_model = TPVitImageClassification(**cifar100_model_params)
+imagenet1k_fine_model = TPVitImageClassification(**imagenet1k_model_params)
 
 # TPDualVit
 TP_MODEL_CIFAR100 = TPDualVit(
@@ -73,3 +92,10 @@ TP_MODEL_MODIFIED_CIFAR100 = TPDualModifiedVit(
     broad_model=broad_vitmodel,
     debug=False,
 )
+
+TP_MODEL_MODIFIED_IMAGENET1K = TPDualModifiedVit(
+    fine_model=imagenet1k_fine_model,
+    broad_model=broad_vitmodel,
+    debug=False,
+)
+
