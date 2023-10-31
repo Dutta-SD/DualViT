@@ -7,7 +7,7 @@ from vish.constants import IMG_SIZE
 
 PATH_DATASETS = os.environ.get("PATH_DATASETS", "./data")
 BATCH_SIZE = 16 if torch.cuda.is_available() else 4
-NUM_WORKERS = int(os.cpu_count() / 2)
+NUM_WORKERS = int(os.cpu_count())
 
 train_transform = tf.Compose(
     [
