@@ -161,13 +161,13 @@ class TransformerBlock(nn.Module):
         self.dropout = nn.Dropout(p_dropout)
 
     def _get_mha_residue(self, ip, mask=None):
-        res = self.layer_norm_1(ip)
+        res = ip
         res = self.mha(res, mask)
         res = self.dropout(res)
         return res
 
     def _get_pwff_residue(self, ip):
-        residue = self.layer_norm_2(ip)
+        residue = ip
         residue = self.pos_wise_ff_layer(residue)
         residue = self.dropout(residue)
         return residue
@@ -175,8 +175,8 @@ class TransformerBlock(nn.Module):
     def forward(self, x, mask=None):
         output = x
         # += is inplace operation, may cause errors
-        output = output + self._get_mha_residue(output, mask)
-        output = output + self._get_pwff_residue(output)
+        output = self.layer_norm_1(output + self._get_mha_residue(output, mask))
+        output = self.layer_norm_2(output + self._get_pwff_residue(output))
         return output
 
 
