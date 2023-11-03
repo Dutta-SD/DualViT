@@ -11,6 +11,7 @@ from vish.model.tp.modified import TPDualModifiedVit
 
 class BroadFineModelLM(LightningModule):
     model: TPDualModifiedVit
+
     def __init__(
         self,
         model: TPDualModifiedVit,
@@ -52,7 +53,7 @@ class BroadFineModelLM(LightningModule):
         self.log("train_loss_fine_ce", loss_fine_ce)
 
         return loss_emb + loss_fine_ce
-    
+
     def _mdl_outputs(self, pixel_values):
         broad_embedding, fine_embedding, fine_logits = self(pixel_values)
         return broad_embedding, fine_embedding, fine_logits
@@ -77,7 +78,7 @@ class BroadFineModelLM(LightningModule):
                 broad_embedding, broad_labels, fine_embedding, fine_labels
             )
 
-        loss_emb = torch.log10(loss_emb + 1)
+        # loss_emb = loss_emb
         return loss_emb
 
     def _compute_emb_loss(
@@ -115,13 +116,14 @@ class BroadFineModelLM(LightningModule):
 
         if stage:
             # Fine
-            self.log(f"{stage}_loss_fine", loss_fine_ce, prog_bar=True)
-            self.log(f"{stage}_acc_fine", acc_fine, prog_bar=True)
+            self.log(f"{stage}_ce_f", loss_fine_ce, prog_bar=True)
+            self.log(f"{stage}_acc_f", acc_fine, prog_bar=True)
             # Embedding
-            self.log(f"{stage}_loss_emb", loss_emb, prog_bar=True)
+            self.log(f"{stage}_l_emb", loss_emb, prog_bar=True)
+            # self.log(f"{stage}_loss_emb_og", (10**loss_emb) - 1, prog_bar=True)
             # Broad
-            self.log(f"{stage}_loss_broad", loss_broad_ce, prog_bar=True)
-            self.log(f"{stage}_acc_broad", acc_broad, prog_bar=True)
+            self.log(f"{stage}_ce_b", loss_broad_ce, prog_bar=True)
+            self.log(f"{stage}_acc_b", acc_broad, prog_bar=True)
 
     def get_broad_statistics_via_fine(self, broad_embedding, broad_labels, fine_labels):
         # Broad Class
@@ -129,7 +131,9 @@ class BroadFineModelLM(LightningModule):
         if isinstance(f_logits_b, (list, tuple)):
             f_logits_b = f_logits_b[-1]
 
-        b_logits = convert_fine_to_broad_logits(f_logits_b, broad_labels, fine_labels, num_broad=self.num_broad_outputs)
+        b_logits = convert_fine_to_broad_logits(
+            f_logits_b, broad_labels, fine_labels, num_broad=self.num_broad_outputs
+        )
         preds = torch.argmax(b_logits, dim=1)
         acc_broad = accuracy(
             preds, broad_labels, task="multiclass", num_classes=self.num_broad_outputs
@@ -163,18 +167,18 @@ class BroadFineModelLM(LightningModule):
             optimizer,
             mode="max",
             verbose=True,
-            patience=5,
+            patience=7,
         )
         return {
             "optimizer": optimizer,
             "lr_scheduler": lr_scheduler,
-            "monitor": "val_acc_fine",
+            "monitor": "val_acc_f",
         }
 
     def get_param_groups(self):
         return [
-            {"params": self.model.embeddings.parameters(), "lr": 1e-5},
-            {"params": self.model.broad_encoders.parameters(), "lr": 1e-5},
+            {"params": self.model.embeddings.parameters(), "lr": 1e-6},
+            {"params": self.model.broad_encoders.parameters(), "lr": 1e-6},
             {"params": self.model.fine_encoders.parameters(), "lr": 1e-2},
             {"params": self.model.mlp_heads.parameters(), "lr": 1e-2},
         ]

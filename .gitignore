@@ -290,4 +290,5 @@ logs/pretrained*
 logs/dual_broad*
 logs/cifar100
 logs/cifar10
+logs
 !vish/lightning/data
