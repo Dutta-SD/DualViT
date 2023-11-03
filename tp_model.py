@@ -62,36 +62,36 @@ imagenet1k_model_params = {
 }
 
 # Common
-broad_vitForImageClassification = ViTForImageClassification.from_pretrained(
-    VIT_PRETRAINED_MODEL_2
-)
-broad_vitForImageClassification.classifier = nn.Identity()
+# broad_vitForImageClassification = ViTForImageClassification.from_pretrained(
+#     VIT_PRETRAINED_MODEL_2
+# )
+# broad_vitForImageClassification.classifier = nn.Identity()
 broad_vitmodel = ViTModel.from_pretrained(VIT_PRETRAINED_MODEL_2)
 
-cifar10_fine_model = TPVitImageClassification(**cifar10_model_params)
-cifar100_fine_model = TPVitImageClassification(**cifar100_model_params)
+# cifar10_fine_model = TPVitImageClassification(**cifar10_model_params)
+# cifar100_fine_model = TPVitImageClassification(**cifar100_model_params)
 imagenet1k_fine_model = TPVitImageClassification(**imagenet1k_model_params)
 
 # TPDualVit
-TP_MODEL_CIFAR100 = TPDualVit(
-    fine_model=cifar100_fine_model, broad_model=broad_vitForImageClassification
-)
-TP_MODEL_CIFAR10 = TPDualVit(
-    fine_model=cifar10_fine_model, broad_model=broad_vitForImageClassification
-)
+# TP_MODEL_CIFAR100 = TPDualVit(
+#     fine_model=cifar100_fine_model, broad_model=broad_vitForImageClassification
+# )
+# TP_MODEL_CIFAR10 = TPDualVit(
+#     fine_model=cifar10_fine_model, broad_model=broad_vitForImageClassification
+# )
 
-# TP Modified Dual Vit
-TP_MODEL_MODIFIED_CIFAR10 = TPDualModifiedVit(
-    fine_model=cifar10_fine_model,
-    broad_model=broad_vitmodel,
-    debug=False,
-)
+# # TP Modified Dual Vit
+# TP_MODEL_MODIFIED_CIFAR10 = TPDualModifiedVit(
+#     fine_model=cifar10_fine_model,
+#     broad_model=broad_vitmodel,
+#     debug=False,
+# )
 
-TP_MODEL_MODIFIED_CIFAR100 = TPDualModifiedVit(
-    fine_model=cifar100_fine_model,
-    broad_model=broad_vitmodel,
-    debug=False,
-)
+# TP_MODEL_MODIFIED_CIFAR100 = TPDualModifiedVit(
+#     fine_model=cifar100_fine_model,
+#     broad_model=broad_vitmodel,
+#     debug=False,
+# )
 
 TP_MODEL_MODIFIED_IMAGENET1K = TPDualModifiedVit(
     fine_model=imagenet1k_fine_model,

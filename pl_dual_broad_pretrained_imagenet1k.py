@@ -29,7 +29,7 @@ datamodule.setup()
 
 LOAD_CKPT = False
 
-CKPT_PATH = "logs/imagenet1k/modified_dual_tpvit_fulldataset/lightning_logs/version_1/checkpoints/tpdualvit-imagenet1k-epoch=02-val_acc_fine=0.001.ckpt"
+CKPT_PATH = "logs/imagenet1k/subset_dualtpvit/lightning_logs/version_0/checkpoints/subset-tpdualvit-imagenet1k-epoch=05-val_acc_fine=0.012.ckpt"
 
 l_module = BroadFineModelLM(
     model=TP_MODEL_MODIFIED_IMAGENET1K,
@@ -40,7 +40,7 @@ l_module = BroadFineModelLM(
 )
 
 checkpoint_callback = ModelCheckpoint(
-    monitor="val_acc_fine",
+    monitor="val_acc_f",
     filename="subset-tpdualvit-imagenet1k-{epoch:02d}-{val_acc_fine:.3f}",
     save_top_k=2,
     mode="max",  
@@ -51,7 +51,7 @@ kwargs = {
     "max_epochs": 300,
     "accelerator": "gpu",
     "gpus": 1,
-    "logger": CSVLogger(save_dir="logs/imagenet1k/modified_dual_tpvit_fulldataset"),
+    "logger": CSVLogger(save_dir="logs/imagenet1k/subset_dualtpvit"),
     "callbacks": [
         LearningRateMonitor(logging_interval="step"),
         TQDMProgressBar(refresh_rate=10),
