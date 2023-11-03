@@ -19,7 +19,6 @@ class TPMHA(MultiHeadAttention):
         qkv_bias: bool = True,
     ):
         super().__init__(emb_dim, num_heads, p_dropout, qkv_bias)
-        # TODO: Is emb_dim -> emb_dim ideal? or emb -> hidden -> emb?
         self.repr_layer = nn.Linear(emb_dim, emb_dim, bias=qkv_bias)
 
     def _split_for_multi_head(self, *args):
@@ -85,13 +84,13 @@ class TPTransformerBlock(TransformerBlock):
         self.mha = TPMHA(emb_dim, num_heads, p_dropout, qkv_bias)
 
     def _get_mha_residue(self, ip, ip_ext=None, mask=None):
-        residue = self.layer_norm_1(ip)
+        residue = ip
         residue = self.mha(residue, ip_ext, mask)
         residue = self.dropout(residue)
         return residue
 
     def _get_pwff_residue(self, ip):
-        residue = self.layer_norm_2(ip)
+        residue = ip
         residue = self.pos_wise_ff_layer(residue)
         residue = self.dropout(residue)
         return residue
@@ -99,8 +98,8 @@ class TPTransformerBlock(TransformerBlock):
     def forward(self, x, x_ext=None, mask=None):
         output = x
         # += is inplace operation, may cause errors
-        output = output + self._get_mha_residue(output, x_ext, mask)
-        output = output + self._get_pwff_residue(output)
+        output = self.layer_norm_1(output + self._get_mha_residue(output, x_ext, mask))
+        output = self.layer_norm_2(output + self._get_pwff_residue(output))
         return output
 
 

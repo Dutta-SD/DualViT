@@ -1,13 +1,13 @@
 import json
-from functools import lru_cache
 import os
+from functools import lru_cache
 from typing import Any
-import PIL
 
+import PIL
 import torch
 from pytorch_lightning import LightningDataModule
-from torchvision.transforms import transforms
 from torchvision.datasets import ImageFolder
+from torchvision.transforms import transforms
 
 from vish.lightning.data.common import PATH_DATASETS, NUM_WORKERS
 

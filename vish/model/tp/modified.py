@@ -18,8 +18,8 @@ class TPDualModifiedVit(nn.Module):
         self.fine_encoders = fine_model.transformer_encoder.tf_blocks
         self.num_classification_heads = fine_model.num_classification_heads
         self.mlp_heads = fine_model.mlp_heads
-        self.ln_fine = nn.LayerNorm(self.emb_dim)
-        self.ln_broad = nn.LayerNorm(self.emb_dim)
+        # self.ln_fine = nn.LayerNorm(self.emb_dim)
+        # self.ln_broad = nn.LayerNorm(self.emb_dim)
         self.debug = debug
 
         self.log("Model INIT complete")
@@ -31,7 +31,8 @@ class TPDualModifiedVit(nn.Module):
         ]
         return logits
 
-    def log(self, f_string):
+    @staticmethod
+    def log(f_string):
         if False:
             print(f_string)
 
@@ -49,9 +50,6 @@ class TPDualModifiedVit(nn.Module):
         x = self.broad_encoders
         self.log(f"Number of ViT encoders blocks {len(x)}")
         return x
-
-    def classify(self, fine_embedding):
-        return self.clf(fine_embedding)
 
     def forward(self, pixel_values):
         broad_t, fine_t = self.get_model_input_encodings(False, pixel_values)
@@ -85,7 +83,7 @@ class TPDualModifiedVit(nn.Module):
             self.log(f"Processing Block {idx} in Encoders")
             broad_t = b_block(broad_t)[0]
             fine_t = f_block(fine_t, x_ext=broad_t, mask=None)
-        return self.ln_broad(broad_t), self.ln_fine(fine_t)
+        return broad_t, fine_t
 
     def get_model_input_encodings(self, interpolate_pos_encoding, pixel_values):
         fine_t = broad_t = self.get_encoded_inputs(
