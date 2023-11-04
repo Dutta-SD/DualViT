@@ -51,7 +51,7 @@ class ImageNet1kMultilabelDataset(ImageFolder):
         self._set_and_check_depth(depth, f)
 
         self.label_tree = f["label_tree"]
-        self.nodes_at_depth = f["depthwise_nodes"][str(depth)]['non_leaves']
+        self.nodes_at_depth = f["depthwise_nodes"][str(depth)]["non_leaves"]
         self.num_broad_classes = len(self.nodes_at_depth)
 
     def _set_and_check_depth(self, depth, f):
@@ -121,8 +121,12 @@ class ImageNet1kMultiLabelDataModule(LightningDataModule):
 
     def setup(self, stage=None):
         if stage == "fit" or stage is None:
-            self._train = ImageNet1kMultilabelDataset("train", self.is_test, self.depth, train_data_dir, train_tf)
-            self._val = ImageNet1kMultilabelDataset("val", self.is_test, self.depth, val_data_dir, val_tf)
+            self._train = ImageNet1kMultilabelDataset(
+                "train", self.is_test, self.depth, train_data_dir, train_tf
+            )
+            self._val = ImageNet1kMultilabelDataset(
+                "val", self.is_test, self.depth, val_data_dir, val_tf
+            )
             self.num_broad_classes = self._train.num_broad_classes
 
     def train_dataloader(self):

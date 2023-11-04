@@ -89,13 +89,18 @@ class VitClassificationDecomposed(nn.Module):
             converted_labels = self.convert_labels(data, label_map, labels)
 
             converted_labels
+
     #         TODO finish
 
     def convert_labels(self, data, label_map, labels):
-        node_labels = torch.tensor(np.fromiter(label_map.keys(), dtype=np.int8), dtype=labels.device)
+        node_labels = torch.tensor(
+            np.fromiter(label_map.keys(), dtype=np.int8), dtype=labels.device
+        )
         labels_mask = labels.isin(node_labels)
         labels = labels_mask * data.labels
-        converted_labels = torch.tensor([label_map[i] for i in labels], device=labels.device)
+        converted_labels = torch.tensor(
+            [label_map[i] for i in labels], device=labels.device
+        )
         return converted_labels
 
     def make_label_map(self, key):

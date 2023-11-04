@@ -59,10 +59,7 @@ kwargs = {
 }
 
 if LOAD_CKPT:
-    kwargs = {
-        **kwargs,
-        "resume_from_checkpoint": CKPT_PATH
-    }
+    kwargs = {**kwargs, "resume_from_checkpoint": CKPT_PATH}
 
 trainer = Trainer(**kwargs)
 

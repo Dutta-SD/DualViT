@@ -1,5 +1,4 @@
 def SplitViTHierarchicalTPVitHalfPretrained(SplitHierarchicalTPViT):
-
     def random_init(self, m):
         torch.nn.init.xavier_normal_(m.weight)
         m.bias.data.fill_(0.01)

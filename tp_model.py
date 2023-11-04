@@ -98,4 +98,3 @@ TP_MODEL_MODIFIED_IMAGENET1K = TPDualModifiedVit(
     broad_model=broad_vitmodel,
     debug=False,
 )
-

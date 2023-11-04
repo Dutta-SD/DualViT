@@ -246,14 +246,16 @@ class TPDualTrainer(VitDualModelTrainer):
             fine_output,
             broad_labels,
             fine_labels,
-            kwargs["epoch"]+10,
+            kwargs["epoch"] + 10,
             classifier=self.model.fine_model.to_logits,
         )
 
         with torch.no_grad():
             # Multi-duh!
             broad_as_fine = self.model.fine_model.to_logits(broad_output[0])[0]
-            broad_logits = convert_fine_to_broad_logits(broad_as_fine, broad_labels, fine_labels)
+            broad_logits = convert_fine_to_broad_logits(
+                broad_as_fine, broad_labels, fine_labels
+            )
 
         metrics = {}
 
@@ -305,7 +307,9 @@ class SplitHierarchicalTPVitTrainer(VitDualModelTrainer):
 
         with torch.no_grad():
             broad_as_fine = self.model.classify(broad_embedding)
-            broad_logits = convert_fine_to_broad_logits(broad_as_fine, broad_labels, fine_labels)
+            broad_logits = convert_fine_to_broad_logits(
+                broad_as_fine, broad_labels, fine_labels
+            )
 
         metrics = {}
 
