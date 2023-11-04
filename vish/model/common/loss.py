@@ -15,7 +15,12 @@ def current_mode(curr_epoch, alt_freq, num_modes=2):
     return val % num_modes
 
 
-def convert_fine_to_broad_logits(logits: Tensor, broad_labels: Tensor, fine_labels: Tensor, num_broad=CIFAR10_NUM_BROAD):
+def convert_fine_to_broad_logits(
+    logits: Tensor,
+    broad_labels: Tensor,
+    fine_labels: Tensor,
+    num_broad=CIFAR10_NUM_BROAD,
+):
     """
     Converts fine logits to broad logits for CIFAR 10
 
@@ -58,7 +63,9 @@ def bnf_alternate_loss(
     fine_labels: torch.IntTensor,
     curr_epoch: int,
     classifier: Callable[[Tensor], Tensor],
-    f2b_filter: Callable[[Tensor, Tensor, Tensor], Tensor] = convert_fine_to_broad_logits,
+    f2b_filter: Callable[
+        [Tensor, Tensor, Tensor], Tensor
+    ] = convert_fine_to_broad_logits,
     scale_factor: float = 100.0,
     alt_freq: int = 10,
     p: int = 1,

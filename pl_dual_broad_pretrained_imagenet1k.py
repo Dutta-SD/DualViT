@@ -43,7 +43,7 @@ checkpoint_callback = ModelCheckpoint(
     monitor="val_acc_f",
     filename="subset-tpdualvit-imagenet1k-{epoch:02d}-{val_acc_fine:.3f}",
     save_top_k=2,
-    mode="max",  
+    mode="max",
 )
 
 
@@ -62,10 +62,7 @@ kwargs = {
 }
 
 if LOAD_CKPT:
-    kwargs = {
-        **kwargs,
-        "resume_from_checkpoint": CKPT_PATH
-    }
+    kwargs = {**kwargs, "resume_from_checkpoint": CKPT_PATH}
 
 trainer = Trainer(**kwargs)
 

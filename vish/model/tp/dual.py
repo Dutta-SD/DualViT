@@ -46,7 +46,6 @@ class TPDualVit(nn.Module):
                 for idx in range(len(x_ext_list))
             ]
         return x_ext_list
-    
+
     def to_logits(self, emb):
         return self.fine_model.to_logits(emb)
-
