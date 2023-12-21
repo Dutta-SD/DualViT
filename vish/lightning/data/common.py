@@ -6,8 +6,8 @@ from torchvision.transforms import transforms as tf
 from vish.constants import IMG_SIZE
 
 PATH_DATASETS = os.environ.get("PATH_DATASETS", "./data")
-BATCH_SIZE = 16 if torch.cuda.is_available() else 4
-NUM_WORKERS = int(os.cpu_count())
+BATCH_SIZE = 4
+NUM_WORKERS = int(os.cpu_count()) // 2
 
 train_transform = tf.Compose(
     [

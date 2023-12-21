@@ -292,3 +292,5 @@ logs/cifar100
 logs/cifar10
 logs
 !vish/lightning/data
+weights/**
+**.tar
