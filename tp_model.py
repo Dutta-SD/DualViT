@@ -1,5 +1,5 @@
 from torch import nn
-from transformers import ViTModel
+from transformers import ViTModel, ViTConfig
 from transformers.models.vit import ViTForImageClassification
 
 from vish.constants import IMG_SIZE, VIT_PRETRAINED_MODEL_2
@@ -66,11 +66,13 @@ imagenet1k_model_params = {
 #     VIT_PRETRAINED_MODEL_2
 # )
 # broad_vitForImageClassification.classifier = nn.Identity()
-broad_vitmodel = ViTModel.from_pretrained(VIT_PRETRAINED_MODEL_2)
+broad_vitmodel = ViTModel.from_pretrained("google/vit-base-patch16-384")
+# broad_vitmodel = ViTModel(ViTConfig())
+
 
 # cifar10_fine_model = TPVitImageClassification(**cifar10_model_params)
-# cifar100_fine_model = TPVitImageClassification(**cifar100_model_params)
-imagenet1k_fine_model = TPVitImageClassification(**imagenet1k_model_params)
+cifar100_fine_model = TPVitImageClassification(**cifar100_model_params)
+# imagenet1k_fine_model = TPVitImageClassification(**imagenet1k_model_params)
 
 # TPDualVit
 # TP_MODEL_CIFAR100 = TPDualVit(
@@ -87,14 +89,14 @@ imagenet1k_fine_model = TPVitImageClassification(**imagenet1k_model_params)
 #     debug=False,
 # )
 
-# TP_MODEL_MODIFIED_CIFAR100 = TPDualModifiedVit(
-#     fine_model=cifar100_fine_model,
-#     broad_model=broad_vitmodel,
-#     debug=False,
-# )
-
-TP_MODEL_MODIFIED_IMAGENET1K = TPDualModifiedVit(
-    fine_model=imagenet1k_fine_model,
+TP_MODEL_MODIFIED_CIFAR100 = TPDualModifiedVit(
+    fine_model=cifar100_fine_model,
     broad_model=broad_vitmodel,
     debug=False,
 )
+
+# TP_MODEL_MODIFIED_IMAGENET1K = TPDualModifiedVit(
+#     fine_model=imagenet1k_fine_model,
+#     broad_model=broad_vitmodel,
+#     debug=False,
+# )

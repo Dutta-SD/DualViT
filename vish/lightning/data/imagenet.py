@@ -8,11 +8,12 @@ import torch
 from pytorch_lightning import LightningDataModule
 from torchvision.datasets import ImageFolder
 from torchvision.transforms import transforms
+from torch.utils.data import DataLoader
 
 from vish.lightning.data.common import PATH_DATASETS, NUM_WORKERS
 
 # Need different value for this in case of ImageNet
-BATCH_SIZE = 16 if torch.cuda.is_available() else 4
+BATCH_SIZE = 64 if torch.cuda.is_available() else 4
 IMAGE_SIZE = 224
 ROOT_DIR = "data/imagenet"
 
@@ -57,19 +58,22 @@ class ImageNet1kMultilabelDataset(ImageFolder):
     def _set_and_check_depth(self, depth, f):
         self.max_allowable_depth = int(f["meta"]["min_depth"])
         if depth >= self.max_allowable_depth:
-            raise ValueError(f"{depth} is not < {self.max_allowable_depth}")
+            pass
+            # raise ValueError(f"{depth} is not < {self.max_allowable_depth}")
 
     @staticmethod
     def read_label_json():
-        with open("vish/lightning/data/imagenet.json") as fp:
+        with open("vish/lightning/data/imagenet_v3.json") as fp:
             f = json.load(fp)
         return f
-
+    
     @lru_cache(maxsize=1100)
     def get_broad_label(self, fine_label: int):
+        # print("Getting Broad")
         label = self._compute_broad(fine_label)
-        return self.nodes_at_depth[label]
-
+        # print("Got Broad node", label)
+        return self.nodes_at_depth.get(label, -1)
+    
     def _compute_broad(self, fine_label):
         fl_str = str(fine_label)
         labels_set = set(self.label_tree[fl_str])
@@ -79,7 +83,9 @@ class ImageNet1kMultilabelDataset(ImageFolder):
         broad_label = labels_set.intersection(depth_nodes)
         if len(broad_label) > 1:
             raise ValueError(f"{broad_label} has more than 1 labels")
-        # print(broad_label)
+        # print("BLabel", broad_label)
+        if len(broad_label) == 0:
+            return -1
         l, *_ = broad_label
         return l
 
@@ -90,6 +96,7 @@ class ImageNet1kMultilabelDataset(ImageFolder):
         return super().__len__()
 
     def __getitem__(self, index: int) -> tuple[Any, Any, int | list[int]]:
+        # print("OK")
         img_tensor, fine_label = super().__getitem__(index)
         return img_tensor, fine_label, self.get_broad_label(fine_label)
 
@@ -130,17 +137,19 @@ class ImageNet1kMultiLabelDataModule(LightningDataModule):
             self.num_broad_classes = self._train.num_broad_classes
 
     def train_dataloader(self):
-        return torch.utils.data.DataLoader(
+        return DataLoader(
             self._train,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=True,
+            shuffle=True,
         )
 
     def val_dataloader(self):
-        return torch.utils.data.DataLoader(
+        return DataLoader(
             self._val,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=True,
+            shuffle=True,
         )

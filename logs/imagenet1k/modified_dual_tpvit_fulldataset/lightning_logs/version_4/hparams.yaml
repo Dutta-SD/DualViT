@@ -1,4 +1,0 @@
-loss_mode: CLUSTER
-lr: 0.001
-num_broad_outputs: 5
-num_fine_outputs: 1000

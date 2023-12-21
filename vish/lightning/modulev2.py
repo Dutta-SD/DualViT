@@ -49,8 +49,8 @@ class BroadFineModelLM(LightningModule):
 
         loss_fine_ce = self.ce_loss(fine_logits, fine_labels)
 
-        self.log("train_loss_emb", loss_emb)
-        self.log("train_loss_fine_ce", loss_fine_ce)
+        self.log("tE", loss_emb, prog_bar=True)
+        self.log("tCE", loss_fine_ce, prog_bar=True)
 
         return loss_emb + loss_fine_ce
 
@@ -78,7 +78,7 @@ class BroadFineModelLM(LightningModule):
                 broad_embedding, broad_labels, fine_embedding, fine_labels
             )
 
-        # loss_emb = loss_emb
+        loss_emb = torch.log(loss_emb)
         return loss_emb
 
     def _compute_emb_loss(
@@ -116,14 +116,14 @@ class BroadFineModelLM(LightningModule):
 
         if stage:
             # Fine
-            self.log(f"{stage}_ce_f", loss_fine_ce, prog_bar=True)
-            self.log(f"{stage}_acc_f", acc_fine, prog_bar=True)
+            self.log(f"{stage}CEF", loss_fine_ce, prog_bar=True)
+            self.log(f"{stage}_af", acc_fine, prog_bar=True)
             # Embedding
-            self.log(f"{stage}_l_emb", loss_emb, prog_bar=True)
+            self.log(f"{stage}E", loss_emb, prog_bar=True)
             # self.log(f"{stage}_loss_emb_og", (10**loss_emb) - 1, prog_bar=True)
             # Broad
-            self.log(f"{stage}_ce_b", loss_broad_ce, prog_bar=True)
-            self.log(f"{stage}_acc_b", acc_broad, prog_bar=True)
+            # self.log(f"{stage}_ceb", loss_broad_ce, prog_bar=True)
+            self.log(f"{stage}AB", acc_broad, prog_bar=True)
 
     def get_broad_statistics_via_fine(self, broad_embedding, broad_labels, fine_labels):
         # Broad Class
@@ -160,25 +160,24 @@ class BroadFineModelLM(LightningModule):
             self.get_param_groups(),
             lr=LEARNING_RATE,
             weight_decay=WEIGHT_DECAY,
-            momentum=0.99,
+            momentum=0.9,
             nesterov=True,
         )
         lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
             optimizer,
             mode="max",
             verbose=True,
-            patience=7,
         )
         return {
             "optimizer": optimizer,
             "lr_scheduler": lr_scheduler,
-            "monitor": "val_acc_f",
+            "monitor": "val_af",
         }
 
     def get_param_groups(self):
         return [
             {"params": self.model.embeddings.parameters(), "lr": 1e-6},
             {"params": self.model.broad_encoders.parameters(), "lr": 1e-6},
-            {"params": self.model.fine_encoders.parameters(), "lr": 1e-2},
-            {"params": self.model.mlp_heads.parameters(), "lr": 1e-2},
+            {"params": self.model.fine_encoders.parameters(), "lr": 1e-3},
+            {"params": self.model.mlp_heads.parameters(), "lr": 1e-3},
         ]

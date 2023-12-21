@@ -116,7 +116,7 @@ checkpoint_callback = ModelCheckpoint(
 LOAD_CKPT = False
 
 kwargs = {
-    "max_epochs": 300,
+    "max_epochs": 30,
     "accelerator": "gpu",
     "gpus": 1,
     "logger": CSVLogger(save_dir="logs/imagenet1k/vit_scratch"),
