@@ -1,5 +1,6 @@
 import torch
-from pytorch_lightning import LightningModule, Tensor
+from pytorch_lightning import LightningModule
+from torch import Tensor
 from torch import nn
 from torchmetrics.functional import accuracy
 
