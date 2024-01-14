@@ -6,14 +6,12 @@ from pytorch_lightning.callbacks.progress import TQDMProgressBar
 from pytorch_lightning.loggers import CSVLogger
 from transformers import logging
 
-from tp_model import TP_MODEL_MODIFIED_CIFAR100
+from vish.tp_model import TPModelFactory
 from vish.constants import LEARNING_RATE
-from vish.lightning.d2 import (
-    CIFAR100MultiLabelDataModule,
-)
+from vish.lightning.data.cifar import CIFAR100MultiLabelDataModule
 from vish.lightning.data.common import train_transform, test_transform
 from vish.lightning.loss import BELMode
-from vish.lightning.modulev2 import BroadFineModelLM
+from vish.lightning.modulev2 import BroadFineModelLM, VALIDATION_METRIC_NAME
 from pytorch_lightning.callbacks import ModelCheckpoint
 
 logging.set_verbosity_warning()
@@ -33,17 +31,19 @@ datamodule.setup()
 
 LOAD_CKPT = False
 
-CKPT_PATH = "logs/cifar100/modified_dual_tpvit_fulldataset/lightning_logs/version_2/checkpoints/tpdualvitcifar100-epoch=75-val_acc_fine=0.864.ckpt"
+CKPT_PATH = ""
 
 checkpoint_callback = ModelCheckpoint(
-    monitor="val_af",  # Monitor the validation loss
-    filename="CIFAR100-TpDualViT-p16-384-{epoch:02d}-{val_af:.3f}",  # Checkpoint filename format
-    save_top_k=2,  # Save only the best model checkpoint
-    mode="max",  # 'min' mode means we want to minimize the monitored metric
+    monitor=VALIDATION_METRIC_NAME,
+    filename="CIFAR100-TpDualViT-p16-384"
+    + "-{epoch:02d}-"
+    + f"{VALIDATION_METRIC_NAME:.3f}",
+    save_top_k=2,
+    mode="max",
 )
 
 l_module = BroadFineModelLM(
-    model=TP_MODEL_MODIFIED_CIFAR100,
+    model=TPModelFactory.get_model("CIFAR100"),
     num_fine_outputs=100,
     num_broad_outputs=20,
     lr=LEARNING_RATE,

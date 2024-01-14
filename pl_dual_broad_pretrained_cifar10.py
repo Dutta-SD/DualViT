@@ -5,12 +5,11 @@ from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning.callbacks.progress import TQDMProgressBar
 from pytorch_lightning.loggers import CSVLogger
 from transformers import logging
+from vish.lightning.modulev2 import VALIDATION_METRIC_NAME
 
-from tp_model import TP_MODEL_MODIFIED_CIFAR10
+from vish.tp_model import TPModelFactory
 from vish.constants import LEARNING_RATE
-from vish.lightning.d2 import (
-    CIFAR10MultiLabelDataModule,
-)
+from vish.lightning.data.cifar import CIFAR10MultiLabelDataModule
 from vish.lightning.data.common import train_transform, test_transform
 from vish.lightning.loss import BELMode
 from vish.lightning.modulev2 import BroadFineModelLM
@@ -32,16 +31,14 @@ datamodule.prepare_data()
 datamodule.setup()
 
 
-LOAD_CKPT = True
+LOAD_CKPT = False
 
-CKPT_PATH = "logs/cifar10/modified_dual_tpvit_fulldataset/lightning_logs/version_1/checkpoints/tpdualvitcifar10-epoch=18-val_acc_fine=0.972.ckpt"
+CKPT_PATH = ""
 
 NUM_FINE_CLASSES = 10
 NUM_BROAD_CLASSES = 2
-
-
 l_module = BroadFineModelLM(
-    model=TP_MODEL_MODIFIED_CIFAR10,
+    model=TPModelFactory.get_model("CIFAR10"),
     num_fine_outputs=NUM_FINE_CLASSES,
     num_broad_outputs=NUM_BROAD_CLASSES,
     lr=LEARNING_RATE,
@@ -49,10 +46,10 @@ l_module = BroadFineModelLM(
 )
 
 checkpoint_callback = ModelCheckpoint(
-    monitor="val_af",  # Monitor the validation loss
-    filename="tpdualvitcifar10-{epoch:02d}-{val_af:.3f}",  # Checkpoint filename format
-    save_top_k=2,  # Save only the best model checkpoint
-    mode="max",  # 'min' mode means we want to minimize the monitored metric
+    monitor=VALIDATION_METRIC_NAME,  # Monitor the validation loss
+    filename="tpdualvitcifar10-" + "{epoch:02d}" + f"-{VALIDATION_METRIC_NAME:.3f}",
+    save_top_k=2,
+    mode="max",  # 'max' -> More is monitor, the better
 )
 
 
@@ -78,7 +75,10 @@ trainer = Trainer(**kwargs)
 
 if __name__ == "__main__":
     if LOAD_CKPT:
+        # Ensure test dataset is defined else comment out
         trainer.test(l_module, datamodule=datamodule, ckpt_path=CKPT_PATH)
 
-    # trainer.fit(l_module, datamodule=datamodule)
-    # trainer.test(l_module, datamodule=datamodule)
+    trainer.fit(l_module, datamodule=datamodule)
+
+    # Ensure test dataset is defined else comment out
+    trainer.test(l_module, datamodule=datamodule)
