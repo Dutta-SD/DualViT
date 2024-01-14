@@ -22,7 +22,7 @@ warnings.filterwarnings("ignore")
 
 # Data Module
 datamodule = CIFAR10MultiLabelDataModule(
-    is_test=False,
+    is_test=True,
     train_transform=train_transform,
     val_transform=test_transform,
 )
@@ -49,7 +49,7 @@ checkpoint_callback = ModelCheckpoint(
     monitor=VALIDATION_METRIC_NAME,  # Monitor the validation loss
     filename="tpdualvitcifar10-"
     + "{epoch:02d}"
-    + "-{{}:.3f}".format(VALIDATION_METRIC_NAME),
+    + "-{{}:.3f}".format(VALIDATION_METRIC_NAME}" + "),
     save_top_k=2,
     mode="max",  # 'max' -> More is monitor, the better
 )

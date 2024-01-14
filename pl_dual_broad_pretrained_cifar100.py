@@ -37,7 +37,7 @@ checkpoint_callback = ModelCheckpoint(
     monitor=VALIDATION_METRIC_NAME,
     filename="CIFAR100-TpDualViT-p16-384"
     + "-{epoch:02d}-"
-    + f"{VALIDATION_METRIC_NAME:.3f}",
+    + f"{{{VALIDATION_METRIC_NAME}:.3f}}",
     save_top_k=2,
     mode="max",
 )
