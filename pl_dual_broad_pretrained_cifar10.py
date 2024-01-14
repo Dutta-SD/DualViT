@@ -49,7 +49,7 @@ checkpoint_callback = ModelCheckpoint(
     monitor=VALIDATION_METRIC_NAME,  # Monitor the validation loss
     filename="tpdualvitcifar10-"
     + "{epoch:02d}"
-    + "-{{}:.3f}".format(VALIDATION_METRIC_NAME}" + "),
+    + f"-{{{VALIDATION_METRIC_NAME}:.3f}}",
     save_top_k=2,
     mode="max",  # 'max' -> More is monitor, the better
 )
