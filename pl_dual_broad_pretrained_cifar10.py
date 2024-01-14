@@ -8,7 +8,7 @@ from transformers import logging
 
 from tp_model import TP_MODEL_MODIFIED_CIFAR10
 from vish.constants import LEARNING_RATE
-from vish.lightning.data import (
+from vish.lightning.d2 import (
     CIFAR10MultiLabelDataModule,
 )
 from vish.lightning.data.common import train_transform, test_transform
