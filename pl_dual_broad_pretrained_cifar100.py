@@ -62,7 +62,7 @@ kwargs = {
         checkpoint_callback,
     ],
     "num_sanity_val_steps": 5,
-    "gradient_clip_val": 0.5,
+    "gradient_clip_val": 1,
 }
 
 if LOAD_CKPT:

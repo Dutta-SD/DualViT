@@ -49,8 +49,8 @@ l_module = BroadFineModelLM(
 )
 
 checkpoint_callback = ModelCheckpoint(
-    monitor="val_acc_fine",  # Monitor the validation loss
-    filename="tpdualvitcifar10-{epoch:02d}-{val_acc_fine:.3f}",  # Checkpoint filename format
+    monitor="val_af",  # Monitor the validation loss
+    filename="tpdualvitcifar10-{epoch:02d}-{val_af:.3f}",  # Checkpoint filename format
     save_top_k=2,  # Save only the best model checkpoint
     mode="max",  # 'min' mode means we want to minimize the monitored metric
 )
