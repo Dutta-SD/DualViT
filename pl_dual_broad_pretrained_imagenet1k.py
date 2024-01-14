@@ -41,7 +41,7 @@ l_module = BroadFineModelLM(
 
 checkpoint_callback = ModelCheckpoint(
     monitor=VALIDATION_METRIC_NAME,
-    filename="tpdualvit-imagenet1k" + "-{epoch:02d}-" + f"{VALIDATION_METRIC_NAME:.3f}",
+    filename="tpdualvit-imagenet1k" + "-{epoch:02d}-" + f"-{{{VALIDATION_METRIC_NAME}:.3f}}",
     save_top_k=2,
     mode="max",
 )
