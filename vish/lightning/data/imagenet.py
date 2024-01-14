@@ -66,14 +66,14 @@ class ImageNet1kMultilabelDataset(ImageFolder):
         with open("vish/lightning/data/imagenet_v3.json") as fp:
             f = json.load(fp)
         return f
-    
+
     @lru_cache(maxsize=1100)
     def get_broad_label(self, fine_label: int):
         # print("Getting Broad")
         label = self._compute_broad(fine_label)
         # print("Got Broad node", label)
         return self.nodes_at_depth.get(label, -1)
-    
+
     def _compute_broad(self, fine_label):
         fl_str = str(fine_label)
         labels_set = set(self.label_tree[fl_str])

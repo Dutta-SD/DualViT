@@ -6,14 +6,20 @@ from pytorch_lightning import LightningDataModule
 from torch.utils.data import random_split
 from torchvision.datasets import CIFAR10, CIFAR100
 
-from vish.constants import CIFAR100_FINE_2_BROAD_MAP
-from vish.lightning.data.common import PATH_DATASETS, BATCH_SIZE, NUM_WORKERS
+from vish.lightning.data.common import (
+    PATH_DATASETS,
+    NUM_WORKERS,
+    CIFAR100_FINE_2_BROAD_MAP,
+    CIFAR_10_FINE_2_BROAD_MAP,
+)
+
+BATCH_SIZE = 32 if torch.cuda.is_available() else 4
 
 
 class CIFAR10MultiLabelDataset(CIFAR10):
     def __init__(self, is_test: bool, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fine_to_broad = [0, 0, 1, 1, 1, 1, 1, 1, 0, 0]
+        self.fine_to_broad = CIFAR_10_FINE_2_BROAD_MAP
         self.is_test = is_test
 
     def _broad(self, idx):
@@ -89,8 +95,8 @@ class CIFAR10MultiLabelDataModule(LightningDataModule):
                 transform=self.train_transform,
             )
 
-            # use 20% of training data for validation
-            train_set_size = int(len(cifar_full) * 0.99)
+            # use 10% of training data for validation
+            train_set_size = int(len(cifar_full) * 0.9)
             valid_set_size = len(cifar_full) - train_set_size
 
             seed_everything(42)
@@ -172,7 +178,7 @@ class CIFAR100MultiLabelDataModule(CIFAR10MultiLabelDataModule):
                 transform=self.train_transform,
             )
 
-            # use 20% of training data for validation
+            # use 10% of training data for validation
             train_set_size = int(len(cifar_full) * 0.9)
             valid_set_size = len(cifar_full) - train_set_size
 

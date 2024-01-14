@@ -1,12 +1,54 @@
 import torch
-from pytorch_lightning import LightningModule
+from pytorch_lightning import LightningModule, Tensor
 from torch import nn
 from torchmetrics.functional import accuracy
 
 from vish.constants import WEIGHT_DECAY, LEARNING_RATE
 from vish.lightning.loss import BroadFineEmbeddingLoss, BELMode
-from vish.model.common.loss import convert_fine_to_broad_logits
 from vish.model.tp.modified import TPDualModifiedVit
+
+VALIDATION_METRIC_NAME = "val_af"  # Should be same as defined in Trainer
+
+
+def convert_fine_to_broad_logits(
+    logits: Tensor,
+    broad_labels: Tensor,
+    fine_labels: Tensor,
+    num_broad: int,
+):
+    """
+    Converts fine logits to broad logits for CIFAR 10
+
+    Args:
+        logits: logits of shape [B, 1, C_fine] or [B, C_fine]
+        broad_labels: Labels of shape [B, ]
+        fine_labels: Labels of shape [B, ]
+
+    Returns:
+
+    """
+
+    if len(logits.shape) == 3 and logits.shape[1] == 1:
+        logits = logits.squeeze(1)
+
+    batch, *_ = logits.shape
+    b_logits = torch.empty((batch, 0), device=logits.device)
+
+    for b_idx in range(num_broad):
+        fine_indexes = torch.unique(fine_labels[broad_labels == b_idx])
+
+        if torch.numel(fine_indexes) == 0:
+            curr_idx_logits = torch.zeros(
+                (batch,), device=logits.device, requires_grad=True
+            )
+        else:
+            curr_idx_logits, _ = torch.max(logits[:, fine_indexes], dim=1)
+            # curr_idx_logits = torch.mean(logits[:, fine_indexes], dim=1)
+        curr_idx_logits = curr_idx_logits.unsqueeze(1)
+
+        b_logits = torch.cat([b_logits, curr_idx_logits], dim=1)
+
+    return b_logits
 
 
 class BroadFineModelLM(LightningModule):
@@ -117,10 +159,13 @@ class BroadFineModelLM(LightningModule):
         if stage:
             # Fine
             self.log(f"{stage}CEF", loss_fine_ce, prog_bar=True)
-            self.log(f"{stage}_af", acc_fine, prog_bar=True)
+            self.log(
+                VALIDATION_METRIC_NAME if stage == "val" else f"{stage}_af",
+                acc_fine,
+                prog_bar=True,
+            )
             # Embedding
             self.log(f"{stage}E", loss_emb, prog_bar=True)
-            # self.log(f"{stage}_loss_emb_og", (10**loss_emb) - 1, prog_bar=True)
             # Broad
             # self.log(f"{stage}_ceb", loss_broad_ce, prog_bar=True)
             self.log(f"{stage}AB", acc_broad, prog_bar=True)

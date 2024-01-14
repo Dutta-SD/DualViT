@@ -1,7 +1,8 @@
 from einops.layers.torch import Rearrange
-
-from vish.model.common.vit_blocks import *
-from vish.utils import *
+from torch import nn
+from vish.model.common.vit_blocks import PositionalEmbedding1D, TransformerEncoder
+import torch
+import einops
 
 
 class ViTBasicForImageClassification(nn.Module):

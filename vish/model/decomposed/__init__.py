@@ -1,1 +1,0 @@
-from vish.model.decomposed.decomposed import VitClassificationDecomposed
