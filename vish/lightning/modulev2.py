@@ -121,7 +121,7 @@ class BroadFineModelLM(LightningModule):
                 broad_embedding, broad_labels, fine_embedding, fine_labels
             )
 
-        loss_emb = torch.log(loss_emb)
+        loss_emb = torch.log10(loss_emb)
         return loss_emb
 
     def _compute_emb_loss(
@@ -206,7 +206,7 @@ class BroadFineModelLM(LightningModule):
             self.get_param_groups(),
             lr=LEARNING_RATE,
             weight_decay=WEIGHT_DECAY,
-            momentum=0.9,
+            momentum=0.99,
             nesterov=True,
         )
         lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -222,8 +222,8 @@ class BroadFineModelLM(LightningModule):
 
     def get_param_groups(self):
         return [
-            {"params": self.model.embeddings.parameters(), "lr": 1e-6},
-            {"params": self.model.broad_encoders.parameters(), "lr": 1e-6},
+            {"params": self.model.embeddings.parameters(), "lr": 1e-5},
+            {"params": self.model.broad_encoders.parameters(), "lr": 1e-5},
             {"params": self.model.fine_encoders.parameters(), "lr": 1e-3},
             {"params": self.model.mlp_heads.parameters(), "lr": 1e-3},
         ]

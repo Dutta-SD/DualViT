@@ -13,7 +13,7 @@ from vish.lightning.data.common import (
     CIFAR_10_FINE_2_BROAD_MAP,
 )
 
-BATCH_SIZE = 32 if torch.cuda.is_available() else 4
+BATCH_SIZE = 16 if torch.cuda.is_available() else 4
 
 
 class CIFAR10MultiLabelDataset(CIFAR10):

@@ -8,7 +8,7 @@ from transformers import logging
 from vish.lightning.modulev2 import VALIDATION_METRIC_NAME
 
 from vish.tp_model import TPModelFactory
-from vish.constants import LEARNING_RATE
+from vish.constants import IMG_SIZE, LEARNING_RATE
 from vish.lightning.data.cifar import CIFAR10MultiLabelDataModule
 from vish.lightning.data.common import train_transform, test_transform
 from vish.lightning.loss import BELMode
@@ -21,8 +21,9 @@ logging.set_verbosity_warning()
 warnings.filterwarnings("ignore")
 
 # Data Module
+# is_test = True then subset, else Full Dataset
 datamodule = CIFAR10MultiLabelDataModule(
-    is_test=True,
+    is_test=False,
     train_transform=train_transform,
     val_transform=test_transform,
 )
@@ -33,7 +34,7 @@ datamodule.setup()
 
 LOAD_CKPT = False
 
-CKPT_PATH = ""
+CKPT_PATH = "logs/cifar10/tpdualvit-p16-224/lightning_logs/version_1/checkpoints/modelepoch=31-val_af=0.957.ckpt"
 
 NUM_FINE_CLASSES = 10
 NUM_BROAD_CLASSES = 2
@@ -47,7 +48,7 @@ l_module = BroadFineModelLM(
 
 checkpoint_callback = ModelCheckpoint(
     monitor=VALIDATION_METRIC_NAME,  # Monitor the validation loss
-    filename="tpdualvitcifar10-"
+    filename="model"
     + "{epoch:02d}"
     + f"-{{{VALIDATION_METRIC_NAME}:.3f}}",
     save_top_k=2,
@@ -59,7 +60,7 @@ kwargs = {
     "max_epochs": 100,
     "accelerator": "gpu",
     "gpus": 1,
-    "logger": CSVLogger(save_dir="logs/cifar10/modified_dual_tpvit_fulldataset"),
+    "logger": CSVLogger(save_dir=f"logs/cifar10/tpdualvit-p16-{IMG_SIZE}"),
     "deterministic": True,
     "callbacks": [
         LearningRateMonitor(logging_interval="step"),

@@ -10,4 +10,4 @@ DATE_TIME_FORMAT = "%Y_%m_%d_%H_%M_%S"
 MOMENTUM = 0.9
 
 # Change this value for image resize
-IMG_SIZE = 384
+IMG_SIZE = 224

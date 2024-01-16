@@ -60,7 +60,7 @@ kwargs = {
     "num_sanity_val_steps": 2,
     "gradient_clip_val": 1,
     # "precision": 16,
-    "accumulate_grad_batches": 2,
+    # "accumulate_grad_batches": 2,
 }
 
 if LOAD_CKPT:
