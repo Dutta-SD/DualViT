@@ -1,0 +1,66 @@
+CIFAR 10/100
+
+    IMG_SIZE = 224
+
+    loss_emb = torch.log10(loss_emb)
+
+    # Modulev2 changes
+    def configure_optimizers(self):
+        optimizer = torch.optim.SGD(
+            self.get_param_groups(),
+            lr=LEARNING_RATE, #1e-3
+            weight_decay=WEIGHT_DECAY, #1e-5
+            momentum=0.99,
+            nesterov=True,
+        )
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            mode="max",
+            verbose=True,
+        )
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": lr_scheduler,
+            "monitor": VALIDATION_METRIC_NAME,
+        }
+
+    def get_param_groups(self):
+        return [
+            {"params": self.model.embeddings.parameters(), "lr": 1e-5},
+            {"params": self.model.broad_encoders.parameters(), "lr": 1e-5},
+            {"params": self.model.fine_encoders.parameters(), "lr": 1e-3},
+            {"params": self.model.mlp_heads.parameters(), "lr": 1e-3},
+        ]
+
+IMAGENET1K
+
+    IMG_SIZE = 224
+
+    loss_emb = torch.log(loss_emb)
+
+    #Module V2 changes
+    def configure_optimizers(self):
+        optimizer = torch.optim.SGD(
+            self.get_param_groups(),
+            lr=LEARNING_RATE, #1e-3
+            weight_decay=WEIGHT_DECAY, #1e-5
+            momentum=0.9,
+        )
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            mode="max",
+            verbose=True,
+        )
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": lr_scheduler,
+            "monitor": VALIDATION_METRIC_NAME,
+        }
+
+    def get_param_groups(self):
+        return [
+            {"params": self.model.embeddings.parameters(), "lr": 1e-6},
+            {"params": self.model.broad_encoders.parameters(), "lr": 1e-6},
+            {"params": self.model.fine_encoders.parameters(), "lr": 1e-3},
+            {"params": self.model.mlp_heads.parameters(), "lr": 1e-3},
+        ]

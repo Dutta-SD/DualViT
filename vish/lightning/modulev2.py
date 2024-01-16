@@ -217,7 +217,7 @@ class BroadFineModelLM(LightningModule):
         return {
             "optimizer": optimizer,
             "lr_scheduler": lr_scheduler,
-            "monitor": "val_af",
+            "monitor": VALIDATION_METRIC_NAME,
         }
 
     def get_param_groups(self):
