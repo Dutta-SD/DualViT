@@ -7,7 +7,7 @@ from pytorch_lightning.loggers import CSVLogger
 from transformers import logging
 
 from vish.tp_model import TPModelFactory
-from vish.constants import LEARNING_RATE
+from vish.constants import IMG_SIZE, LEARNING_RATE
 from vish.lightning.data.cifar import CIFAR100MultiLabelDataModule
 from vish.lightning.data.common import train_transform, test_transform
 from vish.lightning.loss import BELMode
@@ -35,7 +35,7 @@ CKPT_PATH = ""
 
 checkpoint_callback = ModelCheckpoint(
     monitor=VALIDATION_METRIC_NAME,
-    filename="CIFAR100-TpDualViT-p16-384"
+    filename=f"CIFAR100-TpDualViT-p16-{IMG_SIZE}"
     + "-{epoch:02d}-"
     + f"{{{VALIDATION_METRIC_NAME}:.3f}}",
     save_top_k=2,
@@ -55,7 +55,7 @@ kwargs = {
     "max_epochs": 300,
     "accelerator": "gpu",
     "gpus": 1,
-    "logger": CSVLogger(save_dir="logs/cifar100/full_tpdualvit"),
+    "logger": CSVLogger(save_dir=f"logs/cifar100/tpdualvit-p16-{IMG_SIZE}"),
     "callbacks": [
         LearningRateMonitor(logging_interval="step"),
         TQDMProgressBar(refresh_rate=10),
