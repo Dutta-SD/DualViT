@@ -1,13 +1,13 @@
 from torch import nn
 from transformers.models.vit import ViTModel
 
-from vish.model.tp.tp_vit import TPVitImageClassification
+from dualvit.model.models.tp_vit import ViTWithTPR
 
 
-class TPDualModifiedVit(nn.Module):
+class DualViT(nn.Module):
     def __init__(
         self,
-        fine_model: TPVitImageClassification,
+        fine_model: ViTWithTPR,
         broad_model: ViTModel,
         debug=True,
     ):
@@ -33,8 +33,7 @@ class TPDualModifiedVit(nn.Module):
 
     @staticmethod
     def log(f_string):
-        if False:
-            print(f_string)
+        print(f_string)
 
     def get_encoded_inputs(self, pixel_values, interpolate_pos_encoding):
         encodings = self.embeddings(pixel_values, None, interpolate_pos_encoding)

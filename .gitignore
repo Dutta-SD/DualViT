@@ -488,3 +488,4 @@ pyrightconfig.json
 
 *.zip
 !logs/.gitkeep
+.idea

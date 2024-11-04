@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from vish.model.common.vit_blocks import (
+from dualvit.model.common.vit_blocks import (
     MultiHeadAttention,
     TransformerEncoder,
     TransformerBlock,
@@ -12,11 +12,11 @@ from vish.model.common.vit_blocks import (
 
 class TPMHA(MultiHeadAttention):
     def __init__(
-        self,
-        emb_dim: int = 768,
-        num_heads: int = 12,
-        p_dropout: float = 0.0,
-        qkv_bias: bool = True,
+            self,
+            emb_dim: int = 768,
+            num_heads: int = 12,
+            p_dropout: float = 0.0,
+            qkv_bias: bool = True,
     ):
         super().__init__(emb_dim, num_heads, p_dropout, qkv_bias)
         self.repr_layer = nn.Linear(emb_dim, emb_dim, bias=qkv_bias)
@@ -63,14 +63,14 @@ class TPMHA(MultiHeadAttention):
 
 class TPTransformerBlock(TransformerBlock):
     def __init__(
-        self,
-        emb_dim: int = 768,
-        num_heads: int = 12,
-        pos_wise_ff_dim: int = 3072,
-        p_dropout: float = 0.0,
-        qkv_bias: bool = True,
-        pwff_bias: bool = True,
-        eps: float = 1e-6,
+            self,
+            emb_dim: int = 768,
+            num_heads: int = 12,
+            pos_wise_ff_dim: int = 3072,
+            p_dropout: float = 0.0,
+            qkv_bias: bool = True,
+            pwff_bias: bool = True,
+            eps: float = 1e-6,
     ):
         super().__init__(
             emb_dim,
@@ -105,14 +105,14 @@ class TPTransformerBlock(TransformerBlock):
 
 class TPTransformerEncoder(TransformerEncoder):
     def __init__(
-        self,
-        num_layers: int = 12,
-        emb_dim: int = 768,
-        num_heads: int = 12,
-        pwff_dim: int = 3072,
-        p_dropout: float = 0.0,
-        qkv_bias: bool = True,
-        pwff_bias: bool = True,
+            self,
+            num_layers: int = 12,
+            emb_dim: int = 768,
+            num_heads: int = 12,
+            pwff_dim: int = 3072,
+            p_dropout: float = 0.0,
+            qkv_bias: bool = True,
+            pwff_bias: bool = True,
     ):
         super().__init__()
         self.num_layers = num_layers

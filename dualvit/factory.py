@@ -1,9 +1,10 @@
 from typing import Literal
+
 from transformers import ViTModel
 
-from vish.constants import IMG_SIZE
-from vish.model.tp.modified import TPDualModifiedVit
-from vish.model.tp.tp_vit import TPVitImageClassification
+from dualvit.constants import IMG_SIZE
+from dualvit.model.models.dualvit import DualViT
+from dualvit.model.models.tp_vit import ViTWithTPR
 
 # Change as per need, See HuggingFace for available weights
 PRETRAINED_MODEL_STRING = f"google/vit-base-patch16-{IMG_SIZE}"
@@ -64,25 +65,26 @@ imagenet1k_model_params = {
 
 
 # This is just a utility class
+# At least Python 3.10 needed
 class TPModelFactory:
     @staticmethod
     def get_model(
-        model_name: Literal["CIFAR10", "CIFAR100", "IMAGENET1K"]
-    ) -> TPDualModifiedVit:
+            model_name: Literal["CIFAR10", "CIFAR100", "IMAGENET1K"]
+    ) -> DualViT:
         broad_model = ViTModel.from_pretrained(PRETRAINED_MODEL_STRING)
         fine_model = None
 
         match model_name:
             case "CIFAR10":
-                fine_model = TPVitImageClassification(**cifar10_model_params)
+                fine_model = ViTWithTPR(**cifar10_model_params)
 
             case "CIFAR100":
-                fine_model = TPVitImageClassification(**cifar100_model_params)
+                fine_model = ViTWithTPR(**cifar100_model_params)
 
             case "IMAGENET1K":
-                fine_model = TPVitImageClassification(**imagenet1k_model_params)
+                fine_model = ViTWithTPR(**imagenet1k_model_params)
 
-        return TPDualModifiedVit(
+        return DualViT(
             fine_model=fine_model,
             broad_model=broad_model,
             debug=False,

@@ -1,8 +1,9 @@
+import einops
+import torch
 from einops.layers.torch import Rearrange
 from torch import nn
-from vish.model.common.vit_blocks import PositionalEmbedding1D, TransformerEncoder
-import torch
-import einops
+
+from dualvit.model.common.vit_blocks import PositionalEmbedding1D, TransformerEncoder
 
 
 class ViTBasicForImageClassification(nn.Module):
@@ -17,22 +18,22 @@ class ViTBasicForImageClassification(nn.Module):
     """
 
     def __init__(
-        self,
-        img_height: int,
-        img_width: int,
-        img_in_channels: int = 3,
-        patch_dim: int = 16,
-        emb_dim: int = 768,
-        num_layers: int = 12,
-        num_attention_heads: int = 12,
-        pwff_hidden_dim: int = 3072,
-        num_classification_heads: int = 1,
-        mlp_outputs_list: tuple = (10,),  # Cifar 10 default
-        p_dropout: float = 0.0,
-        qkv_bias: bool = True,
-        pwff_bias: bool = True,
-        clf_head_bias: bool = False,
-        conv_bias: bool = False,
+            self,
+            img_height: int,
+            img_width: int,
+            img_in_channels: int = 3,
+            patch_dim: int = 16,
+            emb_dim: int = 768,
+            num_layers: int = 12,
+            num_attention_heads: int = 12,
+            pwff_hidden_dim: int = 3072,
+            num_classification_heads: int = 1,
+            mlp_outputs_list: tuple = (10,),  # Cifar 10 default
+            p_dropout: float = 0.0,
+            qkv_bias: bool = True,
+            pwff_bias: bool = True,
+            clf_head_bias: bool = False,
+            conv_bias: bool = False,
     ):
         super().__init__()
         self.img_height = img_height
@@ -44,8 +45,8 @@ class ViTBasicForImageClassification(nn.Module):
         self.num_patch_height = img_height // patch_dim
 
         self.seq_len = (
-            self.num_patch_width * self.num_patch_height
-        ) + self.num_extra_tokens
+                               self.num_patch_width * self.num_patch_height
+                       ) + self.num_extra_tokens
 
         self.embedding_layer = nn.Sequential(
             nn.Conv2d(
@@ -111,7 +112,7 @@ class ViTBasicForImageClassification(nn.Module):
             return op_seq.mean(dim=(1, 2))
 
         # Broad to fine
-        op_additional_tokens = op_seq[:, -self.num_extra_tokens :, :]
+        op_additional_tokens = op_seq[:, -self.num_extra_tokens:, :]
         return [
             self.mlp_heads[idx](op_additional_tokens[:, idx])
             for idx in range(self.num_classification_heads)

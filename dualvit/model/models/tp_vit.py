@@ -1,31 +1,31 @@
 import torch
 
-from vish.model.tp.blocks import TPTransformerEncoder
-from vish.model.vanilla.vit import ViTBasicForImageClassification
+from dualvit.model.common.tp_blocks import TPTransformerEncoder
+from dualvit.model.vanilla.vit import ViTBasicForImageClassification
 
 
-class TPVitImageClassification(ViTBasicForImageClassification):
+class ViTWithTPR(ViTBasicForImageClassification):
     """
     ViT with TPR
     """
 
     def __init__(
-        self,
-        img_height: int,
-        img_width: int,
-        img_in_channels: int = 3,
-        patch_dim: int = 16,
-        emb_dim: int = 768,
-        num_layers: int = 12,
-        num_attention_heads: int = 12,
-        pwff_hidden_dim: int = 3072,
-        num_classification_heads: int = 1,
-        mlp_outputs_list: tuple = (10,),
-        p_dropout: float = 0.0,
-        qkv_bias: bool = True,
-        pwff_bias: bool = True,
-        clf_head_bias: bool = False,
-        conv_bias: bool = False,
+            self,
+            img_height: int,
+            img_width: int,
+            img_in_channels: int = 3,
+            patch_dim: int = 16,
+            emb_dim: int = 768,
+            num_layers: int = 12,
+            num_attention_heads: int = 12,
+            pwff_hidden_dim: int = 3072,
+            num_classification_heads: int = 1,
+            mlp_outputs_list: tuple = (10,),
+            p_dropout: float = 0.0,
+            qkv_bias: bool = True,
+            pwff_bias: bool = True,
+            clf_head_bias: bool = False,
+            conv_bias: bool = False,
     ):
         super().__init__(
             img_height,
@@ -70,7 +70,7 @@ class TPVitImageClassification(ViTBasicForImageClassification):
             return op_seq.mean(dim=(1, 2))
 
         # Broad to fine
-        additional_embeddings = op_seq[:, -self.num_extra_tokens :, :]
+        additional_embeddings = op_seq[:, -self.num_extra_tokens:, :]
         logits = self.to_logits(additional_embeddings)
         return additional_embeddings, logits
 
