@@ -5,14 +5,14 @@ from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning.callbacks.progress import TQDMProgressBar
 from pytorch_lightning.loggers import CSVLogger
 from transformers import logging
-from vish.lightning.modulev2 import VALIDATION_METRIC_NAME
+from dualvit.lightning.modulev2 import VALIDATION_METRIC_NAME
 
-from vish.tp_model import TPModelFactory
-from vish.constants import IMG_SIZE, LEARNING_RATE
-from vish.lightning.data.cifar import CIFAR10MultiLabelDataModule
-from vish.lightning.data.common import train_transform, test_transform
-from vish.lightning.loss import BELMode
-from vish.lightning.modulev2 import BroadFineModelLM
+from dualvit.factory import TPModelFactory
+from dualvit.constants import IMG_SIZE, LEARNING_RATE
+from dualvit.lightning.data.cifar import CIFAR10MultiLabelDataModule
+from dualvit.lightning.data.common import train_transform, test_transform
+from dualvit.lightning.loss import BELMode
+from dualvit.lightning.modulev2 import BroadFineModelLM
 from pytorch_lightning.callbacks import ModelCheckpoint
 
 
@@ -48,9 +48,7 @@ l_module = BroadFineModelLM(
 
 checkpoint_callback = ModelCheckpoint(
     monitor=VALIDATION_METRIC_NAME,  # Monitor the validation loss
-    filename="model"
-    + "{epoch:02d}"
-    + f"-{{{VALIDATION_METRIC_NAME}:.3f}}",
+    filename="model" + "{epoch:02d}" + f"-{{{VALIDATION_METRIC_NAME}:.3f}}",
     save_top_k=2,
     mode="max",  # 'max' -> More is monitor, the better
 )

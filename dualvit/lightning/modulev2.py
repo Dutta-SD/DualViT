@@ -4,9 +4,9 @@ from torch import Tensor
 from torch import nn
 from torchmetrics.functional import accuracy
 
-from vish.constants import WEIGHT_DECAY, LEARNING_RATE
-from vish.lightning.loss import BroadFineEmbeddingLoss, BELMode
-from vish.model.tp.modified import TPDualModifiedVit
+from dualvit.constants import WEIGHT_DECAY, LEARNING_RATE
+from dualvit.lightning.loss import BroadFineEmbeddingLoss, BELMode
+from dualvit.model.models.dualvit import DualViT
 
 VALIDATION_METRIC_NAME = "val_af"  # Should be same as defined in Trainer
 
@@ -44,7 +44,6 @@ def convert_fine_to_broad_logits(
             )
         else:
             curr_idx_logits, _ = torch.max(logits[:, fine_indexes], dim=1)
-            # curr_idx_logits = torch.mean(logits[:, fine_indexes], dim=1)
         curr_idx_logits = curr_idx_logits.unsqueeze(1)
 
         b_logits = torch.cat([b_logits, curr_idx_logits], dim=1)
@@ -53,11 +52,11 @@ def convert_fine_to_broad_logits(
 
 
 class BroadFineModelLM(LightningModule):
-    model: TPDualModifiedVit
+    model: DualViT
 
     def __init__(
         self,
-        model: TPDualModifiedVit,
+        model: DualViT,
         num_fine_outputs,
         num_broad_outputs,
         lr,

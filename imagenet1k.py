@@ -6,11 +6,11 @@ from pytorch_lightning.callbacks.progress import TQDMProgressBar
 from pytorch_lightning.loggers import CSVLogger
 from transformers import logging
 
-from vish.tp_model import TPModelFactory
-from vish.constants import LEARNING_RATE
-from vish.lightning.data.imagenet import ImageNet1kMultiLabelDataModule
-from vish.lightning.loss import BELMode
-from vish.lightning.modulev2 import BroadFineModelLM, VALIDATION_METRIC_NAME
+from dualvit.factory import TPModelFactory
+from dualvit.constants import LEARNING_RATE
+from dualvit.lightning.data.imagenet import ImageNet1kMultiLabelDataModule
+from dualvit.lightning.loss import BELMode
+from dualvit.lightning.modulev2 import BroadFineModelLM, VALIDATION_METRIC_NAME
 
 logging.set_verbosity_warning()
 
